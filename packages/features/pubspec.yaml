@@ -1,0 +1,21 @@
+name: e_clinic_features
+description: Features shared by the e-Clinic apps — sign-in, two-factor, password reset, app lock, account security.
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.8.0
+  flutter: ">=3.32.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  e_clinic_core:
+    path: ../core
+  e_clinic_data:
+    path: ../data
+  e_clinic_ui:
+    path: ../ui
+  flutter_riverpod: ^3.0.0
+  go_router: ">=14.0.0 <18.0.0"
+  local_auth: ^2.3.0

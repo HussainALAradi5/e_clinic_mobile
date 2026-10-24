@@ -1,0 +1,9 @@
+# JSON keys are snake_case on the wire and camelCase in Dart.
+targets:
+  $default:
+    builders:
+      json_serializable:
+        options:
+          field_rename: snake
+          explicit_to_json: true
+          include_if_null: false
