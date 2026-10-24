@@ -14,10 +14,9 @@ abstract final class AppTheme {
 
   static ThemeData _build(ColorScheme scheme) {
     final base = ThemeData(colorScheme: scheme, useMaterial3: true);
-    final text = GoogleFonts.interTextTheme(base.textTheme).apply(
-      bodyColor: scheme.onSurface,
-      displayColor: scheme.onSurface,
-    );
+    final text = GoogleFonts.interTextTheme(
+      base.textTheme,
+    ).apply(bodyColor: scheme.onSurface, displayColor: scheme.onSurface);
     final control = RoundedRectangleBorder(borderRadius: BorderRadius.circular(controlRadius));
     const buttonSize = Size(64, 48);
     const buttonText = TextStyle(fontWeight: FontWeight.w600, fontSize: 15);
@@ -92,15 +91,9 @@ abstract final class AppTheme {
         showDragHandle: true,
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       ),
-      snackBarTheme: SnackBarThemeData(
-        behavior: SnackBarBehavior.floating,
-        shape: control,
-      ),
+      snackBarTheme: SnackBarThemeData(behavior: SnackBarBehavior.floating, shape: control),
       dividerTheme: DividerThemeData(color: scheme.outlineVariant, space: 1, thickness: 1),
-      listTileTheme: ListTileThemeData(
-        shape: control,
-        iconColor: scheme.onSurfaceVariant,
-      ),
+      listTileTheme: ListTileThemeData(shape: control, iconColor: scheme.onSurfaceVariant),
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: scheme.primary,
         linearTrackColor: scheme.primaryContainer,

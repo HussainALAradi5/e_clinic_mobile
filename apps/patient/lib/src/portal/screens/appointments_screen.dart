@@ -25,14 +25,16 @@ class _AppointmentsScreenState extends ConsumerState<AppointmentsScreen> {
 
   Future<Paged<Appointment>> _load(int page) {
     final upcoming = _view == _View.upcoming;
-    return ref.read(appointmentRepositoryProvider).list(
-      ListQuery(
-        page: page,
-        perPage: _pageSize,
-        sort: upcoming ? const ['scheduledDate', 'startTime'] : const ['-scheduledDate', '-startTime'],
-        filter: upcoming ? upcomingVisits() : pastVisits(),
-      ),
-    );
+    return ref
+        .read(appointmentRepositoryProvider)
+        .list(
+          ListQuery(
+            page: page,
+            perPage: _pageSize,
+            sort: upcoming ? const ['scheduledDate', 'startTime'] : const ['-scheduledDate', '-startTime'],
+            filter: upcoming ? upcomingVisits() : pastVisits(),
+          ),
+        );
   }
 
   @override

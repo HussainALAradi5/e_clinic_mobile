@@ -21,10 +21,7 @@ class ConfirmConfig {
 Future<bool> showConfirmSheet(BuildContext context, ConfirmConfig config) async =>
     await showModalBottomSheet<bool>(
       context: context,
-      builder: (context) => _SheetBody(
-        config: config,
-        onConfirm: () => Navigator.of(context).pop(true),
-      ),
+      builder: (context) => _SheetBody(config: config, onConfirm: () => Navigator.of(context).pop(true)),
     ) ??
     false;
 

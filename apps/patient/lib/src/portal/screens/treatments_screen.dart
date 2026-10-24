@@ -112,7 +112,10 @@ class _Sessions extends ConsumerWidget {
     return AsyncBody(
       value: ref.watch(treatmentSessionsProvider(planId)),
       onRetry: () => ref.invalidate(treatmentSessionsProvider(planId)),
-      loading: const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator())),
+      loading: const Padding(
+        padding: EdgeInsets.all(16),
+        child: Center(child: CircularProgressIndicator()),
+      ),
       data: (sessions) => sessions.isEmpty
           ? const Padding(padding: EdgeInsets.all(16), child: Text('No sessions booked yet.'))
           : Column(
@@ -120,7 +123,10 @@ class _Sessions extends ConsumerWidget {
                 for (final s in sessions)
                   ListTile(
                     dense: true,
-                    leading: CircleAvatar(radius: 14, child: Text('${s.sessionNumber}', style: theme.textTheme.labelSmall)),
+                    leading: CircleAvatar(
+                      radius: 14,
+                      child: Text('${s.sessionNumber}', style: theme.textTheme.labelSmall),
+                    ),
                     title: Text('${ClinicClock.day(s.scheduledDate)}, ${s.startTime}'),
                     subtitle: s.provider == null ? null : Text(s.provider!.fullName),
                     trailing: StatusChip(enumName: 'AppointmentStatus', value: s.status),

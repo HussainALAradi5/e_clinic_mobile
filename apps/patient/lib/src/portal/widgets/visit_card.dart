@@ -18,8 +18,8 @@ class VisitCard extends ConsumerWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final catalog = ref.watch(enumCatalogProvider).value ?? EnumCatalog.empty;
-    final upcoming = AppointmentStatus.upcoming.contains(visit.status) &&
-        visit.scheduledDate.compareTo(ClinicClock.today()) >= 0;
+    final upcoming =
+        AppointmentStatus.upcoming.contains(visit.status) && visit.scheduledDate.compareTo(ClinicClock.today()) >= 0;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),

@@ -73,7 +73,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final (title, subtitle) = switch (_step) {
-      _Step.email => ('Reset your password', 'We will email you a 6-digit code. It also works for a new portal invitation.'),
+      _Step.email => (
+        'Reset your password',
+        'We will email you a 6-digit code. It also works for a new portal invitation.',
+      ),
       _Step.code => ('Check your email', 'Enter the 6-digit code we sent to ${_email.text.trim()}.'),
       _Step.password => ('Choose a new password', 'Use it from now on to sign in on the app and the website.'),
     };
@@ -98,10 +101,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     autofocus: widget.email == null || widget.email!.isEmpty,
                     keyboardType: TextInputType.emailAddress,
                     autofillHints: const [AutofillHints.email],
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon: Icon(Icons.mail_outline_rounded),
-                    ),
+                    decoration: const InputDecoration(labelText: 'Email', prefixIcon: Icon(Icons.mail_outline_rounded)),
                     validator: (v) => (v ?? '').trim().contains('@') ? null : 'Enter the email you sign in with.',
                   ),
                   const SizedBox(height: 24),
@@ -122,22 +122,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   ),
                 ],
                 _Step.password => [
-                  PasswordField(
-                    controller: _password,
-                    label: 'New password',
-                    autofillHints: const [AutofillHints.newPassword],
-                    validator: (v) => PasswordRules.valid(v ?? '') ? null : 'The password does not meet every rule yet.',
-                  ),
-                  const SizedBox(height: 10),
-                  PasswordChecklist(controller: _password),
-                  const SizedBox(height: 16),
-                  PasswordField(
-                    controller: _confirm,
-                    label: 'Repeat the new password',
-                    textInputAction: TextInputAction.done,
-                    autofillHints: const [AutofillHints.newPassword],
-                    validator: (v) => v == _password.text ? null : 'The two passwords are not the same.',
-                  ),
+                  NewPasswordFields(password: _password, confirm: _confirm),
                   const SizedBox(height: 24),
                   AppButton(
                     label: 'Save password',

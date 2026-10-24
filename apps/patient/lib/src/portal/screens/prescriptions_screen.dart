@@ -66,7 +66,8 @@ class _PrescriptionCard extends StatelessWidget {
                       Text(
                         [
                           if (rx.doctor != null) rx.doctor!.fullName,
-                          if (rx.createdAt != null) ClinicClock.date(ClinicClock.isoDate(ClinicClock.local(rx.createdAt!))),
+                          if (rx.createdAt != null)
+                            ClinicClock.date(ClinicClock.isoDate(ClinicClock.local(rx.createdAt!))),
                         ].join(' · '),
                         style: muted,
                       ),
@@ -87,9 +88,16 @@ class _PrescriptionCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(item.medication.name, style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600)),
-                        Text('${item.dose}, ${item.frequency} for ${item.durationDays} days', style: theme.textTheme.bodyMedium),
-                        if (item.instructions != null && item.instructions!.isNotEmpty) Text(item.instructions!, style: muted),
+                        Text(
+                          item.medication.name,
+                          style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          '${item.dose}, ${item.frequency} for ${item.durationDays} days',
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                        if (item.instructions != null && item.instructions!.isNotEmpty)
+                          Text(item.instructions!, style: muted),
                       ],
                     ),
                   ),

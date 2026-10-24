@@ -6,3 +6,4 @@ export 'src/auth/application/session_controller.dart';
 export 'src/auth/presentation/auth_paths.dart';
 export 'src/auth/presentation/auth_routing.dart';
 export 'src/auth/presentation/widgets/auth_scaffold.dart' show BrandMark;
+export 'src/run_clinic_app.dart';

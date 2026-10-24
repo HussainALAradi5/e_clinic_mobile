@@ -65,7 +65,8 @@ class AccountSecurityScreen extends ConsumerWidget {
             variant: ButtonVariant.outlined,
             confirm: const ConfirmConfig(
               title: 'Sign out everywhere?',
-              message: 'Every phone and browser signed in to your account, including this one, will need to sign in again.',
+              message:
+                  'Every phone and browser signed in to your account, including this one, will need to sign in again.',
               confirmLabel: 'Sign out everywhere',
               danger: true,
             ),
@@ -109,11 +110,9 @@ class _ChangePasswordSheetState extends ConsumerState<_ChangePasswordSheet> {
 
   Future<void> _save() async {
     if (!(_form.currentState?.validate() ?? false)) throw const ActionCancelled();
-    await ref.read(authRepositoryProvider).changePassword(
-      currentPassword: _current.text,
-      password: _password.text,
-      passwordConfirmation: _confirm.text,
-    );
+    await ref
+        .read(authRepositoryProvider)
+        .changePassword(currentPassword: _current.text, password: _password.text, passwordConfirmation: _confirm.text);
     if (mounted) Navigator.of(context).pop(true);
   }
 
@@ -134,22 +133,7 @@ class _ChangePasswordSheetState extends ConsumerState<_ChangePasswordSheet> {
             validator: (v) => (v ?? '').isEmpty ? 'Enter your current password.' : null,
           ),
           const SizedBox(height: 16),
-          PasswordField(
-            controller: _password,
-            label: 'New password',
-            autofillHints: const [AutofillHints.newPassword],
-            validator: (v) => PasswordRules.valid(v ?? '') ? null : 'The password does not meet every rule yet.',
-          ),
-          const SizedBox(height: 10),
-          PasswordChecklist(controller: _password),
-          const SizedBox(height: 16),
-          PasswordField(
-            controller: _confirm,
-            label: 'Repeat the new password',
-            textInputAction: TextInputAction.done,
-            autofillHints: const [AutofillHints.newPassword],
-            validator: (v) => v == _password.text ? null : 'The two passwords are not the same.',
-          ),
+          NewPasswordFields(password: _password, confirm: _confirm),
           const SizedBox(height: 24),
           AppButton(label: 'Save new password', expand: true, lock: ButtonLock.once, onPressed: _save),
         ],

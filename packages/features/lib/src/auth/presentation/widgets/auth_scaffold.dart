@@ -53,10 +53,7 @@ class AuthScaffold extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Text(
-                            subtitle,
-                            style: theme.textTheme.bodyLarge?.copyWith(color: const Color(0xFFC6F0E8)),
-                          ),
+                          Text(subtitle, style: theme.textTheme.bodyLarge?.copyWith(color: const Color(0xFFC6F0E8))),
                         ],
                       ),
                     ),

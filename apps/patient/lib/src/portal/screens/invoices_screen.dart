@@ -32,10 +32,7 @@ class InvoicesScreen extends ConsumerWidget {
                   message: 'Invoices appear here once the clinic issues them after a visit.',
                 )
               else
-                for (final invoice in invoices) ...[
-                  _InvoiceCard(invoice: invoice),
-                  const SizedBox(height: 12),
-                ],
+                for (final invoice in invoices) ...[_InvoiceCard(invoice: invoice), const SizedBox(height: 12)],
             ],
           );
         },
@@ -120,7 +117,10 @@ class _InvoiceCard extends StatelessWidget {
               if (invoice.owing)
                 Text(
                   '${invoice.balanceDue.label} due',
-                  style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.tertiary, fontWeight: FontWeight.w600),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.tertiary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
             ],
           ),
@@ -144,7 +144,10 @@ class _InvoiceDetail extends ConsumerWidget {
     return AsyncBody(
       value: ref.watch(invoiceDetailProvider(invoiceId)),
       onRetry: () => ref.invalidate(invoiceDetailProvider(invoiceId)),
-      loading: const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator())),
+      loading: const Padding(
+        padding: EdgeInsets.all(16),
+        child: Center(child: CircularProgressIndicator()),
+      ),
       data: (invoice) => Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -212,7 +215,12 @@ class _TotalRow extends StatelessWidget {
     final style = Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: bold ? FontWeight.w700 : null);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(children: [Expanded(child: Text(label, style: style)), Text(value, style: style)]),
+      child: Row(
+        children: [
+          Expanded(child: Text(label, style: style)),
+          Text(value, style: style),
+        ],
+      ),
     );
   }
 }

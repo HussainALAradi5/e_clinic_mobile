@@ -126,6 +126,8 @@ class AsyncBody<T> extends StatelessWidget {
   Widget build(BuildContext context) => value.when(
     data: data,
     loading: () => loading ?? const Padding(padding: EdgeInsets.only(top: 16), child: SkeletonList()),
-    error: (error, _) => Center(child: ErrorState(error: error, onRetry: onRetry)),
+    error: (error, _) => Center(
+      child: ErrorState(error: error, onRetry: onRetry),
+    ),
   );
 }

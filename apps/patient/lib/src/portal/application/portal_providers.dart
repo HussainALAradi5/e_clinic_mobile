@@ -15,16 +15,12 @@ class VisitsVersion extends Notifier<int> {
 final visitsVersionProvider = NotifierProvider<VisitsVersion, int>(VisitsVersion.new);
 
 /// Upcoming visits, soonest first.
-FilterNode upcomingVisits() => AllOf([
-  const Where.oneOf('status', AppointmentStatus.upcoming),
-  Where.gte('scheduledDate', ClinicClock.today()),
-]);
+FilterNode upcomingVisits() =>
+    AllOf([const Where.oneOf('status', AppointmentStatus.upcoming), Where.gte('scheduledDate', ClinicClock.today())]);
 
 /// Everything else, newest first.
-FilterNode pastVisits() => AnyOf([
-  const Where.noneOf('status', AppointmentStatus.upcoming),
-  Where.lt('scheduledDate', ClinicClock.today()),
-]);
+FilterNode pastVisits() =>
+    AnyOf([const Where.noneOf('status', AppointmentStatus.upcoming), Where.lt('scheduledDate', ClinicClock.today())]);
 
 /// The next three visits (home page).
 final nextVisitsProvider = FutureProvider.autoDispose<List<Appointment>>((ref) async {
@@ -80,10 +76,9 @@ class Profile extends AsyncNotifier<Patient> {
 final profileProvider = AsyncNotifierProvider.autoDispose<Profile, Patient>(Profile.new);
 
 final treatmentsProvider = FutureProvider.autoDispose<List<Treatment>>(
-  (ref) async => (await ref
-          .watch(treatmentRepositoryProvider)
-          .list(const ListQuery(perPage: 50, sort: ['status', '-createdAt'])))
-      .items,
+  (ref) async =>
+      (await ref.watch(treatmentRepositoryProvider).list(const ListQuery(perPage: 50, sort: ['status', '-createdAt'])))
+          .items,
 );
 
 final treatmentSessionsProvider = FutureProvider.autoDispose.family<List<TreatmentSession>, String>(
@@ -91,16 +86,17 @@ final treatmentSessionsProvider = FutureProvider.autoDispose.family<List<Treatme
 );
 
 final resultsProvider = FutureProvider.autoDispose<List<ClinicalOrder>>(
-  (ref) async => (await ref
-          .watch(clinicalOrderRepositoryProvider)
-          .list(
-            const ListQuery(
-              perPage: 50,
-              sort: ['-completedAt'],
-              filter: AllOf([Where.eq('status', GenericStatus.completed)]),
-            ),
-          ))
-      .items,
+  (ref) async =>
+      (await ref
+              .watch(clinicalOrderRepositoryProvider)
+              .list(
+                const ListQuery(
+                  perPage: 50,
+                  sort: ['-completedAt'],
+                  filter: AllOf([Where.eq('status', GenericStatus.completed)]),
+                ),
+              ))
+          .items,
 );
 
 final resultDetailProvider = FutureProvider.autoDispose.family<ClinicalOrder, String>(
@@ -108,17 +104,13 @@ final resultDetailProvider = FutureProvider.autoDispose.family<ClinicalOrder, St
 );
 
 final prescriptionsProvider = FutureProvider.autoDispose<List<Prescription>>(
-  (ref) async => (await ref
-          .watch(prescriptionRepositoryProvider)
-          .list(const ListQuery(perPage: 50, sort: ['-createdAt'])))
-      .items,
+  (ref) async =>
+      (await ref.watch(prescriptionRepositoryProvider).list(const ListQuery(perPage: 50, sort: ['-createdAt']))).items,
 );
 
 final invoicesProvider = FutureProvider.autoDispose<List<Invoice>>(
-  (ref) async => (await ref
-          .watch(invoiceRepositoryProvider)
-          .list(const ListQuery(perPage: 50, sort: ['-issueDate'])))
-      .items,
+  (ref) async =>
+      (await ref.watch(invoiceRepositoryProvider).list(const ListQuery(perPage: 50, sort: ['-issueDate']))).items,
 );
 
 final invoiceDetailProvider = FutureProvider.autoDispose.family<Invoice, String>(

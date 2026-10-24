@@ -15,9 +15,7 @@ abstract final class AppSnack {
     HapticFeedback.mediumImpact();
     final message = error is ApiException ? error.message : 'Something went wrong. Please try again.';
     final requestId = error is ApiException ? error.requestId : null;
-    final reference = requestId == null
-        ? ''
-        : '\nRef. ${requestId.length > 8 ? requestId.substring(0, 8) : requestId}';
+    final reference = requestId == null ? '' : '\nRef. ${requestId.length > 8 ? requestId.substring(0, 8) : requestId}';
     _show(context, '$message$reference', icon: Icons.error_rounded, isError: true);
   }
 

@@ -74,10 +74,7 @@ class AppLockController extends Notifier<AppLockState> {
 
   Future<bool> _authenticate(String reason) async {
     try {
-      return await _auth.authenticate(
-        localizedReason: reason,
-        options: const AuthenticationOptions(stickyAuth: true),
-      );
+      return await _auth.authenticate(localizedReason: reason, options: const AuthenticationOptions(stickyAuth: true));
     } on PlatformException {
       return false;
     }

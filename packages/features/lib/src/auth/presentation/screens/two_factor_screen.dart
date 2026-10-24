@@ -32,9 +32,7 @@ class _TwoFactorScreenState extends ConsumerState<TwoFactorScreen> {
     if (_busy || code.length < (_recovery ? 8 : 6)) throw const ActionCancelled();
     _busy = true;
     try {
-      await ref
-          .read(sessionProvider.notifier)
-          .verifyTwoFactor(widget.challenge, code, isRecoveryCode: _recovery);
+      await ref.read(sessionProvider.notifier).verifyTwoFactor(widget.challenge, code, isRecoveryCode: _recovery);
     } catch (_) {
       _code.clear();
       rethrow;

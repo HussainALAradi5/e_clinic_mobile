@@ -56,10 +56,11 @@ class ProfileScreen extends ConsumerWidget {
                     (label: 'Address', value: p.person.address?.formatted),
                     (
                       label: 'Emergency contact',
-                      value: [p.emergencyContactName, p.emergencyContactRelation, p.emergencyContactPhone]
-                          .whereType<String>()
-                          .where((v) => v.isNotEmpty)
-                          .join(' · '),
+                      value: [
+                        p.emergencyContactName,
+                        p.emergencyContactRelation,
+                        p.emergencyContactPhone,
+                      ].whereType<String>().where((v) => v.isNotEmpty).join(' · '),
                     ),
                   ],
                 ),
@@ -179,15 +180,17 @@ class _ContactSheetState extends ConsumerState<_ContactSheet> {
     if (!(_form.currentState?.validate() ?? false)) throw const ActionCancelled();
     final p = widget.patient;
     try {
-      final saved = await ref.read(portalRepositoryProvider).updateProfile(
-        version: p.version,
-        personVersion: p.person.version,
-        phone: _phone.text.trim(),
-        email: _blankToNull(_email),
-        emergencyContactName: _blankToNull(_contactName),
-        emergencyContactPhone: _blankToNull(_contactPhone),
-        emergencyContactRelation: _blankToNull(_contactRelation),
-      );
+      final saved = await ref
+          .read(portalRepositoryProvider)
+          .updateProfile(
+            version: p.version,
+            personVersion: p.person.version,
+            phone: _phone.text.trim(),
+            email: _blankToNull(_email),
+            emergencyContactName: _blankToNull(_contactName),
+            emergencyContactPhone: _blankToNull(_contactPhone),
+            emergencyContactRelation: _blankToNull(_contactRelation),
+          );
       if (mounted) Navigator.of(context).pop(saved);
     } on ApiException catch (error) {
       if (error.code == ErrorCodes.validationFailed && mounted) {
@@ -219,7 +222,8 @@ class _ContactSheetState extends ConsumerState<_ContactSheet> {
                 textInputAction: TextInputAction.next,
                 autofillHints: const [AutofillHints.telephoneNumber],
                 decoration: field('Mobile', 'phone', Icons.phone_iphone_rounded),
-                validator: (v) => (v ?? '').trim().length < 8 ? 'Enter your mobile number with the country code.' : null,
+                validator: (v) =>
+                    (v ?? '').trim().length < 8 ? 'Enter your mobile number with the country code.' : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
@@ -243,7 +247,11 @@ class _ContactSheetState extends ConsumerState<_ContactSheet> {
                 controller: _contactRelation,
                 textCapitalization: TextCapitalization.sentences,
                 textInputAction: TextInputAction.next,
-                decoration: field('Relation (e.g. wife, son)', 'emergency_contact_relation', Icons.diversity_1_outlined),
+                decoration: field(
+                  'Relation (e.g. wife, son)',
+                  'emergency_contact_relation',
+                  Icons.diversity_1_outlined,
+                ),
               ),
               const SizedBox(height: 12),
               TextFormField(

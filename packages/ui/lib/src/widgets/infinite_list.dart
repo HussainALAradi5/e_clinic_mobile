@@ -101,10 +101,7 @@ class _InfiniteListState<T> extends State<InfiniteList<T>> {
     final header = widget.header;
     final Widget body;
     if (_firstLoad) {
-      body = ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        children: [?header, const SkeletonList()],
-      );
+      body = ListView(physics: const AlwaysScrollableScrollPhysics(), children: [?header, const SkeletonList()]);
     } else if (_items.isEmpty) {
       body = ListView(
         physics: const AlwaysScrollableScrollPhysics(),

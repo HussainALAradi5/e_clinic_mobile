@@ -58,7 +58,11 @@ abstract final class PortalActions {
   static Future<void> openFile(WidgetRef ref, Attachment file) async {
     final link = await ref.read(attachmentRepositoryProvider).downloadLink(file.id);
     if (!await launchUrl(Uri.parse(link.url), mode: LaunchMode.externalApplication)) {
-      throw const ApiException(status: 0, code: ErrorCodes.unexpected, message: 'No app on this phone can open the file.');
+      throw const ApiException(
+        status: 0,
+        code: ErrorCodes.unexpected,
+        message: 'No app on this phone can open the file.',
+      );
     }
   }
 }

@@ -48,14 +48,16 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
     final slot = _slot;
     if (doctor == null || slot == null) throw const ActionCancelled();
     try {
-      await ref.read(portalRepositoryProvider).book(
-        doctorId: doctor.id,
-        type: _type,
-        date: _date,
-        startTime: slot.startTime,
-        reason: _reason.text.trim().isEmpty ? null : _reason.text.trim(),
-        idempotencyKey: _idempotencyKey,
-      );
+      await ref
+          .read(portalRepositoryProvider)
+          .book(
+            doctorId: doctor.id,
+            type: _type,
+            date: _date,
+            startTime: slot.startTime,
+            reason: _reason.text.trim().isEmpty ? null : _reason.text.trim(),
+            idempotencyKey: _idempotencyKey,
+          );
     } on ApiException catch (error) {
       // Someone else may have taken the time: show fresh times and let the patient pick again.
       if (!error.isOffline && mounted) {
@@ -157,11 +159,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                   }),
                 ),
                 const SectionHeader('Time'),
-                _Slots(
-                  slotKey: _slotKey!,
-                  selected: _slot,
-                  onPick: (slot) => setState(() => _slot = slot),
-                ),
+                _Slots(slotKey: _slotKey!, selected: _slot, onPick: (slot) => setState(() => _slot = slot)),
                 const SectionHeader('Anything the doctor should know? (optional)'),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -290,9 +288,9 @@ class _Slots extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: Text(
                   'No free times this day — try another day.',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
               )
             : Wrap(

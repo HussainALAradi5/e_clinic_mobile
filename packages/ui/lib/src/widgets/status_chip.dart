@@ -40,10 +40,9 @@ class StatusChip extends ConsumerWidget {
           const SizedBox(width: 6),
           Text(
             label,
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: colors.foreground,
-              fontWeight: FontWeight.w600,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.labelMedium?.copyWith(color: colors.foreground, fontWeight: FontWeight.w600),
           ),
         ],
       ),

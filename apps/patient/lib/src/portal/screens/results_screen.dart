@@ -85,7 +85,10 @@ class _ResultDetail extends ConsumerWidget {
     return AsyncBody(
       value: ref.watch(resultDetailProvider(orderId)),
       onRetry: () => ref.invalidate(resultDetailProvider(orderId)),
-      loading: const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator())),
+      loading: const Padding(
+        padding: EdgeInsets.all(16),
+        child: Center(child: CircularProgressIndicator()),
+      ),
       data: (order) => Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

@@ -59,9 +59,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final theme = Theme.of(context);
     return AuthScaffold(
       title: 'Welcome back',
-      subtitle: patient
-          ? 'Your visits, results and invoices in one place.'
-          : 'Sign in to your clinic workspace.',
+      subtitle: patient ? 'Your visits, results and invoices in one place.' : 'Sign in to your clinic workspace.',
       child: AutofillGroup(
         child: Form(
           key: _form,

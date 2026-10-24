@@ -10,15 +10,20 @@ Future<void> showCodeSheet(
   required String title,
   required List<String> lines,
   required String hint,
-}) =>
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => _CodeSheet(entity: entity, id: id, title: title, lines: lines, hint: hint),
-    );
+}) => showModalBottomSheet<void>(
+  context: context,
+  isScrollControlled: true,
+  builder: (context) => _CodeSheet(entity: entity, id: id, title: title, lines: lines, hint: hint),
+);
 
 class _CodeSheet extends ConsumerWidget {
-  const _CodeSheet({required this.entity, required this.id, required this.title, required this.lines, required this.hint});
+  const _CodeSheet({
+    required this.entity,
+    required this.id,
+    required this.title,
+    required this.lines,
+    required this.hint,
+  });
 
   final String entity;
   final String id;
@@ -69,8 +74,7 @@ class _CodeSheet extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 20),
-            for (final line in lines)
-              Text(line, style: theme.textTheme.titleMedium, textAlign: TextAlign.center),
+            for (final line in lines) Text(line, style: theme.textTheme.titleMedium, textAlign: TextAlign.center),
             const SizedBox(height: 12),
             Text(
               hint,
