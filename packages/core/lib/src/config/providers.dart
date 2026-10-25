@@ -37,10 +37,7 @@ final dioProvider = Provider<Dio>((ref) {
   );
   dio.interceptors.addAll([
     RequestIdInterceptor(),
-    AuthInterceptor(
-      tokens: ref.watch(tokenStoreProvider),
-      onExpired: () => ref.read(sessionExpiredProvider)(),
-    ),
+    AuthInterceptor(tokens: ref.watch(tokenStoreProvider), onExpired: () => ref.read(sessionExpiredProvider)()),
     RetryInterceptor(dio),
   ]);
   return dio;

@@ -50,7 +50,8 @@ class RetryInterceptor extends Interceptor {
     final options = err.requestOptions;
     final attempt = (options.extra['retry'] as int?) ?? 0;
     final safe = options.method == 'GET' || options.headers.containsKey('Idempotency-Key');
-    final network = err.response == null &&
+    final network =
+        err.response == null &&
         (err.type == DioExceptionType.connectionError ||
             err.type == DioExceptionType.connectionTimeout ||
             err.type == DioExceptionType.receiveTimeout);

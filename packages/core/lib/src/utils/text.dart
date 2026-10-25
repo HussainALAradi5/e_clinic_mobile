@@ -1,6 +1,5 @@
 /// `scheduledDate` → `scheduled_date`, `checkedIn` → `checked_in`.
-String snakeCase(String value) =>
-    value.replaceAllMapped(RegExp('[A-Z]'), (m) => '_${m[0]!.toLowerCase()}');
+String snakeCase(String value) => value.replaceAllMapped(RegExp('[A-Z]'), (m) => '_${m[0]!.toLowerCase()}');
 
 /// `in_progress` → `In progress` (fallback label of an enum value the catalogue does not know).
 String humanise(String value) {

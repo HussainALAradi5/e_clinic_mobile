@@ -68,8 +68,7 @@ class ApiClient {
     Map<String, Object?>? query,
     Object? body,
     String? idempotencyKey,
-  }) async =>
-      (await _send(method, path, query: query, body: body, idempotencyKey: idempotencyKey))['data'];
+  }) async => (await _send(method, path, query: query, body: body, idempotencyKey: idempotencyKey))['data'];
 
   Future<Map<String, dynamic>> _send(
     String method,
@@ -82,14 +81,13 @@ class ApiClient {
       final response = await _dio.request<Object?>(
         path,
         data: body,
-        queryParameters: query == null ? null : {
-          for (final entry in query.entries)
-            if (entry.value != null) entry.key: entry.value,
-        },
-        options: Options(
-          method: method,
-          headers: {'Idempotency-Key': ?idempotencyKey},
-        ),
+        queryParameters: query == null
+            ? null
+            : {
+                for (final entry in query.entries)
+                  if (entry.value != null) entry.key: entry.value,
+              },
+        options: Options(method: method, headers: {'Idempotency-Key': ?idempotencyKey}),
       );
       final data = response.data;
       if (data is Map<String, dynamic>) return data;

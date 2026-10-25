@@ -1,4 +1,3 @@
-import 'package:e_clinic_core/core.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,11 +54,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final patient = ref.watch(appConfigProvider).app == MobileApp.patient;
     final theme = Theme.of(context);
     return AuthScaffold(
       title: 'Welcome back',
-      subtitle: patient ? 'Your visits, results and invoices in one place.' : 'Sign in to your clinic workspace.',
+      subtitle: 'Your visits and results — or your day at the clinic.',
       child: AutofillGroup(
         child: Form(
           key: _form,
@@ -97,15 +95,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               const SizedBox(height: 8),
               AppButton(label: 'Sign in', icon: Icons.login_rounded, expand: true, onPressed: _submit),
               const Spacer(),
-              if (patient)
-                Padding(
-                  padding: const EdgeInsets.only(top: 24),
-                  child: Text(
-                    'New here? Ask the front desk for your portal invitation — it sets up your account.',
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-                  ),
+              Padding(
+                padding: const EdgeInsets.only(top: 24),
+                child: Text(
+                  'Patients: new here? Ask the front desk for your invitation — it sets up your account.',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                 ),
+              ),
             ],
           ),
         ),

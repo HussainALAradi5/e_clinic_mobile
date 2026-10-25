@@ -1,25 +1,30 @@
-/// Which app is running; sent when registering a push device and used in the token's device name.
+/// Who the app is serving, as the server's device registry knows it (`notifications/devices`). One app serves both:
+/// the signed-in account decides which.
 enum MobileApp {
   patient,
   staff;
 
-  /// `flutter-patient` / `flutter-staff` — shown in the user's list of signed-in devices.
-  String get deviceName => 'flutter-$name';
+  static MobileApp forAccount({required bool isPatient}) => isPatient ? patient : staff;
 }
 
-/// Per-app settings, provided by each app's `main.dart` through [appConfigProvider].
+/// App settings, provided by `main.dart` through [appConfigProvider].
 class AppConfig {
   const AppConfig({
-    required this.app,
     required this.apiBaseUrl,
-    required this.lockAfter,
+    this.patientLockAfter = const Duration(minutes: 5),
+    this.staffLockAfter = const Duration(minutes: 2),
   });
 
-  final MobileApp app;
+  /// Shown in the user's list of signed-in devices.
+  static const deviceName = 'flutter-e-clinic';
 
   /// Server origin plus `/api/v1`, e.g. `https://api.clinic.bh/api/v1` (passed with `--dart-define=API_URL=...`).
   final String apiBaseUrl;
 
-  /// Time in the background after which the app asks to unlock again (patient 5 min, staff 2 min).
-  final Duration lockAfter;
+  /// Time in the background after which the app asks to unlock again. Staff phones hold many patients' data, so
+  /// they lock sooner.
+  final Duration patientLockAfter;
+  final Duration staffLockAfter;
+
+  Duration lockAfterFor({required bool isPatient}) => isPatient ? patientLockAfter : staffLockAfter;
 }

@@ -7,11 +7,7 @@ enum _Status { checkedIn, noShow }
 void main() {
   test('requests go to <api>/<path> whether or not the configured URL ends in a slash', () {
     for (final url in ['http://10.0.2.2:8000/api/v1', 'http://10.0.2.2:8000/api/v1/']) {
-      final container = ProviderContainer(
-        overrides: [
-          appConfigProvider.overrideWithValue(AppConfig(app: MobileApp.staff, apiBaseUrl: url, lockAfter: Duration.zero)),
-        ],
-      );
+      final container = ProviderContainer(overrides: [appConfigProvider.overrideWithValue(AppConfig(apiBaseUrl: url))]);
       addTearDown(container.dispose);
       final dio = container.read(dioProvider);
       expect(Uri.parse(dio.options.baseUrl).resolve('auth/login').toString(), 'http://10.0.2.2:8000/api/v1/auth/login');

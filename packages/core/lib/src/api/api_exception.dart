@@ -45,9 +45,7 @@ class ApiException implements Exception {
       fieldErrors: rawErrors is Map<String, dynamic>
           ? {
               for (final entry in rawErrors.entries)
-                entry.key: [
-                  for (final m in entry.value as List<dynamic>) m.toString(),
-                ],
+                entry.key: [for (final m in entry.value as List<dynamic>) m.toString()],
             }
           : const {},
       meta: rawMeta is Map<String, dynamic> ? rawMeta : const {},

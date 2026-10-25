@@ -66,13 +66,7 @@ final class NoneOf extends FilterNode {
 
 /// Mirror of the server ListQuery: paging, sort (`-field` = descending), search and a filter tree.
 class ListQuery {
-  const ListQuery({
-    this.page,
-    this.perPage,
-    this.sort = const [],
-    this.search,
-    this.filter,
-  });
+  const ListQuery({this.page, this.perPage, this.sort = const [], this.search, this.filter});
 
   /// The server caps a page at 100 rows.
   static const maxPerPage = 100;
@@ -83,22 +77,15 @@ class ListQuery {
   final String? search;
   final FilterNode? filter;
 
-  ListQuery copyWith({int? page}) => ListQuery(
-    page: page ?? this.page,
-    perPage: perPage,
-    sort: sort,
-    search: search,
-    filter: filter,
-  );
+  ListQuery copyWith({int? page}) =>
+      ListQuery(page: page ?? this.page, perPage: perPage, sort: sort, search: search, filter: filter);
 
   Map<String, String> toParams() {
     final out = <String, String>{};
     if (page != null) out['page'] = '$page';
     if (perPage != null) out['per_page'] = '${perPage!.clamp(1, maxPerPage)}';
     if (sort.isNotEmpty) {
-      out['sort'] = sort
-          .map((s) => s.startsWith('-') ? '-${snakeCase(s.substring(1))}' : snakeCase(s))
-          .join(',');
+      out['sort'] = sort.map((s) => s.startsWith('-') ? '-${snakeCase(s.substring(1))}' : snakeCase(s)).join(',');
     }
     final term = search?.trim();
     if (term != null && term.isNotEmpty) out['search'] = term;

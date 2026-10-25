@@ -1,5 +1,5 @@
 name: e_clinic_mobile
-description: e-Clinic mobile apps (patient + staff) — pub workspace root.
+description: e-Clinic mobile app (patients and staff in one app) — pub workspace root.
 publish_to: none
 
 environment:
@@ -10,8 +10,7 @@ workspace:
   - packages/data
   - packages/ui
   - packages/features
-  - apps/patient
-  - apps/staff
+  - apps/clinic
 
 dev_dependencies:
   flutter_lints: ">=5.0.0 <7.0.0"

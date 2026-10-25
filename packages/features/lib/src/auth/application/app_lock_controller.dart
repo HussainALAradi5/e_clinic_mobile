@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_auth/local_auth.dart';
 
+import 'session_controller.dart';
+
 /// Whether the app lock is on, and whether the app is locked right now.
 class AppLockState {
   const AppLockState({required this.enabled, required this.locked});
@@ -11,7 +13,8 @@ class AppLockState {
   final bool locked;
 }
 
-/// Biometric app lock: on cold start and after [AppConfig.lockAfter] in the background, when the user turned it on.
+/// Biometric app lock: on cold start and after [AppConfig.lockAfterFor] the signed-in account (staff lock sooner) in
+/// the background, when the user turned it on.
 /// Three failed unlocks fall back to signing in with the password.
 class AppLockController extends Notifier<AppLockState> {
   static const _prefKey = 'ec.biometric_lock';
@@ -48,7 +51,9 @@ class AppLockController extends Notifier<AppLockState> {
   void resumed() {
     final since = _pausedAt;
     _pausedAt = null;
-    if (state.enabled && since != null && DateTime.now().difference(since) >= ref.read(appConfigProvider).lockAfter) {
+    final isPatient = ref.read(currentUserProvider)?.isPatient ?? true;
+    final lockAfter = ref.read(appConfigProvider).lockAfterFor(isPatient: isPatient);
+    if (state.enabled && since != null && DateTime.now().difference(since) >= lockAfter) {
       state = const AppLockState(enabled: true, locked: true);
     }
   }

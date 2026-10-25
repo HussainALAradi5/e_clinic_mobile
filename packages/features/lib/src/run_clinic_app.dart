@@ -9,9 +9,8 @@ import 'auth/application/session_controller.dart';
 /// The default reaches `php artisan serve` on the host from the Android emulator.
 const _apiUrl = String.fromEnvironment('API_URL', defaultValue: 'http://10.0.2.2:8000/api/v1');
 
-/// Starts an e-Clinic app: loads the settings, wires the API and the session, then shows [root].
-/// [lockAfter] is the time in the background before the app asks to unlock again.
-Future<void> runClinicApp({required MobileApp app, required Duration lockAfter, required Widget root}) async {
+/// Starts the e-Clinic app: loads the settings, wires the API and the session, then shows [root].
+Future<void> runClinicApp({required Widget root}) async {
   WidgetsFlutterBinding.ensureInitialized();
   final preferences = await SharedPreferences.getInstance();
 
@@ -20,7 +19,7 @@ Future<void> runClinicApp({required MobileApp app, required Duration lockAfter, 
       // Failed loads show a retry button instead of retrying silently.
       retry: (retryCount, error) => null,
       overrides: [
-        appConfigProvider.overrideWithValue(AppConfig(app: app, apiBaseUrl: _apiUrl, lockAfter: lockAfter)),
+        appConfigProvider.overrideWithValue(const AppConfig(apiBaseUrl: _apiUrl)),
         preferencesProvider.overrideWithValue(preferences),
         sessionExpiredProvider.overrideWith(
           (ref) =>

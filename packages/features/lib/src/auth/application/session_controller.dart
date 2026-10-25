@@ -16,7 +16,7 @@ class TwoFactorChallenge {
 class SessionController extends AsyncNotifier<Session?> {
   TokenStore get _tokens => ref.read(tokenStoreProvider);
   AuthRepository get _auth => ref.read(authRepositoryProvider);
-  String get _deviceName => ref.read(appConfigProvider).app.deviceName;
+  String get _deviceName => AppConfig.deviceName;
 
   @override
   Future<Session?> build() async {

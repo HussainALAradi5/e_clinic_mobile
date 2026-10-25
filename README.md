@@ -1,10 +1,11 @@
 # e-Clinic Mobile
 
-Flutter apps for **e-Clinic**, a clinic management system: a **patient app** for visits, results and invoices, and a
-**staff app** for the day at the clinic — schedule, check-in by QR code, treatment sessions, approvals and clocking in.
+**One Flutter app** for **e-Clinic**, a clinic management system. After sign-in it shows what fits the account:
+**patients** get their visits, results and invoices; **staff** get their day at the clinic — schedule, check-in by
+QR code, treatment sessions, approvals and clocking in. One app, one store listing, one build — the same approach as
+the web client, where staff pages and the patient portal also live in one app.
 
-Both apps talk to the same REST API as the web client and share one set of packages, so a feature looks and behaves
-the same everywhere.
+It talks to the same REST API as the web client, so a feature looks and behaves the same everywhere.
 
 | | |
 |---|---|
@@ -16,9 +17,9 @@ the same everywhere.
 
 ---
 
-## The apps
+## What it does
 
-### Patient app — `apps/patient`
+### For patients
 
 | Screen | What patients do |
 |---|---|
@@ -31,7 +32,7 @@ the same everywhere.
 | **Invoices** | Issued invoices with what is left to pay, their lines and payments |
 | **Messages · Profile** | In-app notifications; contact details and emergency contact |
 
-### Staff app — `apps/staff`
+### For staff
 
 Tabs appear only when the user's role has the matching right; Today and More are there for everyone.
 
@@ -44,9 +45,9 @@ Tabs appear only when the user's role has the matching right; Today and More are
 | **More** | All staff | Account, clock page, password & security, sign out |
 
 Action buttons follow each booking's `allowed_transitions` from the server *and* the user's permissions — the server
-checks both again on every call. A patient account that signs in to the staff app is sent to the patient app.
+checks both again on every call. Patients never reach staff screens, nor staff the patient screens.
 
-### Shared by both
+### For everyone
 
 - Sign-in with email and password, **two-step code** for roles that need it, password reset by emailed code
 - **Biometric app lock** after time in the background (patient 5 min, staff 2 min)
@@ -62,8 +63,9 @@ One [pub workspace](https://dart.dev/tools/pub/workspaces) — a single `flutter
 ```text
 e_clinic_mobile/
 ├── apps/
-│   ├── patient/        Patient app: router, bottom-tab shell, portal screens
-│   └── staff/          Staff app: router, permission-aware tabs, screens, actions
+│   └── clinic/         The app: one router with a patient and a staff area
+│       ├── lib/src/portal/   Patient tabs and screens
+│       └── lib/src/staff/    Staff tabs (filtered by rights), screens and actions
 ├── packages/
 │   ├── core/           AppConfig, Dio client + interceptors, ApiException & error codes,
 │   │                   ListQuery filter grammar, token storage, permission expressions,
@@ -121,25 +123,23 @@ flutter pub get
 # Generate the models (*.freezed.dart / *.g.dart) — again after changing a model.
 cd packages/data && dart run build_runner build && cd ../..
 
-# Android / iOS folders for each app (keeps the existing lib/ and test/), then the platform settings.
-cd apps/patient && flutter create --platforms=android,ios --org bh.clinic --project-name e_clinic_patient . && cd ../..
-dart run tools/patch_platforms.dart apps/patient
-cd apps/staff && flutter create --platforms=android,ios --org bh.clinic --project-name e_clinic_staff . && cd ../..
-dart run tools/patch_platforms.dart apps/staff
 ```
 
-The staff app's scanner (`mobile_scanner`) needs Android `minSdkVersion` 21+ and iOS 15.5+; if `flutter create` set
-lower values, raise them in `apps/staff/android/app/build.gradle(.kts)` and `apps/staff/ios/Podfile`.
+The Android and iOS folders are in the repository, already set up (internet, fingerprint / face unlock, camera for
+the scanner, plain HTTP to a local server in debug builds — see `tools/patch_platforms.dart`).
 
 ### Run against your local server
 
 ```bash
-# In e_clinic_server:  php artisan serve        →  http://127.0.0.1:8000
-cd apps/staff          # or apps/patient
+# In e_clinic_server:  composer dev   (API on http://127.0.0.1:8000 plus the queue worker)
+cd apps/clinic
 flutter run                                                         # Android emulator → http://10.0.2.2:8000/api/v1
+
+# Real Android phone over USB: forward the phone's port 8000 to this computer, then use localhost.
+adb reverse tcp:8000 tcp:8000
+flutter run --dart-define=API_URL=http://127.0.0.1:8000/api/v1
+
 flutter run --dart-define=API_URL=http://127.0.0.1:8000/api/v1      # iOS simulator
-flutter run --dart-define=API_URL=http://192.168.1.20:8000/api/v1   # phone on the same Wi-Fi
-                                                                    # (serve with --host=0.0.0.0)
 ```
 
 ### Demo accounts (local seed data only)
@@ -147,7 +147,7 @@ flutter run --dart-define=API_URL=http://192.168.1.20:8000/api/v1   # phone on t
 The server's demo seeder creates these accounts on non-production installs; the password and the fixed two-step code
 are listed in `DEMO_USERS.md` of the documentation repository.
 
-| App | Account | Try |
+| Area | Account | Try |
 |---|---|---|
 | Patient | `patient@demo.eclinic.bh` | Home ticket, booking, results, prescriptions, invoices |
 | Staff | `reception@demo.eclinic.bh` | Today (clinic schedule), Scan & check-in |
@@ -163,11 +163,11 @@ private address).
 
 ```bash
 flutter analyze                                   # lints: flutter_lints + strict casts / raw types
-flutter test packages/core apps/patient apps/staff
+flutter test packages/core apps/clinic
 ```
 
 Tests cover the permission-expression parser, the filter grammar, money and clinic dates, the API base URL, which
-staff tabs and visit steps a role gets, and the late / waiting rules.
+staff tabs and visit steps a role gets, the late / waiting rules, and which area each account may open.
 
 ## Conventions
 
@@ -183,7 +183,7 @@ staff tabs and visit steps a role gets, and the late / waiting rules.
 
 ## Roadmap
 
-- Staff app: patient files, calendar and booking, X-ray / lab work list with camera uploads, dispensing with barcode
+- Staff: patient files, calendar and booking, X-ray / lab work list with camera uploads, dispensing with barcode
   scan, leave requests, offline cache, clinic geofence on clock-in
 - Push notifications (Firebase / APNs), deep links, screenshot protection on medical screens, certificate pinning
 - Setting up two-step sign-in from the phone (signing in with a code works today)
