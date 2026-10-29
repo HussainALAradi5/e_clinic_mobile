@@ -8,8 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../application/staff_providers.dart';
-import '../widgets/appointment_card.dart';
-import '../widgets/clock_card.dart';
+import '../widgets/appointments/appointment_card.dart';
+import '../widgets/clock/clock_card.dart';
+import '../widgets/today/no_schedule_notice.dart';
 
 /// `/` — the staff member's day: clock in / out, then today's bookings by stage (expected → waiting → with the
 /// doctor → done) with the next step on each card. Front-desk staff can switch between their own and everyone's.
@@ -70,7 +71,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
               GreetingHeader(firstName: user?.firstName ?? ''),
               if (access.can('attendance.self'))
                 const Padding(padding: EdgeInsets.symmetric(horizontal: 16), child: ClockCard()),
-              if (canSchedule) ..._schedule(context, access) else const _NoSchedule(),
+              if (canSchedule) ..._schedule(context, access) else const NoScheduleNotice(),
             ],
           ),
         ),
@@ -142,15 +143,4 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
       ),
     ];
   }
-}
-
-class _NoSchedule extends StatelessWidget {
-  const _NoSchedule();
-
-  @override
-  Widget build(BuildContext context) => const EmptyState(
-    icon: Icons.work_outline_rounded,
-    title: 'Your work is on the other tabs',
-    message: 'Your role has no patient bookings. Use the tabs below for the rest of your work.',
-  );
 }

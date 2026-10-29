@@ -7,7 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-import '../widgets/scan_result_sheet.dart';
+import '../widgets/scan/camera_unavailable.dart';
+import '../widgets/scan/scan_result_sheet.dart';
+import '../widgets/scan/type_code_dialog.dart';
 
 /// `/scan` — full-screen camera for the clinic's signed codes: patient cards, check-in codes from the patient app,
 /// orders, prescriptions, invoices. The result opens in a sheet (check the patient in, open the record).
@@ -89,7 +91,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
   }
 
   Future<void> _typeCode() async {
-    final payload = await showDialog<String>(context: context, builder: (_) => const _TypeCodeDialog());
+    final payload = await showDialog<String>(context: context, builder: (_) => const TypeCodeDialog());
     if (payload != null && payload.trim().isNotEmpty) await _resolve(payload);
   }
 
@@ -104,7 +106,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
           MobileScanner(
             controller: _camera,
             onDetect: _onDetect,
-            errorBuilder: (context, error) => _CameraUnavailable(
+            errorBuilder: (context, error) => CameraUnavailable(
               denied: error.errorCode == MobileScannerErrorCode.permissionDenied,
               onTypeCode: _typeCode,
             ),
@@ -171,85 +173,4 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
       ),
     );
   }
-}
-
-/// No camera, or no permission: say how to fix it and offer typing the code instead.
-class _CameraUnavailable extends StatelessWidget {
-  const _CameraUnavailable({required this.denied, required this.onTypeCode});
-
-  final bool denied;
-  final VoidCallback onTypeCode;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return ColoredBox(
-      color: Colors.black,
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.no_photography_outlined, size: 48, color: Colors.white70),
-              const SizedBox(height: 16),
-              Text(
-                denied ? 'Camera access is off' : 'The camera is not available',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                denied
-                    ? 'Allow e-Clinic Staff to use the camera in your phone settings, or type the code instead.'
-                    : 'You can still type the code printed under the QR code.',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white70),
-              ),
-              const SizedBox(height: 20),
-              FilledButton.icon(
-                onPressed: onTypeCode,
-                icon: const Icon(Icons.keyboard_outlined),
-                label: const Text('Type the code'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// For a code that will not scan (damaged label, emulator without a camera): the text printed under it.
-class _TypeCodeDialog extends StatefulWidget {
-  const _TypeCodeDialog();
-
-  @override
-  State<_TypeCodeDialog> createState() => _TypeCodeDialogState();
-}
-
-class _TypeCodeDialogState extends State<_TypeCodeDialog> {
-  final _code = TextEditingController();
-
-  @override
-  void dispose() {
-    _code.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => AlertDialog(
-    title: const Text('Type the code'),
-    content: TextField(
-      controller: _code,
-      autofocus: true,
-      autocorrect: false,
-      decoration: const InputDecoration(labelText: 'Code', hintText: 'appointment:APT-…'),
-      onSubmitted: (value) => Navigator.of(context).pop(value),
-    ),
-    actions: [
-      TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
-      FilledButton(onPressed: () => Navigator.of(context).pop(_code.text), child: const Text('Look up')),
-    ],
-  );
 }

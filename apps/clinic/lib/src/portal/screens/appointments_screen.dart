@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../application/portal_providers.dart';
 import '../portal_paths.dart';
-import '../widgets/visit_card.dart';
+import '../widgets/visits/visit_card.dart';
 
 enum _View { upcoming, past }
 

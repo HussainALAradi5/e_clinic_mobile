@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../application/staff_providers.dart';
-import '../widgets/clock_card.dart';
+import '../widgets/clock/clock_card.dart';
 
 /// `/hr/attendance/clock` — clock in / out with the day's punches. Works only on the clinic network; elsewhere the
 /// server says so and HR records the day by hand.

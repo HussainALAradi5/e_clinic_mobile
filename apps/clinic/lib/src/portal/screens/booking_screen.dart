@@ -8,6 +8,8 @@ import 'package:go_router/go_router.dart';
 import '../application/booking_providers.dart';
 import '../application/portal_providers.dart';
 import '../portal_paths.dart';
+import '../widgets/booking/doctor_tile.dart';
+import '../widgets/booking/slot_choices.dart';
 
 /// `/appointments/new` — kind of visit → specialty → doctor → day → free time → optional reason → book.
 /// Times are at least two hours ahead; the booking stays pending until the clinic confirms it.
@@ -138,7 +140,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                 for (final doctor in doctors)
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                    child: _DoctorTile(
+                    child: DoctorTile(
                       doctor: doctor,
                       price: _price(doctor),
                       selected: _doctor?.id == doctor.id,
@@ -159,7 +161,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                   }),
                 ),
                 const SectionHeader('Time'),
-                _Slots(slotKey: _slotKey!, selected: _slot, onPick: (slot) => setState(() => _slot = slot)),
+                SlotChoices(slotKey: _slotKey!, selected: _slot, onPick: (slot) => setState(() => _slot = slot)),
                 const SectionHeader('Anything the doctor should know? (optional)'),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -207,104 +209,6 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _DoctorTile extends StatelessWidget {
-  const _DoctorTile({required this.doctor, required this.price, required this.selected, required this.onTap});
-
-  final Doctor doctor;
-  final Money? price;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    return Material(
-      color: selected ? scheme.primaryContainer : scheme.surfaceContainerLowest,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: selected ? scheme.primary : scheme.outlineVariant, width: selected ? 2 : 1),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: selected ? scheme.primary : scheme.secondaryContainer,
-                foregroundColor: selected ? scheme.onPrimary : scheme.onSecondaryContainer,
-                child: Text(initials(doctor.fullName)),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(doctor.displayName, style: theme.textTheme.titleSmall),
-                    if (doctor.specialty != null)
-                      Text(
-                        doctor.specialty!.name,
-                        style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
-                      ),
-                  ],
-                ),
-              ),
-              if (price != null) Text(price!.label, style: theme.textTheme.labelLarge),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Slots extends ConsumerWidget {
-  const _Slots({required this.slotKey, required this.selected, required this.onPick});
-
-  final SlotKey slotKey;
-  final Slot? selected;
-  final ValueChanged<Slot> onPick;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final slots = ref.watch(slotsProvider(slotKey));
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: slots.when(
-        loading: () => const Padding(
-          padding: EdgeInsets.symmetric(vertical: 24),
-          child: Center(child: CircularProgressIndicator()),
-        ),
-        error: (error, _) => ErrorState(error: error, onRetry: () => ref.invalidate(slotsProvider(slotKey))),
-        data: (list) => list.isEmpty
-            ? Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Text(
-                  'No free times this day — try another day.',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
-                ),
-              )
-            : Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  for (final slot in list)
-                    ChoiceChip(
-                      label: Text(slot.startTime),
-                      selected: selected?.startTime == slot.startTime,
-                      onSelected: (_) => onPick(slot),
-                    ),
-                ],
-              ),
       ),
     );
   }

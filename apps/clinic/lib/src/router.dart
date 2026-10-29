@@ -14,7 +14,7 @@ import 'portal/screens/prescriptions_screen.dart';
 import 'portal/screens/profile_screen.dart';
 import 'portal/screens/results_screen.dart';
 import 'portal/screens/treatments_screen.dart';
-import 'portal/widgets/patient_shell.dart';
+import 'portal/widgets/shell/patient_shell.dart';
 import 'staff/screens/appointment_detail_screen.dart';
 import 'staff/screens/approvals_screen.dart';
 import 'staff/screens/clock_screen.dart';
@@ -23,7 +23,7 @@ import 'staff/screens/scan_screen.dart';
 import 'staff/screens/sessions_screen.dart';
 import 'staff/screens/today_screen.dart';
 import 'staff/staff_paths.dart';
-import 'staff/widgets/staff_shell.dart';
+import 'staff/widgets/shell/staff_shell.dart';
 
 /// Where an account starts: patients on their home, staff on today's schedule.
 String homeFor(User? user) => (user?.isPatient ?? false) ? PortalPaths.home : StaffPaths.today;

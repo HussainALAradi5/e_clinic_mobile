@@ -1,12 +1,23 @@
 import 'package:e_clinic_core/core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/enum_catalog.dart';
-import 'auth_repository.dart';
-import 'clinic_repositories.dart';
-import 'other_repositories.dart';
-import 'portal_repository.dart';
-import 'staff_repositories.dart';
+import '../models/shared/enum_catalog.dart';
+import 'billing/invoice_repository.dart';
+import 'billing/refund_repository.dart';
+import 'clinic/appointment_repository.dart';
+import 'clinic/clinical_order_repository.dart';
+import 'clinic/doctor_repository.dart';
+import 'clinic/portal_repository.dart';
+import 'clinic/treatment_repository.dart';
+import 'finance/expense_repository.dart';
+import 'hr/attendance_repository.dart';
+import 'hr/leave_repository.dart';
+import 'identity/attachment_repository.dart';
+import 'identity/auth_repository.dart';
+import 'identity/code_repository.dart';
+import 'identity/meta_repository.dart';
+import 'identity/notification_repository.dart';
+import 'pharmacy/prescription_repository.dart';
 
 final authRepositoryProvider = Provider((ref) => AuthRepository(ref.watch(apiClientProvider)));
 final portalRepositoryProvider = Provider((ref) => PortalRepository(ref.watch(apiClientProvider)));

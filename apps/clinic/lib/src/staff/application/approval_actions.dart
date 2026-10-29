@@ -4,6 +4,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../utils/formatters.dart';
 import 'staff_providers.dart';
 
 /// One request waiting for a decision: what the approve confirmation says, and the two server calls.
@@ -61,7 +62,7 @@ abstract final class ApprovalActions {
     return Decision(
       approveConfirm: ConfirmConfig(
         title: 'Approve this leave?',
-        message: '$name, ${leaveDays(leave)}. The days leave their balance and their schedule is blocked.',
+        message: '$name, ${leaveDaysLabel(leave)}. The days leave their balance and their schedule is blocked.',
         confirmLabel: 'Approve',
       ),
       approve: (context) async {
@@ -93,7 +94,7 @@ abstract final class ApprovalActions {
     approveConfirm: ConfirmConfig(
       title: 'Approve the overtime?',
       message:
-          '${day.employee?.fullName ?? 'Staff member'}: ${minutesLabel(day.overtimeMinutes)} on '
+          '${day.employee?.fullName ?? 'Staff member'}: ${formatMinutes(day.overtimeMinutes)} on '
           '${ClinicClock.date(day.date)}. It is paid with the month\'s payroll.',
       confirmLabel: 'Approve',
     ),
@@ -116,23 +117,5 @@ abstract final class ApprovalActions {
   static void decided(BuildContext context, WidgetRef ref, String message) {
     ref.read(approvalsVersionProvider.notifier).bump();
     if (context.mounted) AppSnack.success(context, message);
-  }
-
-  /// `2 days, 3 Nov 2026 – 4 Nov 2026`.
-  static String leaveDays(LeaveRequest leave) {
-    final days = double.tryParse(leave.totalDays);
-    final count = days == null ? leave.totalDays : (days == days.roundToDouble() ? '${days.round()}' : '$days');
-    final range = leave.startDate == leave.endDate
-        ? ClinicClock.date(leave.startDate)
-        : '${ClinicClock.date(leave.startDate)} – ${ClinicClock.date(leave.endDate)}';
-    return '$count ${count == '1' ? 'day' : 'days'}, $range';
-  }
-
-  /// `1 h 25 min`, `40 min`.
-  static String minutesLabel(int minutes) {
-    final h = minutes ~/ 60;
-    final m = minutes % 60;
-    if (h == 0) return '$m min';
-    return m == 0 ? '$h h' : '$h h $m min';
   }
 }

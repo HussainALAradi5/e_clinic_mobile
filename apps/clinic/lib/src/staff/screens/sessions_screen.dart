@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../application/staff_providers.dart';
-import '../widgets/appointment_card.dart';
+import '../widgets/appointments/appointment_card.dart';
 
 /// `/clinic/sessions` — the therapist's treatment sessions for a day (today and the week ahead): start a session
 /// when the patient is in, complete it when done. Attendance and plan progress follow from these steps.

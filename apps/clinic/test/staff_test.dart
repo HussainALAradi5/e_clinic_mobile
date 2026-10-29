@@ -1,7 +1,7 @@
-import 'package:e_clinic_app/src/staff/application/approval_actions.dart';
 import 'package:e_clinic_app/src/staff/application/visit_actions.dart';
 import 'package:e_clinic_app/src/staff/staff_paths.dart';
-import 'package:e_clinic_app/src/staff/widgets/appointment_card.dart';
+import 'package:e_clinic_app/src/staff/utils/formatters.dart';
+import 'package:e_clinic_app/src/staff/utils/visit_timing.dart';
 import 'package:e_clinic_core/core.dart';
 import 'package:e_clinic_data/data.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -75,8 +75,8 @@ void main() {
   });
 
   test('minutes read as hours and minutes', () {
-    expect(ApprovalActions.minutesLabel(40), '40 min');
-    expect(ApprovalActions.minutesLabel(60), '1 h');
-    expect(ApprovalActions.minutesLabel(85), '1 h 25 min');
+    expect(formatMinutes(40), '40 min');
+    expect(formatMinutes(60), '1 h');
+    expect(formatMinutes(85), '1 h 25 min');
   });
 }
