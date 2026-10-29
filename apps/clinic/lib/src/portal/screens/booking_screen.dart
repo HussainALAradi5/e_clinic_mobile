@@ -78,7 +78,6 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
   @override
   Widget build(BuildContext context) {
     final choices = ref.watch(bookingChoicesProvider);
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: const Text('Book a visit')),
       body: AsyncBody(
@@ -179,35 +178,16 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           );
         },
       ),
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerLowest,
-            border: Border(top: BorderSide(color: theme.colorScheme.outlineVariant)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (_doctor != null && _slot != null)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Text(
-                    '${ClinicClock.day(_date)} at ${_slot!.startTime} with ${_doctor!.displayName}',
-                    style: theme.textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              AppButton(
-                label: _slot == null ? 'Pick a doctor and a time' : 'Book visit',
-                icon: Icons.event_available_rounded,
-                lock: ButtonLock.once,
-                expand: true,
-                onPressed: _doctor != null && _slot != null ? _book : null,
-              ),
-            ],
-          ),
+      bottomNavigationBar: BottomBar(
+        summary: _doctor != null && _slot != null
+            ? '${ClinicClock.day(_date)} at ${_slot!.startTime} with ${_doctor!.displayName}'
+            : null,
+        child: AppButton(
+          label: _slot == null ? 'Pick a doctor and a time' : 'Book visit',
+          icon: Icons.event_available_rounded,
+          lock: ButtonLock.once,
+          expand: true,
+          onPressed: _doctor != null && _slot != null ? _book : null,
         ),
       ),
     );

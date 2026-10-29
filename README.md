@@ -2,7 +2,8 @@
 
 **One Flutter app** for **e-Clinic**, a clinic management system. After sign-in it shows what fits the account:
 **patients** get their visits, results and invoices; **staff** get their day at the clinic — schedule, check-in by
-QR code, treatment sessions, approvals and clocking in. One app, one store listing, one build — the same approach as
+QR code, treatment sessions, approvals, patient files, booking, the order work list, the pharmacy and their own leave.
+One app, one store listing, one build — the same approach as
 the web client, where staff pages and the patient portal also live in one app.
 
 It talks to the same REST API as the web client, so a feature looks and behaves the same everywhere.
@@ -42,7 +43,19 @@ Tabs appear only when the user's role has the matching right; Today and More are
 | **Scan** | Front desk, nurses, doctors, pharmacy | Camera (or typed code) → a booking with **Check in**, a patient card with today's bookings, or any signed record's key facts |
 | **Sessions** | Therapists, doctors | My treatment sessions for today and the week ahead · **Start** / **Complete** |
 | **Approvals** | Accountant, HR, admin | Pending refunds, expenses, leave and overtime · **Approve** / **Reject** with a reason · leave over booked days asks before cancelling them |
-| **More** | All staff | Account, clock page, password & security, sign out |
+| **More** | All staff | Account, the work pages below that the role may open, password & security, sign out |
+
+Work pages opened from **More** (each follows its own right, also when opened by a link):
+
+| Page | Who | What it does |
+|---|---|---|
+| **Patient files** | Front desk, doctors, nurses, pharmacy | Search by name, file number or mobile · allergies first, details, insurance, coming visits and history · **Book a visit** |
+| **Calendar & booking** | Front desk, doctors, nurses | A day by provider, two weeks ahead · booking wizard: patient → kind of visit → provider → day → free time → desk or phone |
+| **Order work list** | Doctors, nurses | Open X-ray, scan, lab, ECG and referral orders, urgent first · **Start**, **Write result** (flag abnormal), **Cancel** with a reason |
+| **Pharmacy queue** | Pharmacists | Prescriptions still to hand over · owed quantities preselected, − / + per medicine, a witness for controlled drugs · **Dispense** (stock out first-expiry-first, added to the invoice) |
+| **Dispensed medicines** | Pharmacy | What left the pharmacy, with batches · **Cancel** returns the stock and reverses the charge |
+| **My leave** | All staff | Days left per leave type · **Request leave** (half day for one day) · send a draft once the certificate is attached · withdraw |
+| **Clock in / out** | Staff with attendance | Today's shift and times |
 
 Action buttons follow each booking's `allowed_transitions` from the server *and* the user's permissions — the server
 checks both again on every call. Patients never reach staff screens, nor staff the patient screens.
@@ -152,6 +165,8 @@ are listed in `DEMO_USERS.md` of the documentation repository.
 | Patient | `patient@demo.eclinic.bh` | Home ticket, booking, results, prescriptions, invoices |
 | Staff | `reception@demo.eclinic.bh` | Today (clinic schedule), Scan & check-in |
 | Staff | `nurse@demo.eclinic.bh` | Sessions, start / complete |
+| Staff | `doctor@demo.eclinic.bh` | Patient files, calendar, order work list, my leave |
+| Staff | `pharmacist@demo.eclinic.bh` | Pharmacy queue, dispense, dispensed medicines |
 | Staff | `accountant@demo.eclinic.bh` · `hr@demo.eclinic.bh` | Approvals (two-step code) |
 
 Clocking in works only from the clinic network (`HR_CHECK_IN_NETWORKS` on the server; a local install accepts any
@@ -167,7 +182,8 @@ flutter test packages/core apps/clinic
 ```
 
 Tests cover the permission-expression parser, the filter grammar, money and clinic dates, the API base URL, which
-staff tabs and visit steps a role gets, the late / waiting rules, and which area each account may open.
+staff tabs, pages, visit and order steps a role gets, the late / waiting rules, the calendar grouping, what a
+dispense sends (and when it needs a witness), and which area each account may open.
 
 ## Conventions
 
@@ -183,7 +199,7 @@ staff tabs and visit steps a role gets, the late / waiting rules, and which area
 
 ## Roadmap
 
-- Staff: patient files, calendar and booking, X-ray / lab work list with camera uploads, dispensing with barcode
-  scan, leave requests, offline cache, clinic geofence on clock-in
+- Staff: camera uploads for X-ray / lab results, medication barcode scan while dispensing, offline cache, clinic
+  geofence on clock-in
 - Push notifications (Firebase / APNs), deep links, screenshot protection on medical screens, certificate pinning
 - Setting up two-step sign-in from the phone (signing in with a code works today)

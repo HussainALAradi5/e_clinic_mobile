@@ -3,7 +3,6 @@ import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'portal_providers.dart';
 
@@ -51,18 +50,6 @@ abstract final class PortalActions {
     } on ApiException catch (error) {
       if (context.mounted) AppSnack.error(context, error);
       return null;
-    }
-  }
-
-  /// Opens a result file in the phone's viewer through a short-lived signed link.
-  static Future<void> openFile(WidgetRef ref, Attachment file) async {
-    final link = await ref.read(attachmentRepositoryProvider).downloadLink(file.id);
-    if (!await launchUrl(Uri.parse(link.url), mode: LaunchMode.externalApplication)) {
-      throw const ApiException(
-        status: 0,
-        code: ErrorCodes.unexpected,
-        message: 'No app on this phone can open the file.',
-      );
     }
   }
 }

@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../staff_paths.dart';
 
-/// `/more` — who is signed in, clock in / out, password & security, sign out.
+/// `/more` — who is signed in, the work pages the role may open, password & security, sign out.
 class MoreScreen extends ConsumerWidget {
   const MoreScreen({super.key});
 
@@ -24,14 +24,17 @@ class MoreScreen extends ConsumerWidget {
           if (user != null)
             ProfileHeader(name: user.fullName, lines: [session?.roles.map(humanise).join(', '), user.email]),
           const SizedBox(height: 16),
+          if (StaffPage.visible(access) case final pages when pages.isNotEmpty) ...[
+            LinkGroup(
+              links: [
+                for (final page in pages)
+                  LinkTile(icon: page.icon, label: page.label, onTap: () => context.push(page.path)),
+              ],
+            ),
+            const SizedBox(height: 16),
+          ],
           LinkGroup(
             links: [
-              if (access.can('attendance.self'))
-                LinkTile(
-                  icon: Icons.schedule_rounded,
-                  label: 'Clock in / out',
-                  onTap: () => context.push(StaffPaths.clock),
-                ),
               LinkTile(
                 icon: Icons.shield_outlined,
                 label: 'Password & security',
@@ -42,7 +45,7 @@ class MoreScreen extends ConsumerWidget {
           const InfoNote(
             icon: Icons.computer_rounded,
             text:
-                'Patient files, billing, the pharmacy and reports are on the clinic website. '
+                'Billing, stock, HR and reports are on the clinic website. '
                 'This app keeps nothing medical on the phone.',
           ),
           const SizedBox(height: 12),

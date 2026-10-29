@@ -17,8 +17,19 @@ import 'portal/screens/treatments_screen.dart';
 import 'portal/widgets/shell/patient_shell.dart';
 import 'staff/screens/appointment_detail_screen.dart';
 import 'staff/screens/approvals_screen.dart';
+import 'staff/screens/book_screen.dart';
+import 'staff/screens/calendar_screen.dart';
 import 'staff/screens/clock_screen.dart';
+import 'staff/screens/dispensations_screen.dart';
+import 'staff/screens/dispense_screen.dart';
+import 'staff/screens/leaves_screen.dart';
 import 'staff/screens/more_screen.dart';
+import 'staff/screens/new_leave_screen.dart';
+import 'staff/screens/order_detail_screen.dart';
+import 'staff/screens/orders_screen.dart';
+import 'staff/screens/patient_detail_screen.dart';
+import 'staff/screens/patients_screen.dart';
+import 'staff/screens/pharmacy_queue_screen.dart';
 import 'staff/screens/scan_screen.dart';
 import 'staff/screens/sessions_screen.dart';
 import 'staff/screens/today_screen.dart';
@@ -29,12 +40,12 @@ import 'staff/widgets/shell/staff_shell.dart';
 String homeFor(User? user) => (user?.isPatient ?? false) ? PortalPaths.home : StaffPaths.today;
 
 /// One app, two experiences: after sign-in the account type picks the patient or the staff screens, as on the web.
-/// Patients never reach staff paths and staff never reach patient paths; staff tabs also follow their rights.
-/// (Hiding is a convenience — the server checks every request.)
+/// Patients never reach staff paths and staff never reach patient paths; staff tabs and pages also follow their
+/// rights. (Hiding is a convenience — the server checks every request.)
 String? areaRedirect(User user, String path, bool Function(String expression) can) {
   if (path == '/') return homeFor(user);
   if (user.isPatient ? StaffPaths.owns(path) : PortalPaths.owns(path)) return homeFor(user);
-  if (!user.isPatient && StaffPaths.owns(path) && !can(StaffTab.of(path).access)) return StaffPaths.today;
+  if (!user.isPatient && StaffPaths.owns(path) && !can(StaffPaths.accessFor(path))) return StaffPaths.today;
   return null;
 }
 
@@ -89,6 +100,29 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, state) => AppointmentDetailScreen(id: state.pathParameters['id']!),
       ),
       page(StaffPaths.clock, const ClockScreen()),
+      page(StaffPaths.patients, const PatientsScreen()),
+      GoRoute(
+        path: StaffPaths.patientPattern,
+        builder: (_, state) => PatientDetailScreen(id: state.pathParameters['id']!),
+      ),
+      page(StaffPaths.calendar, const CalendarScreen()),
+      GoRoute(
+        path: StaffPaths.book,
+        builder: (_, state) => BookScreen(patientId: state.uri.queryParameters['patient']),
+      ),
+      page(StaffPaths.orders, const OrdersScreen()),
+      GoRoute(
+        path: StaffPaths.orderPattern,
+        builder: (_, state) => OrderDetailScreen(id: state.pathParameters['id']!),
+      ),
+      page(StaffPaths.dispense, const PharmacyQueueScreen()),
+      GoRoute(
+        path: StaffPaths.dispensePattern,
+        builder: (_, state) => DispenseScreen(id: state.pathParameters['id']!),
+      ),
+      page(StaffPaths.dispensations, const DispensationsScreen()),
+      page(StaffPaths.leaves, const LeavesScreen()),
+      page(StaffPaths.newLeave, const NewLeaveScreen()),
     ],
   );
   ref.onDispose(router.dispose);

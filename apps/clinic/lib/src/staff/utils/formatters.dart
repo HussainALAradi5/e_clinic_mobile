@@ -9,6 +9,12 @@ String formatMinutes(int minutes) {
   return m == 0 ? '$h h' : '$h h $m min';
 }
 
+/// A medicine quantity as people write it: `2`, `2.5`, `0.25` (no trailing zeros).
+String formatQuantity(num quantity) {
+  if (quantity == quantity.roundToDouble()) return '${quantity.round()}';
+  return quantity.toStringAsFixed(2).replaceFirst(RegExp(r'0+$'), '');
+}
+
 /// `2 days, 3 Nov 2026 – 4 Nov 2026` (half days as `2.5 days`).
 String leaveDaysLabel(LeaveRequest leave) {
   final days = double.tryParse(leave.totalDays);

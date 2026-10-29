@@ -7,6 +7,7 @@ import 'billing/refund_repository.dart';
 import 'clinic/appointment_repository.dart';
 import 'clinic/clinical_order_repository.dart';
 import 'clinic/doctor_repository.dart';
+import 'clinic/patient_repository.dart';
 import 'clinic/portal_repository.dart';
 import 'clinic/treatment_repository.dart';
 import 'finance/expense_repository.dart';
@@ -17,6 +18,7 @@ import 'identity/auth_repository.dart';
 import 'identity/code_repository.dart';
 import 'identity/meta_repository.dart';
 import 'identity/notification_repository.dart';
+import 'pharmacy/dispensation_repository.dart';
 import 'pharmacy/prescription_repository.dart';
 
 final authRepositoryProvider = Provider((ref) => AuthRepository(ref.watch(apiClientProvider)));
@@ -34,6 +36,8 @@ final codeRepositoryProvider = Provider((ref) => CodeRepository(ref.watch(apiCli
 final attendanceRepositoryProvider = Provider((ref) => AttendanceRepository(ref.watch(apiClientProvider)));
 final refundRepositoryProvider = Provider((ref) => RefundRepository(ref.watch(apiClientProvider)));
 final expenseRepositoryProvider = Provider((ref) => ExpenseRepository(ref.watch(apiClientProvider)));
+final patientRepositoryProvider = Provider((ref) => PatientRepository(ref.watch(apiClientProvider)));
+final dispensationRepositoryProvider = Provider((ref) => DispensationRepository(ref.watch(apiClientProvider)));
 final leaveRepositoryProvider = Provider((ref) => LeaveRepository(ref.watch(apiClientProvider)));
 
 /// Enum labels; falls back to humanised values while loading or offline.

@@ -2,7 +2,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../application/portal_actions.dart';
+import '../../../shared/widgets/attachment_list.dart';
 import '../../application/portal_providers.dart';
 
 class ResultDetail extends ConsumerWidget {
@@ -36,21 +36,7 @@ class ResultDetail extends ConsumerWidget {
               const SizedBox(height: 16),
               Text('Files', style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
               const SizedBox(height: 4),
-              for (final file in order.attachments)
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Icon(file.isImage ? Icons.image_outlined : Icons.picture_as_pdf_outlined),
-                  title: Text(file.originalName, maxLines: 1, overflow: TextOverflow.ellipsis),
-                  subtitle: Text(file.size),
-                  trailing: const Icon(Icons.open_in_new_rounded),
-                  onTap: () async {
-                    try {
-                      await PortalActions.openFile(ref, file);
-                    } catch (error) {
-                      if (context.mounted) AppSnack.error(context, error);
-                    }
-                  },
-                ),
+              AttachmentList(files: order.attachments),
             ],
           ],
         ),

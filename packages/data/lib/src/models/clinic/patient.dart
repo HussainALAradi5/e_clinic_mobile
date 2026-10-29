@@ -33,7 +33,8 @@ abstract class Person with _$Person {
   factory Person.fromJson(Map<String, dynamic> json) => _$PersonFromJson(json);
 }
 
-/// Mirror of PatientResource as the portal returns it (no medical fields).
+/// Mirror of PatientResource. Medical fields come only with `patients.view_medical` (never in the portal);
+/// staff notes are never sent to the patient themself.
 @freezed
 abstract class Patient with _$Patient {
   const factory Patient({
@@ -53,6 +54,11 @@ abstract class Patient with _$Patient {
     String? insurancePolicyNumber,
     String? insuranceExpiryDate,
     String? insuranceCoveragePercent,
+    String? bloodGroup,
+    String? allergies,
+    String? chronicConditions,
+    String? notes,
+    bool? hasPortalAccount,
     required int version,
   }) = _Patient;
 

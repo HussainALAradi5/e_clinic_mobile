@@ -40,7 +40,7 @@ enum VisitStage {
 }
 
 /// Cancelled and moved bookings never show on a day's schedule.
-const _offSchedule = [AppointmentStatus.cancelled, AppointmentStatus.rescheduled];
+const offSchedule = [AppointmentStatus.cancelled, AppointmentStatus.rescheduled];
 
 /// Only my own bookings. Starts on for people who treat patients; front desk staff start with the whole clinic.
 /// (Accounts that can only read their own bookings get just those from the server either way.)
@@ -77,7 +77,7 @@ final todayScheduleProvider = FutureProvider.autoDispose<List<Appointment>>((ref
   final repository = ref.watch(appointmentRepositoryProvider);
   final filter = AllOf([
     Where.eq('scheduledDate', ClinicClock.today()),
-    const Where.noneOf('status', _offSchedule),
+    const Where.noneOf('status', offSchedule),
     // A staff account and its employee record share one id, so the provider is "me".
     if (mine && me != null) Where.eq('providerId', me),
   ]);
@@ -107,7 +107,7 @@ final sessionsProvider = FutureProvider.autoDispose<List<Appointment>>((ref) {
   final filter = AllOf([
     Where.eq('scheduledDate', day),
     const Where.eq('type', AppointmentType.treatmentSession),
-    const Where.noneOf('status', _offSchedule),
+    const Where.noneOf('status', offSchedule),
     if (me != null) Where.eq('providerId', me),
   ]);
   return _allPages(
@@ -132,7 +132,7 @@ final patientTodayProvider = FutureProvider.autoDispose.family<List<Appointment>
           perPage: 20,
           sort: const ['startTime'],
           search: code,
-          filter: AllOf([Where.eq('scheduledDate', ClinicClock.today()), const Where.noneOf('status', _offSchedule)]),
+          filter: AllOf([Where.eq('scheduledDate', ClinicClock.today()), const Where.noneOf('status', offSchedule)]),
         ),
       );
   return page.items;
