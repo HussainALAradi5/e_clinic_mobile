@@ -13,3 +13,6 @@ pubspec_overrides.yaml
 apps/*/android/local.properties
 apps/*/ios/Flutter/Generated.xcconfig
 apps/*/ios/Flutter/flutter_export_environment.sh
+
+# Kotlin build cache (Android)
+**/android/.kotlin/
