@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../application/support_providers.dart';
 import '../staff_paths.dart';
 
 /// `/more` — who is signed in, the work pages the role may open, password & security, sign out.
@@ -16,6 +17,7 @@ class MoreScreen extends ConsumerWidget {
     final session = ref.watch(sessionProvider).value;
     final user = session?.user;
     final access = ref.watch(accessProvider);
+    final unread = ref.watch(staffUnreadProvider).value ?? 0;
     return Scaffold(
       appBar: AppBar(title: const Text('More')),
       body: ListView(
@@ -28,7 +30,12 @@ class MoreScreen extends ConsumerWidget {
             LinkGroup(
               links: [
                 for (final page in pages)
-                  LinkTile(icon: page.icon, label: page.label, onTap: () => context.push(page.path)),
+                  LinkTile(
+                    icon: page.icon,
+                    label: page.label,
+                    subtitle: page == StaffPage.inbox && unread > 0 ? '$unread unread' : null,
+                    onTap: () => context.push(page.path),
+                  ),
               ],
             ),
             const SizedBox(height: 16),

@@ -22,9 +22,11 @@ import 'staff/screens/calendar_screen.dart';
 import 'staff/screens/clock_screen.dart';
 import 'staff/screens/dispensations_screen.dart';
 import 'staff/screens/dispense_screen.dart';
+import 'staff/screens/inbox_screen.dart';
 import 'staff/screens/leaves_screen.dart';
 import 'staff/screens/more_screen.dart';
 import 'staff/screens/new_leave_screen.dart';
+import 'staff/screens/new_ticket_screen.dart';
 import 'staff/screens/order_detail_screen.dart';
 import 'staff/screens/orders_screen.dart';
 import 'staff/screens/patient_detail_screen.dart';
@@ -32,6 +34,8 @@ import 'staff/screens/patients_screen.dart';
 import 'staff/screens/pharmacy_queue_screen.dart';
 import 'staff/screens/scan_screen.dart';
 import 'staff/screens/sessions_screen.dart';
+import 'staff/screens/ticket_detail_screen.dart';
+import 'staff/screens/tickets_screen.dart';
 import 'staff/screens/today_screen.dart';
 import 'staff/staff_paths.dart';
 import 'staff/widgets/shell/staff_shell.dart';
@@ -123,6 +127,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       page(StaffPaths.dispensations, const DispensationsScreen()),
       page(StaffPaths.leaves, const LeavesScreen()),
       page(StaffPaths.newLeave, const NewLeaveScreen()),
+      page(StaffPaths.inbox, const InboxScreen()),
+      page(StaffPaths.tickets, const TicketsScreen()),
+      // `new` before `:id`, so it is not read as a ticket id.
+      page(StaffPaths.newTicket, const NewTicketScreen()),
+      GoRoute(
+        path: StaffPaths.ticketPattern,
+        builder: (_, state) => TicketDetailScreen(id: state.pathParameters['id']!),
+      ),
     ],
   );
   ref.onDispose(router.dispose);

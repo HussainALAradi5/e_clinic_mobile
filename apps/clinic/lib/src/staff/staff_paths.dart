@@ -23,6 +23,10 @@ abstract final class StaffPaths {
   static const dispensations = '/pharmacy/dispensing';
   static const leaves = '/hr/leaves';
   static const newLeave = '/hr/leaves/new';
+  static const inbox = '/inbox';
+  static const tickets = '/support/tickets';
+  static const newTicket = '/support/tickets/new';
+  static const ticketPattern = '/support/tickets/:id';
 
   static String appointment(String id) => '/clinic/appointments/$id';
 
@@ -34,7 +38,20 @@ abstract final class StaffPaths {
 
   static String dispenseFor(String prescriptionId) => '$dispense/$prescriptionId';
 
-  static const _roots = [today, scan, approvals, more, '/clinic', '/hr', '/pharmacy'];
+  static String ticket(String id) => '$tickets/$id';
+
+  /// The staff page a notification opens, by its related record (null when the app has no page for it).
+  static String? forNotification(String? type, String? id) => switch ((type, id)) {
+    ('support_ticket', final String id) => ticket(id),
+    ('appointment', final String id) => appointment(id),
+    ('clinical_order', final String id) => order(id),
+    ('patient', final String id) => patient(id),
+    ('leave_request', _) => leaves,
+    ('attendance', _) => clock,
+    _ => null,
+  };
+
+  static const _roots = [today, scan, approvals, more, inbox, '/clinic', '/hr', '/pharmacy', '/support'];
 
   /// The path is part of the staff area.
   static bool owns(String path) => _roots.any((root) => _under(path, root));
@@ -44,6 +61,7 @@ abstract final class StaffPaths {
   static final _guards = <(String, String)>[
     (book, 'appointments.create'),
     (newLeave, 'leaves.create & leaves.request'),
+    (newTicket, 'tickets.create'),
     ('/clinic/appointments', 'appointments.read_all | appointments.read_own'),
     for (final page in StaffPage.values) (page.path, page.access),
   ];
@@ -109,6 +127,8 @@ enum StaffTab {
 
 /// Work pages linked from More, in menu order; a link shows only when the user holds its permission expression.
 enum StaffPage {
+  inbox(StaffPaths.inbox, 'Notifications', Icons.notifications_outlined, Access.authenticated),
+  tickets(StaffPaths.tickets, 'Support tickets', Icons.support_agent_rounded, 'tickets.read_own | tickets.read_all'),
   patients(StaffPaths.patients, 'Patient files', Icons.folder_shared_outlined, 'patients.read_all | patients.read_own'),
   calendar(
     StaffPaths.calendar,

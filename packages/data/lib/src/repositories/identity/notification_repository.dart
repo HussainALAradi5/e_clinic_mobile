@@ -2,17 +2,26 @@ import 'package:e_clinic_core/core.dart';
 
 import '../../models/identity/app_notification.dart';
 
+/// Which notifications the inbox shows.
+enum InboxRead { all, unread, read }
+
 /// The signed-in user's in-app inbox and push devices.
 class NotificationRepository {
   const NotificationRepository(this._api);
 
   final ApiClient _api;
 
+  /// Unread first; filters, search and paging on the server. [read] narrows to `unread` or `read` ones;
   /// `meta.unreadCount` carries the badge number.
-  Future<Paged<AppNotification>> inbox(ListQuery query, {bool unreadOnly = false}) =>
-      _api.list('notifications/mine', query, AppNotification.fromJson, extra: {if (unreadOnly) 'unread': 1});
+  Future<Paged<AppNotification>> inbox(ListQuery query, {InboxRead read = InboxRead.all}) => _api.list(
+    'notifications/mine',
+    query,
+    AppNotification.fromJson,
+    extra: {if (read != InboxRead.all) 'read': read.name},
+  );
 
-  Future<int> unreadCount() async => (await inbox(const ListQuery(perPage: 1), unreadOnly: true)).meta.unreadCount ?? 0;
+  Future<int> unreadCount() async =>
+      (await inbox(const ListQuery(perPage: 1), read: InboxRead.unread)).meta.unreadCount ?? 0;
 
   Future<AppNotification> markRead(String id) =>
       _api.patch('notifications/$id/read', objectOf(AppNotification.fromJson));

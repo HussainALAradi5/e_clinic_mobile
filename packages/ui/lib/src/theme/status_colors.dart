@@ -126,18 +126,6 @@ abstract final class StatusColors {
       'expiry_writeoff': StatusTone.red,
     },
     'UserStatus': {'active': StatusTone.green, 'locked': StatusTone.red},
-    'TicketStatus': {
-      'open': StatusTone.blue,
-      'in_progress': StatusTone.amber,
-      'resolved': StatusTone.green,
-      'closed': StatusTone.grey,
-    },
-    'TicketPriority': {
-      'low': StatusTone.grey,
-      'normal': StatusTone.blue,
-      'high': StatusTone.amber,
-      'urgent': StatusTone.red,
-    },
     'TicketCategory': {
       'technical': StatusTone.indigo,
       'access': StatusTone.purple,

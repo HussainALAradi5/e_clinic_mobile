@@ -61,10 +61,25 @@ void main() {
 
     test('More lists only the pages the role may open', () {
       final pharmacist = _access({'dispensing.create', 'dispensing.dispense', 'dispensing.read_all'});
-      expect(StaffPage.visible(pharmacist), [StaffPage.dispense, StaffPage.dispensations]);
+      expect(StaffPage.visible(pharmacist), [StaffPage.inbox, StaffPage.dispense, StaffPage.dispensations]);
 
-      final nurse = _access({'patients.read_own', 'leaves.read_own', 'attendance.self'});
-      expect(StaffPage.visible(nurse), [StaffPage.patients, StaffPage.leaves, StaffPage.clock]);
+      final nurse = _access({'patients.read_own', 'leaves.read_own', 'attendance.self', 'tickets.read_own'});
+      expect(StaffPage.visible(nurse), [
+        StaffPage.inbox,
+        StaffPage.tickets,
+        StaffPage.patients,
+        StaffPage.leaves,
+        StaffPage.clock,
+      ]);
+    });
+
+    test('opening a ticket needs tickets.create; a notification opens its record', () {
+      expect(StaffPaths.accessFor(StaffPaths.newTicket), 'tickets.create');
+      expect(StaffPaths.accessFor(StaffPaths.ticket('t1')), 'tickets.read_own | tickets.read_all');
+      expect(StaffPaths.forNotification('support_ticket', 't1'), '/support/tickets/t1');
+      expect(StaffPaths.forNotification('appointment', 'a1'), '/clinic/appointments/a1');
+      expect(StaffPaths.forNotification('conversation', 'c1'), isNull);
+      expect(StaffPaths.forNotification(null, null), isNull);
     });
   });
 
