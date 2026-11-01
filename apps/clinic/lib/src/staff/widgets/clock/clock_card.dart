@@ -54,7 +54,11 @@ class _ClockBody extends ConsumerWidget {
     final String detail;
     if (row == null || notIn) {
       title = 'Not checked in';
-      detail = shift.start == null ? 'Check in when you arrive.' : 'Your shift starts at ${shift.start}.';
+      detail = shift.start == null
+          ? 'Check in when you arrive.'
+          : shift.flexible
+          ? '${shift.name}: arrive by ${shift.start}.'
+          : '${shift.name ?? 'Your shift'} starts at ${shift.start}.';
     } else if (working) {
       title = 'Checked in at ${_time(row.checkInAt)}';
       detail = [
@@ -75,8 +79,14 @@ class _ClockBody extends ConsumerWidget {
         icon: Icons.login_rounded,
         expand: true,
         onPressed: () async {
-          ref.read(todayClockProvider.notifier).replace(await repository.checkIn(position: await clockPosition()));
-          if (context.mounted) AppSnack.success(context, 'Checked in. Have a good shift.');
+          final row = await repository.checkIn(position: await clockPosition());
+          ref.read(todayClockProvider.notifier).replace(row);
+          final late = row.lateMinutes;
+          if (context.mounted) {
+            late > 0
+                ? AppSnack.info(context, 'Checked in — ${formatMinutes(late)} late for ${shift.name ?? 'your shift'}.')
+                : AppSnack.success(context, 'Checked in on time. Have a good shift.');
+          }
         },
       ),
       (_, true) => AppButton(
@@ -90,8 +100,17 @@ class _ClockBody extends ConsumerWidget {
           confirmLabel: 'Check out',
         ),
         onPressed: () async {
-          ref.read(todayClockProvider.notifier).replace(await repository.checkOut(position: await clockPosition()));
-          if (context.mounted) AppSnack.success(context, 'Checked out. See you next time.');
+          final row = await repository.checkOut(position: await clockPosition());
+          ref.read(todayClockProvider.notifier).replace(row);
+          final overtime = row.overtimeMinutes;
+          if (context.mounted) {
+            AppSnack.success(
+              context,
+              overtime > 0
+                  ? 'Checked out — ${formatMinutes(overtime)} overtime, sent for approval.'
+                  : 'Checked out. See you next time.',
+            );
+          }
         },
       ),
       _ => null,
@@ -172,7 +191,7 @@ class _ClockBody extends ConsumerWidget {
                             '${row.overtimeApproved ?? false ? ' (approved)' : ' (waiting for approval)'}'
                       : null,
                 ),
-                (label: 'Shift', value: shift.start == null ? null : '${shift.start} – ${shift.end ?? ''}'),
+                (label: 'Shift', value: shift.label),
               ],
             ),
           ),
