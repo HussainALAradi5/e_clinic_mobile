@@ -376,7 +376,7 @@ class _AskCard extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: AppButton(label: 'Yes, it works', icon: Icons.thumb_up_alt_rounded, onPressed: onConfirm),
+                child: AppButton(label: 'It works', icon: Icons.thumb_up_alt_rounded, onPressed: onConfirm),
               ),
             ],
           ),

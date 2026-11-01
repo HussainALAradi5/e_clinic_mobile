@@ -51,12 +51,18 @@ Taken on a real Android phone (debug build; release builds block screenshots wit
 | Appearance switch | <img src="light/34-appearance-switch.png" width="220"> | <img src="dark/34-appearance-switch.png" width="220"> |
 | Clock | <img src="light/35-clock.png" width="220"> | <img src="dark/35-clock.png" width="220"> |
 
-## Nurse
+## Nurse — support tickets and notifications
 
 | Screen | Light | Dark |
 |---|---|---|
 | Nurse today | <img src="light/40-nurse-today.png" width="220"> | <img src="dark/40-nurse-today.png" width="220"> |
 | Nurse sessions | <img src="light/41-nurse-sessions.png" width="220"> | <img src="dark/41-nurse-sessions.png" width="220"> |
+| Nurse confirmed | <img src="light/nurse-confirmed.png" width="220"> | <img src="dark/nurse-confirmed.png" width="220"> |
+| Nurse decline sheet | <img src="light/nurse-decline-sheet.png" width="220"> | <img src="dark/nurse-decline-sheet.png" width="220"> |
+| Nurse declined | <img src="light/nurse-declined.png" width="220"> | <img src="dark/nurse-declined.png" width="220"> |
+| Nurse did this fix it | <img src="light/nurse-did-this-fix-it.png" width="220"> | <img src="dark/nurse-did-this-fix-it.png" width="220"> |
+| Nurse my tickets solved | <img src="light/nurse-my-tickets-solved.png" width="220"> | <img src="dark/nurse-my-tickets-solved.png" width="220"> |
+| Nurse notifications resolved | <img src="light/nurse-notifications-resolved.png" width="220"> | <img src="dark/nurse-notifications-resolved.png" width="220"> |
 
 ## Patient
 
@@ -76,6 +82,8 @@ Taken on a real Android phone (debug build; release builds block screenshots wit
 | Admin notifications page2 | <img src="light/admin-notifications-page2.png" width="220"> | <img src="dark/admin-notifications-page2.png" width="220"> |
 | Admin notifications support | <img src="light/admin-notifications-support.png" width="220"> | <img src="dark/admin-notifications-support.png" width="220"> |
 | Admin solve steps sheet | <img src="light/admin-solve-steps-sheet.png" width="220"> | <img src="dark/admin-solve-steps-sheet.png" width="220"> |
+| Admin solve with solution | <img src="light/admin-solve-with-solution.png" width="220"> | <img src="dark/admin-solve-with-solution.png" width="220"> |
+| Admin solved awaiting | <img src="light/admin-solved-awaiting.png" width="220"> | <img src="dark/admin-solved-awaiting.png" width="220"> |
 | Admin ticket desk urgent | <img src="light/admin-ticket-desk-urgent.png" width="220"> | <img src="dark/admin-ticket-desk-urgent.png" width="220"> |
 | Admin ticket desk | <img src="light/admin-ticket-desk.png" width="220"> | <img src="dark/admin-ticket-desk.png" width="220"> |
 | Admin ticket pending | <img src="light/admin-ticket-pending.png" width="220"> | <img src="dark/admin-ticket-pending.png" width="220"> |

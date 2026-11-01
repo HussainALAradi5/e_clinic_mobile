@@ -85,12 +85,11 @@ class _TicketsScreenState extends ConsumerState<TicketsScreen> {
               label: const Text('New ticket'),
             )
           : null,
-      body: RefreshIndicator(
-        onRefresh: () async => setState(() => _version++),
-        child: InfiniteList<SupportTicket>(
-          reloadKey: (_status, _priority, _search, _version),
-          load: _load,
-          header: Column(
+      // The filters live above the list (not in its header), so the search field keeps its text and focus
+      // while the list reloads.
+      body: Column(
+        children: [
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
@@ -121,16 +120,25 @@ class _TicketsScreenState extends ConsumerState<TicketsScreen> {
                 ),
             ],
           ),
-          empty: EmptyState(
-            icon: Icons.support_agent_rounded,
-            title: 'No tickets here',
-            message: desk ? 'Nothing matches these filters.' : 'Report a problem with “New ticket”.',
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async => setState(() => _version++),
+              child: InfiniteList<SupportTicket>(
+                reloadKey: (_status, _priority, _search, _version),
+                load: _load,
+                empty: EmptyState(
+                  icon: Icons.support_agent_rounded,
+                  title: 'No tickets here',
+                  message: desk ? 'Nothing matches these filters.' : 'Report a problem with “New ticket”.',
+                ),
+                itemBuilder: (context, ticket, _) => Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+                  child: _TicketCard(ticket: ticket, showRequester: desk),
+                ),
+              ),
+            ),
           ),
-          itemBuilder: (context, ticket, _) => Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-            child: _TicketCard(ticket: ticket, showRequester: desk),
-          ),
-        ),
+        ],
       ),
     );
   }

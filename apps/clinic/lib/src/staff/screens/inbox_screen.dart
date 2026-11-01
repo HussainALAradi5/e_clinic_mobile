@@ -77,12 +77,11 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
           const SizedBox(width: 8),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () async => setState(() => _version++),
-        child: InfiniteList<AppNotification>(
-          reloadKey: _reloadKey,
-          load: _load,
-          header: Column(
+      // The filters live above the list (not in its header), so the search field keeps its text and focus
+      // while the list reloads.
+      body: Column(
+        children: [
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
@@ -117,18 +116,27 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
                 ),
             ],
           ),
-          empty: EmptyState(
-            icon: Icons.notifications_off_outlined,
-            title: _read == InboxRead.all && _topic == null && _search.isEmpty
-                ? 'No notifications yet'
-                : 'Nothing matches these filters',
-            message: 'Ticket updates, bookings and other news land here.',
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async => setState(() => _version++),
+              child: InfiniteList<AppNotification>(
+                reloadKey: _reloadKey,
+                load: _load,
+                empty: EmptyState(
+                  icon: Icons.notifications_off_outlined,
+                  title: _read == InboxRead.all && _topic == null && _search.isEmpty
+                      ? 'No notifications yet'
+                      : 'Nothing matches these filters',
+                  message: 'Ticket updates, bookings and other news land here.',
+                ),
+                itemBuilder: (context, item, replace) => Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: _NotificationCard(item: item, onTap: () => _open(item, replace)),
+                ),
+              ),
+            ),
           ),
-          itemBuilder: (context, item, replace) => Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-            child: _NotificationCard(item: item, onTap: () => _open(item, replace)),
-          ),
-        ),
+        ],
       ),
     );
   }
