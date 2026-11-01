@@ -57,6 +57,8 @@ Taken on a real Android phone (debug build; release builds block screenshots wit
 |---|---|---|
 | Nurse today | <img src="light/40-nurse-today.png" width="220"> | <img src="dark/40-nurse-today.png" width="220"> |
 | Nurse sessions | <img src="light/41-nurse-sessions.png" width="220"> | <img src="dark/41-nurse-sessions.png" width="220"> |
+| Tickets coloured filters | <img src="light/45-tickets-coloured-filters.png" width="220"> | <img src="dark/45-tickets-coloured-filters.png" width="220"> |
+| New ticket coloured choices | <img src="light/46-new-ticket-coloured-choices.png" width="220"> | <img src="dark/46-new-ticket-coloured-choices.png" width="220"> |
 | Nurse confirmed | <img src="light/nurse-confirmed.png" width="220"> | <img src="dark/nurse-confirmed.png" width="220"> |
 | Nurse decline sheet | <img src="light/nurse-decline-sheet.png" width="220"> | <img src="dark/nurse-decline-sheet.png" width="220"> |
 | Nurse declined | <img src="light/nurse-declined.png" width="220"> | <img src="dark/nurse-declined.png" width="220"> |

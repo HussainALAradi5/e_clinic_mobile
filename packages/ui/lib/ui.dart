@@ -22,6 +22,7 @@ export 'src/widgets/feedback/skeleton_list.dart';
 export 'src/widgets/inputs/chip_bar.dart';
 export 'src/widgets/inputs/password_fields.dart';
 export 'src/widgets/inputs/search_field.dart';
+export 'src/widgets/inputs/tone_chip.dart';
 export 'src/widgets/layout/bottom_bar.dart';
 export 'src/widgets/layout/fact_list.dart';
 export 'src/widgets/layout/greeting_header.dart';

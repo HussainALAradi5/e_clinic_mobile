@@ -100,6 +100,14 @@ class _TicketsScreenState extends ConsumerState<TicketsScreen> {
                 options: [for (final s in _StatusFilter.values) (value: s, label: s.label, count: null)],
                 selected: _status,
                 onSelected: (v) => setState(() => _status = v),
+                // A single status wears its badge colour; All / Open stay neutral.
+                tone: (s) => s.statuses.length == 1
+                    ? StatusColors.tone(
+                        'GenericStatus',
+                        wireValue(s.statuses.single),
+                        order: catalog.values('GenericStatus'),
+                      )
+                    : null,
               ),
               const SizedBox(height: 8),
               ChipBar<String?>(
@@ -109,6 +117,7 @@ class _TicketsScreenState extends ConsumerState<TicketsScreen> {
                 ],
                 selected: _priority,
                 onSelected: (v) => setState(() => _priority = v),
+                tone: (p) => p == null ? null : StatusColors.tone('TreatmentPriority', p),
               ),
               if (_total != null)
                 Padding(

@@ -80,10 +80,11 @@ class _NewTicketScreenState extends ConsumerState<NewTicketScreen> {
       runSpacing: 4,
       children: [
         for (final v in values)
-          ChoiceChip(
-            label: Text(catalog.label(enumName, v)),
+          ToneChip(
+            label: catalog.label(enumName, v),
             selected: v == selected,
-            onSelected: (_) => onSelected(v),
+            onSelected: () => onSelected(v),
+            tone: StatusColors.tone(enumName, v, order: catalog.values(enumName)),
           ),
       ],
     );

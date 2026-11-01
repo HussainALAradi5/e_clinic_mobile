@@ -139,6 +139,7 @@ class _BookScreenState extends ConsumerState<BookScreen> {
           ChipBar<AppointmentType>(
             options: [for (final t in _types) (value: t, label: catalog.label('AppointmentType', t), count: null)],
             selected: _type,
+            tone: (t) => StatusColors.tone('AppointmentType', wireValue(t)),
             onSelected: (t) => setState(() {
               _type = t;
               _reset(provider: true);
