@@ -27,6 +27,8 @@ class PatientFacts extends StatelessWidget {
       facts: [
         (label: 'Blood group', value: p.bloodGroup == 'unknown' ? null : p.bloodGroup),
         (label: 'Chronic conditions', value: p.chronicConditions),
+        (label: 'Family history', value: p.familyHistory),
+        (label: 'Surgical history', value: p.surgicalHistory),
         (label: 'Date of birth', value: ClinicClock.date(p.dateOfBirth)),
         (label: 'ID number', value: p.person.nationalId),
         (label: 'Email', value: p.email),

@@ -1,3 +1,4 @@
+import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_features/features.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import '../application/patient_providers.dart';
 import '../staff_paths.dart';
 import '../widgets/appointments/appointment_card.dart';
 import '../widgets/patients/medical_alert_card.dart';
+import '../widgets/patients/medical_history_sheet.dart';
 import '../widgets/patients/patient_facts.dart';
 import '../widgets/patients/patient_timeline.dart';
 
@@ -24,7 +26,28 @@ class PatientDetailScreen extends ConsumerWidget {
     final access = ref.watch(accessProvider);
     final canBook = access.can('appointments.create');
     return Scaffold(
-      appBar: AppBar(title: Text(file.value?.code ?? 'Patient file')),
+      appBar: AppBar(
+        title: Text(file.value?.code ?? 'Patient file'),
+        actions: [
+          if (file.value != null && access.can('records.write & patients.view_medical'))
+            IconButton(
+              tooltip: 'Medical history',
+              icon: const Icon(Icons.medical_information_outlined),
+              onPressed: () async {
+                final saved = await showModalBottomSheet<Patient>(
+                  context: context,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  builder: (_) => MedicalHistorySheet(patient: file.value!),
+                );
+                if (saved != null) {
+                  ref.invalidate(patientProvider(id));
+                  if (context.mounted) AppSnack.success(context, 'Medical history saved.');
+                }
+              },
+            ),
+        ],
+      ),
       body: AsyncBody(
         value: file,
         onRetry: () => ref.invalidate(patientProvider(id)),

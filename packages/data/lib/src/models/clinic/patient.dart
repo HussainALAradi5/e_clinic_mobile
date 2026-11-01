@@ -57,10 +57,27 @@ abstract class Patient with _$Patient {
     String? bloodGroup,
     String? allergies,
     String? chronicConditions,
+    String? familyHistory,
+    String? surgicalHistory,
     String? notes,
     bool? hasPortalAccount,
     required int version,
   }) = _Patient;
 
   factory Patient.fromJson(Map<String, dynamic> json) => _$PatientFromJson(json);
+}
+
+/// GET /patients/lookup — who a patient is (no medical data) and whether their file is already open to me.
+@freezed
+abstract class PatientLookup with _$PatientLookup {
+  const factory PatientLookup({
+    required String id,
+    required String code,
+    required String fullName,
+    required String gender,
+    required int age,
+    @Default(false) bool inCare,
+  }) = _PatientLookup;
+
+  factory PatientLookup.fromJson(Map<String, dynamic> json) => _$PatientLookupFromJson(json);
 }
