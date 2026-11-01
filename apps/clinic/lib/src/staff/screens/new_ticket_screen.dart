@@ -1,8 +1,12 @@
+import 'package:e_clinic_core/core.dart';
 import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../../shared/widgets/attach_photo_button.dart';
 
 /// `/support/tickets/new` — report a problem: subject, category, priority and what happened. Closes with the new
 /// ticket; the support team is told right away.
@@ -22,6 +26,8 @@ class _NewTicketScreenState extends ConsumerState<NewTicketScreen> {
   final _description = TextEditingController();
   var _category = 'technical';
   var _priority = 'medium';
+  var _tried = false;
+  final _photos = <XFile>[];
 
   @override
   void dispose() {
@@ -31,7 +37,11 @@ class _NewTicketScreenState extends ConsumerState<NewTicketScreen> {
   }
 
   Future<void> _submit() async {
-    if (!(_form.currentState?.validate() ?? false)) return;
+    if (!(_form.currentState?.validate() ?? false)) {
+      // Show the errors as the fields change from now on; the button unlocks for another try.
+      setState(() => _tried = true);
+      throw const ActionCancelled();
+    }
     final ticket = await ref
         .read(ticketRepositoryProvider)
         .open(
@@ -40,6 +50,21 @@ class _NewTicketScreenState extends ConsumerState<NewTicketScreen> {
           category: _category,
           priority: _priority,
         );
+    if (_photos.isNotEmpty) {
+      try {
+        await ref
+            .read(attachmentRepositoryProvider)
+            .upload(
+              ownerType: 'support_ticket',
+              ownerId: ticket.id,
+              category: AttachmentCategory.ticketAttachment,
+              files: [for (final p in _photos) (path: p.path, name: p.name)],
+            );
+      } on ApiException catch (e) {
+        // The ticket is open either way; photos can be added on its page.
+        if (mounted) AppSnack.error(context, e);
+      }
+    }
     if (mounted) {
       AppSnack.success(context, '${ticket.code} opened — the support team is told.');
       context.pop(ticket);
@@ -66,6 +91,7 @@ class _NewTicketScreenState extends ConsumerState<NewTicketScreen> {
       appBar: AppBar(title: const Text('New support ticket')),
       body: Form(
         key: _form,
+        autovalidateMode: _tried ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
           children: [
@@ -102,6 +128,29 @@ class _NewTicketScreenState extends ConsumerState<NewTicketScreen> {
                 alignLabelWithHint: true,
               ),
               validator: (v) => (v?.trim().length ?? 0) < 10 ? 'At least 10 characters.' : null,
+            ),
+            const SizedBox(height: 4),
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                for (final photo in _photos)
+                  InputChip(
+                    avatar: const Icon(Icons.image_outlined, size: 18),
+                    label: Text(photo.name, overflow: TextOverflow.ellipsis),
+                    onDeleted: () => setState(() => _photos.remove(photo)),
+                  ),
+                if (_photos.length < 5)
+                  TextButton.icon(
+                    onPressed: () async {
+                      final photo = await pickPhoto(context);
+                      if (photo != null) setState(() => _photos.add(photo));
+                    },
+                    icon: const Icon(Icons.add_a_photo_outlined),
+                    label: Text(_photos.isEmpty ? 'Add a photo or screenshot' : 'Add another'),
+                  ),
+              ],
             ),
             const SizedBox(height: 8),
             AppButton(

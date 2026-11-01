@@ -30,10 +30,18 @@ class TicketRepository {
   Future<TicketComment> comment(String id, String body) =>
       _api.post('$_path/$id/comments', objectOf(TicketComment.fromJson), body: {'body': body});
 
-  /// Admins only; [resolution] is required to mark it solved (completed).
-  Future<SupportTicket> setStatus(SupportTicket ticket, GenericStatus to, {String? resolution}) => _api.patch(
-    '$_path/${ticket.id}/status',
-    objectOf(SupportTicket.fromJson),
-    body: {'status': wireValue(to), 'resolution': ?resolution, 'version': ticket.version},
-  );
+  /// Admins only; marking it solved needs [resolution] (the solution in words), optionally with the [steps].
+  Future<SupportTicket> setStatus(SupportTicket ticket, GenericStatus to, {String? resolution, List<String>? steps}) =>
+      _api.patch(
+        '$_path/${ticket.id}/status',
+        objectOf(SupportTicket.fromJson),
+        body: {'status': wireValue(to), 'resolution': ?resolution, 'steps': ?steps, 'version': ticket.version},
+      );
+
+  /// The requester: the fix works.
+  Future<SupportTicket> confirm(String id) => _api.post('$_path/$id/confirm', objectOf(SupportTicket.fromJson));
+
+  /// The requester: still broken, and why — back to in progress.
+  Future<SupportTicket> decline(String id, String reason) =>
+      _api.post('$_path/$id/decline', objectOf(SupportTicket.fromJson), body: {'reason': reason});
 }

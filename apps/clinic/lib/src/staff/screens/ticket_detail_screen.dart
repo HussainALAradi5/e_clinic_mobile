@@ -5,7 +5,10 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../shared/widgets/attach_photo_button.dart';
+import '../../shared/widgets/attachment_list.dart';
 import '../application/support_providers.dart';
+import '../widgets/support/solve_steps_sheet.dart';
 
 /// One admin step of the ticket flow (the moves the server allows from the current status).
 typedef _Step = ({GenericStatus to, String label, IconData icon, ButtonVariant variant});
@@ -43,18 +46,10 @@ class _TicketDetailScreenState extends ConsumerState<TicketDetailScreen> {
   ].where((s) => t.allowedTransitions.contains(s.to)).toList();
 
   Future<void> _move(SupportTicket t, _Step step) async {
-    String? resolution;
+    TicketSolution? solution;
     if (step.to == GenericStatus.completed) {
-      resolution = await showReasonSheet(
-        context,
-        ConfirmConfig(
-          title: 'Mark this ticket solved?',
-          message: '${t.requester?.fullName ?? 'The requester'} is told, with what you write here.',
-          confirmLabel: 'Mark solved',
-        ),
-        label: 'What was done',
-      );
-      if (resolution == null) return;
+      solution = await showSolveStepsSheet(context, requester: t.requester?.fullName ?? 'The requester');
+      if (solution == null) return;
     } else if (step.to == GenericStatus.cancelled) {
       final ok = await showConfirmSheet(
         context,
@@ -67,9 +62,34 @@ class _TicketDetailScreenState extends ConsumerState<TicketDetailScreen> {
       );
       if (!ok) return;
     }
-    await ref.read(ticketRepositoryProvider).setStatus(t, step.to, resolution: resolution);
+    await ref
+        .read(ticketRepositoryProvider)
+        .setStatus(t, step.to, resolution: solution?.resolution, steps: solution?.steps);
     ref.invalidate(ticketProvider(widget.id));
     if (mounted) AppSnack.success(context, '${t.code}: ${step.label.toLowerCase()} — done.');
+  }
+
+  Future<void> _confirm() async {
+    await ref.read(ticketRepositoryProvider).confirm(widget.id);
+    ref.invalidate(ticketProvider(widget.id));
+    if (mounted) AppSnack.success(context, 'Thanks — the support team is told it works.');
+  }
+
+  Future<void> _decline() async {
+    final reason = await showReasonSheet(
+      context,
+      const ConfirmConfig(
+        title: 'Still not fixed?',
+        message: 'Say what still happens; the ticket goes back to the support team.',
+        confirmLabel: 'Not fixed',
+        danger: true,
+      ),
+      label: 'What still happens',
+    );
+    if (reason == null) return;
+    await ref.read(ticketRepositoryProvider).decline(widget.id, reason);
+    ref.invalidate(ticketProvider(widget.id));
+    if (mounted) AppSnack.success(context, 'Sent back to the support team.');
   }
 
   Future<void> _send() async {
@@ -84,6 +104,7 @@ class _TicketDetailScreenState extends ConsumerState<TicketDetailScreen> {
   Widget build(BuildContext context) {
     final value = ref.watch(ticketProvider(widget.id));
     final desk = ref.watch(accessProvider).can('tickets.resolve');
+    final me = ref.watch(sessionProvider).value?.user.id;
     final ticket = value.value;
     final steps = ticket == null || !desk ? const <_Step>[] : _steps(ticket);
     final theme = Theme.of(context);
@@ -106,9 +127,17 @@ class _TicketDetailScreenState extends ConsumerState<TicketDetailScreen> {
                   StatusChip(enumName: 'GenericStatus', value: t.status),
                   StatusChip(enumName: 'TreatmentPriority', value: t.priority),
                   StatusChip(enumName: 'TicketCategory', value: t.category),
+                  if (t.confirmation != null) StatusChip(enumName: 'TicketConfirmation', value: t.confirmation!),
                 ],
               ),
-              if (t.resolution != null) ...[const SizedBox(height: 12), _SolvedBanner(ticket: t)],
+              if (t.status == GenericStatus.completed && t.resolution != null) ...[
+                const SizedBox(height: 12),
+                _SolvedBanner(ticket: t),
+              ],
+              if (t.awaitsConfirmation && t.requester?.id == me) ...[
+                const SizedBox(height: 12),
+                _AskCard(onConfirm: _confirm, onDecline: _decline),
+              ],
               const SizedBox(height: 16),
               Card(
                 margin: EdgeInsets.zero,
@@ -130,6 +159,20 @@ class _TicketDetailScreenState extends ConsumerState<TicketDetailScreen> {
                   child: SelectableText(t.description, style: theme.textTheme.bodyMedium),
                 ),
               ),
+              if (t.attachments.isNotEmpty || (t.status != GenericStatus.cancelled && (desk || t.requester?.id == me)))
+                const SectionHeader('Screenshots & files'),
+              if (t.attachments.isNotEmpty) AttachmentList(files: t.attachments),
+              if (t.status != GenericStatus.cancelled && (desk || t.requester?.id == me))
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: AttachPhotoButton(
+                    ownerType: 'support_ticket',
+                    ownerId: t.id,
+                    category: AttachmentCategory.ticketAttachment,
+                    label: 'Add a photo',
+                    onUploaded: (_) => ref.invalidate(ticketProvider(widget.id)),
+                  ),
+                ),
               SectionHeader('Conversation (${t.comments.length})'),
               if (t.comments.isEmpty)
                 Text('No replies yet.', style: theme.textTheme.bodyMedium)
@@ -150,8 +193,6 @@ class _TicketDetailScreenState extends ConsumerState<TicketDetailScreen> {
                   alignment: Alignment.centerRight,
                   child: AppButton(label: 'Send', icon: Icons.send_rounded, onPressed: _send),
                 ),
-                if (!desk && t.status == GenericStatus.completed)
-                  Text('Still not working? Reply here and the ticket opens again.', style: theme.textTheme.bodySmall),
               ],
             ],
           ),
@@ -210,8 +251,20 @@ class _SolvedBanner extends StatelessWidget {
                   'Solved${ticket.resolver == null ? '' : ' by ${ticket.resolver!.fullName}'}',
                   style: TextStyle(color: fg, fontWeight: FontWeight.w700),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 4),
                 Text(ticket.resolution ?? '', style: TextStyle(color: fg)),
+                if (ticket.resolutionSteps.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    'Steps taken',
+                    style: TextStyle(color: fg, fontWeight: FontWeight.w600),
+                  ),
+                ],
+                for (final (i, step) in ticket.resolutionSteps.indexed)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text('${i + 1}. $step', style: TextStyle(color: fg)),
+                  ),
               ],
             ),
           ),
@@ -269,6 +322,65 @@ class _CommentBubble extends StatelessWidget {
             Text(comment.body, style: theme.textTheme.bodyMedium),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// "Did this fix it?" — the requester's answer to a solved ticket.
+class _AskCard extends StatelessWidget {
+  const _AskCard({required this.onConfirm, required this.onDecline});
+
+  final Future<void> Function() onConfirm;
+  final Future<void> Function() onDecline;
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final fg = dark ? const Color(0xFFFDE68A) : const Color(0xFF78350F);
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: dark ? const Color(0xFF422006) : const Color(0xFFFFFBEB),
+        border: Border.all(color: const Color(0xFFF59E0B)),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.help_rounded, color: Color(0xFFD97706)),
+              const SizedBox(width: 8),
+              Text(
+                'Did this fix it?',
+                style: TextStyle(color: fg, fontWeight: FontWeight.w700, fontSize: 16),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Try it, then tell the support team. If it still happens, say what you see.',
+            style: TextStyle(color: fg),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: AppButton(
+                  label: 'Not fixed',
+                  icon: Icons.thumb_down_alt_outlined,
+                  variant: ButtonVariant.outlined,
+                  onPressed: onDecline,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: AppButton(label: 'Yes, it works', icon: Icons.thumb_up_alt_rounded, onPressed: onConfirm),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

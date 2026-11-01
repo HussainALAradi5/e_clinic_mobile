@@ -36,28 +36,7 @@ class _AttachPhotoButtonState extends ConsumerState<AttachPhotoButton> {
   XFile? _photo;
 
   Future<bool> _pick() async {
-    final source = await showModalBottomSheet<ImageSource>(
-      context: context,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.photo_camera_outlined),
-              title: const Text('Take a photo'),
-              onTap: () => Navigator.pop(context, ImageSource.camera),
-            ),
-            ListTile(
-              leading: const Icon(Icons.photo_library_outlined),
-              title: const Text('Choose from the gallery'),
-              onTap: () => Navigator.pop(context, ImageSource.gallery),
-            ),
-          ],
-        ),
-      ),
-    );
-    if (source == null) return false;
-    _photo = await ImagePicker().pickImage(source: source, imageQuality: 85, maxWidth: 2400);
+    _photo = await pickPhoto(context);
     return _photo != null;
   }
 
@@ -92,4 +71,30 @@ class _AttachPhotoButtonState extends ConsumerState<AttachPhotoButton> {
     before: _pick,
     onPressed: _upload,
   );
+}
+
+/// Camera or gallery, then the photo (resized for upload); null when the user backs out.
+Future<XFile?> pickPhoto(BuildContext context) async {
+  final source = await showModalBottomSheet<ImageSource>(
+    context: context,
+    builder: (context) => SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.photo_camera_outlined),
+            title: const Text('Take a photo'),
+            onTap: () => Navigator.pop(context, ImageSource.camera),
+          ),
+          ListTile(
+            leading: const Icon(Icons.photo_library_outlined),
+            title: const Text('Choose from the gallery'),
+            onTap: () => Navigator.pop(context, ImageSource.gallery),
+          ),
+        ],
+      ),
+    ),
+  );
+  if (source == null) return null;
+  return ImagePicker().pickImage(source: source, imageQuality: 85, maxWidth: 2400);
 }

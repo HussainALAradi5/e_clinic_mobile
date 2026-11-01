@@ -8,6 +8,8 @@ the web client, where staff pages and the patient portal also live in one app.
 
 It talks to the same REST API as the web client, so a feature looks and behaves the same everywhere.
 
+**Screenshots:** taken on a real phone, light and dark, for each role — [docs/screenshots](docs/screenshots/README.md).
+
 ## Live demo
 
 | | Address |
@@ -80,7 +82,8 @@ checks both again on every call. Patients never reach staff screens, nor staff t
 - **Two-step sign-in set-up** from the phone: open the authenticator app (or copy the key), type the first code,
   keep the recovery codes; turn it off with the password where the role allows
 - **Biometric app lock** after time in the background (patient 5 min, staff 2 min)
-- **No screenshots** on Android (`FLAG_SECURE`): medical screens never end up in the gallery or recent-apps list
+- **No screenshots** in release builds on Android (`FLAG_SECURE`): medical screens never end up in the gallery or
+  recent-apps list (debug builds allow them, for the documentation)
 - **Deep links** `eclinic://app/<page>` (e.g. `eclinic://app/clinic/appointments/<id>`), after sign-in and unlock
 - **Offline**: staff still see today's schedule from an encrypted copy (wiped on sign-out), with actions off
 - Light and dark themes in the clinic's brand colours; coloured status badges for every enum, labelled by the server
