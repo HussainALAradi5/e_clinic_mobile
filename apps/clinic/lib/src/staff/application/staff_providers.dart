@@ -3,6 +3,8 @@ import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_features/features.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'schedule_cache.dart';
+
 /// Bumped after a check-in, start, complete or no-show, so the schedule, sessions and open bookings reload.
 class ScheduleVersion extends Notifier<int> {
   @override
@@ -69,23 +71,36 @@ Future<List<T>> _allPages<T>(Future<Paged<T>> Function(int page) load) async {
   return items;
 }
 
-/// Today's bookings in time order — visits and treatment sessions together.
-final todayScheduleProvider = FutureProvider.autoDispose<List<Appointment>>((ref) {
+/// Today's bookings, and when they come from the phone's copy because there is no connection (null = live).
+typedef TodaySchedule = ({List<Appointment> visits, DateTime? cachedAt});
+
+/// Today's bookings in time order — visits and treatment sessions together. Each load is kept (encrypted) so the
+/// day can still be read offline; actions then stay off until the connection is back.
+final todayScheduleProvider = FutureProvider.autoDispose<TodaySchedule>((ref) async {
   ref.watch(scheduleVersionProvider);
   final mine = ref.watch(onlyMineProvider);
   final me = ref.watch(currentUserProvider)?.id;
   final repository = ref.watch(appointmentRepositoryProvider);
+  final cache = ref.watch(scheduleCacheProvider);
   final filter = AllOf([
     Where.eq('scheduledDate', ClinicClock.today()),
     const Where.noneOf('status', offSchedule),
     // A staff account and its employee record share one id, so the provider is "me".
     if (mine && me != null) Where.eq('providerId', me),
   ]);
-  return _allPages(
-    (page) => repository.list(
-      ListQuery(page: page, perPage: ListQuery.maxPerPage, sort: const ['startTime'], filter: filter),
-    ),
-  );
+  try {
+    final visits = await _allPages(
+      (page) => repository.list(
+        ListQuery(page: page, perPage: ListQuery.maxPerPage, sort: const ['startTime'], filter: filter),
+      ),
+    );
+    if (me != null) await cache.save(me, mine: mine, visits: visits);
+    return (visits: visits, cachedAt: null);
+  } on ApiException catch (error) {
+    final saved = error.isOffline && me != null ? await cache.read(me, mine: mine) : null;
+    if (saved == null) rethrow;
+    return (visits: saved.visits, cachedAt: saved.savedAt);
+  }
 });
 
 /// The day shown on the Sessions page (`YYYY-MM-DD`).

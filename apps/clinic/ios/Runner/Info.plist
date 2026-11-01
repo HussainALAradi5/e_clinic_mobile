@@ -74,6 +74,25 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Scan patient cards, check-in codes and labels at the clinic.</string>
+	<string>Scan patient cards, check-in codes and labels at the clinic, and photograph results.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Attach a photo of a result or a medical certificate.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Check that you are at the clinic when you clock in or out.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>bh.clinic.e_clinic_app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>eclinic</string>
+			</array>
+		</dict>
+	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>otpauth</string>
+	</array>
 </dict>
 </plist>

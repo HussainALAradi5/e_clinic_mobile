@@ -9,6 +9,9 @@ import 'page.dart';
 /// Turns the `data` of the success envelope into a model.
 typedef Decoder<T> = T Function(Object? data);
 
+/// A file on the phone to upload: its path and the name the server keeps.
+typedef UploadFile = ({String path, String name});
+
 /// A decoder for an object `data` (`fromJson` of a model).
 Decoder<T> objectOf<T>(T Function(Map<String, dynamic> json) fromJson) =>
     (data) => fromJson(data! as Map<String, dynamic>);
@@ -50,6 +53,20 @@ class ApiClient {
 
   Future<T> post<T>(String path, Decoder<T> decode, {Object? body, String? idempotencyKey}) async =>
       decode(await _data('POST', path, body: body, idempotencyKey: idempotencyKey));
+
+  /// Sends files as `multipart/form-data` (`files[]`) with plain [fields]; the server checks type and size.
+  Future<T> upload<T>(
+    String path,
+    Decoder<T> decode, {
+    required List<UploadFile> files,
+    Map<String, Object> fields = const {},
+  }) async {
+    final form = FormData.fromMap({
+      ...fields,
+      'files[]': [for (final file in files) await MultipartFile.fromFile(file.path, filename: file.name)],
+    });
+    return decode(await _data('POST', path, body: form));
+  }
 
   Future<T> put<T>(String path, Decoder<T> decode, {Object? body}) async =>
       decode(await _data('PUT', path, body: body));

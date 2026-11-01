@@ -1,16 +1,20 @@
+import 'dart:async';
+
 import 'package:e_clinic_core/core.dart';
 import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../application/pharmacy_providers.dart';
 import '../utils/dispense_plan.dart';
 import '../widgets/pharmacy/dispense_item_card.dart';
+import '../widgets/pharmacy/pack_scan_sheet.dart';
 
 /// `/pharmacy/dispense/:id` — hand a prescription over: everything owed is preselected, lower what the patient
-/// takes now, a witness for controlled drugs, then *Dispense*. Batches are picked first-expiry-first-out by the
+/// takes now, scan each pack to check it is the right medicine, a witness for controlled drugs, then *Dispense*. Batches are picked first-expiry-first-out by the
 /// server, and the medicines go on the patient's invoice.
 class DispenseScreen extends ConsumerWidget {
   const DispenseScreen({super.key, required this.id});
@@ -44,6 +48,9 @@ class _DispenseForm extends ConsumerStatefulWidget {
 
 class _DispenseFormState extends ConsumerState<_DispenseForm> {
   late final DispenseQuantities _quantities = owedQuantities(widget.prescription);
+
+  /// Lines whose pack was scanned and matched (a check that the right medicine is in hand).
+  final _checked = <String>{};
   final _notes = TextEditingController();
   final _idempotencyKey = ApiClient.newIdempotencyKey();
   String? _witnessId;
@@ -76,13 +83,34 @@ class _DispenseFormState extends ConsumerState<_DispenseForm> {
     context.pop();
   }
 
+  Future<void> _scan() async {
+    final code = await scanPack(context);
+    if (code == null || !mounted) return;
+    final item = itemForBarcode(_p, code);
+    if (item == null) {
+      unawaited(HapticFeedback.heavyImpact());
+      AppSnack.error(
+        context,
+        ApiException(status: 0, code: ErrorCodes.unexpected, message: 'This pack ($code) is not on the prescription.'),
+      );
+      return;
+    }
+    setState(() => _checked.add(item.id));
+    AppSnack.success(context, '${item.medication.name} matches.');
+  }
+
   @override
   Widget build(BuildContext context) {
     final lines = dispenseLines(_p, _quantities);
     final witness = needsWitness(_p, _quantities);
     final ready = _p.patient != null && lines.isNotEmpty && (!witness || _witnessId != null);
     return Scaffold(
-      appBar: AppBar(title: Text(_p.code)),
+      appBar: AppBar(
+        title: Text(_p.code),
+        actions: [
+          IconButton(tooltip: 'Scan a pack', icon: const Icon(Icons.qr_code_scanner_rounded), onPressed: _scan),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 24),
         children: [
@@ -111,6 +139,7 @@ class _DispenseFormState extends ConsumerState<_DispenseForm> {
               child: DispenseItemCard(
                 item: item,
                 quantity: _quantities[item.id] ?? 0,
+                checked: _checked.contains(item.id),
                 onChanged: (q) => setState(() => _quantities[item.id] = q),
               ),
             ),

@@ -23,17 +23,22 @@ Appointment _booking(String id, String provider, String name, String start, {App
   version: 1,
 );
 
-PrescriptionItem _item(String id, {required String quantity, String? remaining, bool controlled = false}) =>
-    PrescriptionItem(
-      id: id,
-      medication: MedicationRef(id: 'm-$id', name: 'Med $id', isControlled: controlled),
-      dose: '1 tab',
-      frequency: 'twice a day',
-      route: 'oral',
-      durationDays: 5,
-      quantity: quantity,
-      remainingQuantity: remaining,
-    );
+PrescriptionItem _item(
+  String id, {
+  required String quantity,
+  String? remaining,
+  bool controlled = false,
+  String? gtin,
+}) => PrescriptionItem(
+  id: id,
+  medication: MedicationRef(id: 'm-$id', code: 'MED-$id', name: 'Med $id', isControlled: controlled, gtin: gtin),
+  dose: '1 tab',
+  frequency: 'twice a day',
+  route: 'oral',
+  durationDays: 5,
+  quantity: quantity,
+  remainingQuantity: remaining,
+);
 
 void main() {
   group('page rights', () {
@@ -105,7 +110,7 @@ void main() {
       status: GenericStatus.inProgress,
       validUntil: '2026-12-31',
       items: [
-        _item('i1', quantity: '10', remaining: '4'),
+        _item('i1', quantity: '10', remaining: '4', gtin: '6291100123456'),
         _item('i2', quantity: '2', remaining: '0'),
         _item('i3', quantity: '1', controlled: true),
       ],
@@ -122,6 +127,36 @@ void main() {
       ]);
       expect(needsWitness(prescription, quantities), isFalse);
       expect(needsWitness(prescription, {'i3': 1}), isTrue);
+    });
+
+    test('a scanned pack finds its line by barcode or medication code, and nothing else', () {
+      expect(itemForBarcode(prescription, '6291100123456')?.id, 'i1');
+      expect(itemForBarcode(prescription, '06291100123456')?.id, 'i1'); // GTIN-14 padding
+      expect(itemForBarcode(prescription, 'med-i3')?.id, 'i3');
+      expect(itemForBarcode(prescription, '5000000000000'), isNull);
+      expect(itemForBarcode(prescription, '  '), isNull);
+    });
+  });
+
+  group('order files', () {
+    ClinicalOrder order(ClinicalOrderType type, GenericStatus status) =>
+        ClinicalOrder(id: 'o1', code: 'ORD-1', type: type, description: 'x', status: status);
+
+    test('photos go on open or done orders for those who may attach to orders', () {
+      final doctor = _access({'attachments.create', 'orders.write'});
+      expect(canAttach(order(ClinicalOrderType.xray, GenericStatus.inProgress), doctor), isTrue);
+      expect(canAttach(order(ClinicalOrderType.xray, GenericStatus.cancelled), doctor), isFalse);
+      expect(
+        canAttach(order(ClinicalOrderType.xray, GenericStatus.completed), _access({'attachments.create'})),
+        isFalse,
+      );
+    });
+
+    test('each kind of order files its photo under the right category', () {
+      expect(resultCategory(ClinicalOrderType.mri), AttachmentCategory.xrayImage);
+      expect(resultCategory(ClinicalOrderType.labTest), AttachmentCategory.labResult);
+      expect(resultCategory(ClinicalOrderType.ecg), AttachmentCategory.labResult);
+      expect(resultCategory(ClinicalOrderType.referral), AttachmentCategory.referralLetter);
     });
   });
 

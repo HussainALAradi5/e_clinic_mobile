@@ -15,7 +15,13 @@ import 'timing_label.dart';
 /// A booking on a staff list: time, patient, type / room / provider, status, and the next step as a button
 /// (other steps under ⋯). Tapping opens the booking.
 class AppointmentCard extends ConsumerWidget {
-  const AppointmentCard({super.key, required this.visit, this.showProvider = true, this.showDate = false});
+  const AppointmentCard({
+    super.key,
+    required this.visit,
+    this.showProvider = true,
+    this.showDate = false,
+    this.readOnly = false,
+  });
 
   final Appointment visit;
   final bool showProvider;
@@ -23,12 +29,15 @@ class AppointmentCard extends ConsumerWidget {
   /// For bookings that may not be today (a scanned code).
   final bool showDate;
 
+  /// No steps (an offline copy): the card only shows the booking.
+  final bool readOnly;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final catalog = ref.watch(enumCatalogProvider).value ?? EnumCatalog.empty;
-    final actions = VisitAction.available(visit, ref.watch(accessProvider));
+    final actions = readOnly ? const <VisitAction>[] : VisitAction.available(visit, ref.watch(accessProvider));
     final primary = VisitAction.primary(actions);
     final others = actions.where((a) => a != primary).toList();
     final kind = visit.type == AppointmentType.treatmentSession && visit.sessionNumber != null

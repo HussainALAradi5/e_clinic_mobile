@@ -116,3 +116,15 @@ abstract final class OrderActions {
     OrderAction.cancel => '${order.code} cancelled.',
   };
 }
+
+/// Files go on an order while it is open or done (not once cancelled), for whoever may attach files to orders.
+bool canAttach(ClinicalOrder order, Access access) =>
+    order.status != GenericStatus.cancelled && access.can('attachments.create & orders.write');
+
+/// What a photo on an order is: an image for scans, a result for lab and ECG, the letter for a referral.
+AttachmentCategory resultCategory(ClinicalOrderType type) => switch (type) {
+  ClinicalOrderType.labTest || ClinicalOrderType.ecg => AttachmentCategory.labResult,
+  ClinicalOrderType.referral => AttachmentCategory.referralLetter,
+  ClinicalOrderType.unknown => AttachmentCategory.clinicalDocument,
+  _ => AttachmentCategory.xrayImage,
+};

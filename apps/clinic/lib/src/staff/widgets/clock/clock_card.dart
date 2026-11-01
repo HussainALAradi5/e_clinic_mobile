@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../application/staff_providers.dart';
+import '../../utils/clock_location.dart';
 import '../../utils/formatters.dart';
 
 /// One-tap clock in / out with today's state. The server accepts it only from the clinic network and works out
@@ -74,7 +75,7 @@ class _ClockBody extends ConsumerWidget {
         icon: Icons.login_rounded,
         expand: true,
         onPressed: () async {
-          ref.read(todayClockProvider.notifier).replace(await repository.checkIn());
+          ref.read(todayClockProvider.notifier).replace(await repository.checkIn(position: await clockPosition()));
           if (context.mounted) AppSnack.success(context, 'Checked in. Have a good shift.');
         },
       ),
@@ -89,7 +90,7 @@ class _ClockBody extends ConsumerWidget {
           confirmLabel: 'Check out',
         ),
         onPressed: () async {
-          ref.read(todayClockProvider.notifier).replace(await repository.checkOut());
+          ref.read(todayClockProvider.notifier).replace(await repository.checkOut(position: await clockPosition()));
           if (context.mounted) AppSnack.success(context, 'Checked out. See you next time.');
         },
       ),

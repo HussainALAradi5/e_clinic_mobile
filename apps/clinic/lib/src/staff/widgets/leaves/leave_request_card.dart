@@ -4,28 +4,39 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../shared/widgets/attach_photo_button.dart';
 import '../../application/leave_providers.dart';
 import '../../utils/formatters.dart';
 
-/// One of my leave requests: type, days and dates, status, the manager's note, and *Send* (draft) or *Withdraw*
-/// while it is still open.
-class LeaveRequestCard extends ConsumerWidget {
+/// One of my leave requests: type, days and dates, status, the manager's note; while open *Withdraw*, and for a
+/// draft a certificate photo and *Send*.
+class LeaveRequestCard extends ConsumerStatefulWidget {
   const LeaveRequestCard({super.key, required this.leave});
 
   final LeaveRequest leave;
 
-  Future<void> _submit(WidgetRef ref) async {
+  @override
+  ConsumerState<LeaveRequestCard> createState() => _LeaveRequestCardState();
+}
+
+class _LeaveRequestCardState extends ConsumerState<LeaveRequestCard> {
+  /// A certificate was attached here (lists do not carry the file count).
+  var _attached = false;
+
+  LeaveRequest get leave => widget.leave;
+
+  Future<void> _submit() async {
     await ref.read(leaveRepositoryProvider).submit(leave.id);
     ref.read(leavesVersionProvider.notifier).bump();
   }
 
-  Future<void> _cancel(WidgetRef ref) async {
+  Future<void> _cancel() async {
     await ref.read(leaveRepositoryProvider).cancel(leave.id);
     ref.read(leavesVersionProvider.notifier).bump();
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final muted = theme.colorScheme.onSurfaceVariant;
     final canAct = ref.watch(accessProvider).can('leaves.write & leaves.request');
@@ -50,15 +61,19 @@ class LeaveRequestCard extends ConsumerWidget {
             ],
             if (leave.isDraft) ...[
               const SizedBox(height: 6),
-              const InfoNote(
+              InfoNote(
                 icon: Icons.attach_file_rounded,
-                text: 'Attach the certificate on the clinic website, then send it to your manager.',
+                text: _attached || (leave.attachmentsCount ?? 0) > 0
+                    ? 'Certificate attached — send it to your manager.'
+                    : 'Attach a photo of the certificate, then send it to your manager.',
               ),
             ],
             if (canAct && leave.cancellable) ...[
               const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+              Wrap(
+                alignment: WrapAlignment.end,
+                spacing: 8,
+                runSpacing: 8,
                 children: [
                   AppButton(
                     label: 'Withdraw',
@@ -70,15 +85,22 @@ class LeaveRequestCard extends ConsumerWidget {
                       cancelLabel: 'Keep',
                       danger: true,
                     ),
-                    onPressed: () => _cancel(ref),
+                    onPressed: _cancel,
                   ),
                   if (leave.isDraft) ...[
-                    const SizedBox(width: 8),
+                    AttachPhotoButton(
+                      ownerType: 'leave_request',
+                      ownerId: leave.id,
+                      category: AttachmentCategory.medicalCertificate,
+                      label: 'Certificate',
+                      variant: ButtonVariant.text,
+                      onUploaded: (_) => setState(() => _attached = true),
+                    ),
                     AppButton(
                       label: 'Send',
                       icon: Icons.send_rounded,
                       variant: ButtonVariant.tonal,
-                      onPressed: () => _submit(ref),
+                      onPressed: _submit,
                     ),
                   ],
                 ],

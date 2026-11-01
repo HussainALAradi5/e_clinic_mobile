@@ -7,8 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../application/app_lock_controller.dart';
 import '../../application/session_controller.dart';
+import '../widgets/two_factor_sheets.dart';
 
-/// `/account/security` — change password, app lock with fingerprint / face, sign out everywhere.
+/// `/account/security` — change password, two-step sign-in, app lock with fingerprint / face, sign out everywhere.
 class AccountSecurityScreen extends ConsumerWidget {
   const AccountSecurityScreen({super.key});
 
@@ -16,6 +17,7 @@ class AccountSecurityScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final lockOn = ref.watch(appLockProvider.select((lock) => lock.enabled));
+    final twoFactor = ref.watch(sessionProvider).value?.user.twoFactor ?? const TwoFactorState();
     return Scaffold(
       appBar: AppBar(title: const Text('Password & security')),
       body: ListView(
@@ -31,6 +33,8 @@ class AccountSecurityScreen extends ConsumerWidget {
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => _changePassword(context),
                 ),
+                const Divider(indent: 16, endIndent: 16),
+                _TwoFactorTile(state: twoFactor),
                 const Divider(indent: 16, endIndent: 16),
                 FutureBuilder<bool>(
                   future: ref.read(appLockProvider.notifier).available,
@@ -139,5 +143,40 @@ class _ChangePasswordSheetState extends ConsumerState<_ChangePasswordSheet> {
         ],
       ),
     ),
+  );
+}
+
+/// Two-step sign-in: on / off with its sheet; roles that must keep it cannot turn it off.
+class _TwoFactorTile extends StatelessWidget {
+  const _TwoFactorTile({required this.state});
+
+  final TwoFactorState state;
+
+  Future<void> _open(BuildContext context, Widget sheet, String done) async {
+    final changed = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (_) => sheet,
+    );
+    if ((changed ?? false) && context.mounted) AppSnack.success(context, done);
+  }
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+    leading: Icon(state.enabled ? Icons.verified_user_rounded : Icons.shield_outlined),
+    title: const Text('Two-step sign-in'),
+    subtitle: Text(switch ((state.enabled, state.mandatory)) {
+      (true, true) => 'On — your role requires it.',
+      (true, false) => 'On — a code from your authenticator app at sign-in.',
+      (false, true) => 'Your role requires it: turn it on now.',
+      (false, false) => 'Off — add a code from an authenticator app at sign-in.',
+    }),
+    trailing: state.enabled && state.mandatory ? null : const Icon(Icons.chevron_right_rounded),
+    onTap: switch ((state.enabled, state.mandatory)) {
+      (true, true) => null,
+      (true, false) => () => _open(context, const TwoFactorDisableSheet(), 'Two-step sign-in is off.'),
+      _ => () => _open(context, const TwoFactorSetupSheet(), 'Two-step sign-in is on.'),
+    },
   );
 }

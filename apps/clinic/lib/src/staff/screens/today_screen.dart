@@ -84,7 +84,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
     final mine = ref.watch(onlyMineProvider);
     // People who only read their own bookings have nothing to switch to.
     final canSwitch = access.can('appointments.read_all');
-    final all = schedule.value ?? const <Appointment>[];
+    final all = schedule.value?.visits ?? const <Appointment>[];
     int count(VisitStage stage) => all.where(stage.includes).length;
 
     return [
@@ -119,23 +119,30 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
       schedule.when(
         loading: () => const SkeletonList(count: 3, height: 140),
         error: (error, _) => ErrorState(error: error, onRetry: () => ref.invalidate(todayScheduleProvider)),
-        data: (visits) {
+        data: (day) {
+          final visits = day.visits;
           final shown = visits.where(_stage.includes).toList();
-          if (shown.isEmpty) {
-            return EmptyState(
-              icon: Icons.event_available_outlined,
-              title: visits.isEmpty ? 'Nothing booked today' : 'No bookings here',
-              message: visits.isEmpty
-                  ? (mine ? 'No patients are booked with you today.' : 'The clinic has no bookings today.')
-                  : 'Pick another stage to see the rest of the day.',
-            );
-          }
+          final offline = day.cachedAt == null
+              ? null
+              : Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                  child: OfflineBanner(savedAt: day.cachedAt!, onRetry: () => ref.invalidate(todayScheduleProvider)),
+                );
           return Column(
             children: [
+              ?offline,
+              if (shown.isEmpty)
+                EmptyState(
+                  icon: Icons.event_available_outlined,
+                  title: visits.isEmpty ? 'Nothing booked today' : 'No bookings here',
+                  message: visits.isEmpty
+                      ? (mine ? 'No patients are booked with you today.' : 'The clinic has no bookings today.')
+                      : 'Pick another stage to see the rest of the day.',
+                ),
               for (final visit in shown)
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                  child: AppointmentCard(visit: visit, showProvider: !mine),
+                  child: AppointmentCard(visit: visit, showProvider: !mine, readOnly: offline != null),
                 ),
             ],
           );

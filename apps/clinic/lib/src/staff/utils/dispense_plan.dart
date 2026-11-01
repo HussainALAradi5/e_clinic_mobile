@@ -21,3 +21,18 @@ List<DispenseLine> dispenseLines(Prescription prescription, DispenseQuantities q
 /// A controlled drug is being handed over, so a second member of staff must witness it.
 bool needsWitness(Prescription prescription, DispenseQuantities quantities) =>
     prescription.items.any((item) => item.medication.isControlled && (quantities[item.id] ?? 0) > 0);
+
+/// The prescription line a scanned pack belongs to: its barcode (GTIN) or the clinic's medication code, ignoring
+/// leading zeros a scanner may add to an EAN. Null when the pack is not on this prescription.
+PrescriptionItem? itemForBarcode(Prescription prescription, String code) {
+  String plain(String value) => value.trim().replaceFirst(RegExp('^0+'), '').toUpperCase();
+  final scanned = plain(code);
+  if (scanned.isEmpty) return null;
+  return prescription.items
+      .where(
+        (item) =>
+            (item.medication.gtin != null && plain(item.medication.gtin!) == scanned) ||
+            (item.medication.code != null && plain(item.medication.code!) == scanned),
+      )
+      .firstOrNull;
+}

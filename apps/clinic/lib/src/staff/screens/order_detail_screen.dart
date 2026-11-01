@@ -1,9 +1,11 @@
 import 'package:e_clinic_core/core.dart';
+import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_features/features.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../shared/widgets/attach_photo_button.dart';
 import '../../shared/widgets/attachment_list.dart';
 import '../application/order_actions.dart';
 import '../application/order_providers.dart';
@@ -94,10 +96,19 @@ class OrderDetailScreen extends ConsumerWidget {
                 ),
               ),
             ],
-            if (order.attachments.isNotEmpty) ...[
-              const SectionHeader('Files'),
-              AttachmentList(files: order.attachments),
-            ],
+            if (order.attachments.isNotEmpty || canAttach(order, access)) const SectionHeader('Files'),
+            if (order.attachments.isNotEmpty) AttachmentList(files: order.attachments),
+            if (canAttach(order, access))
+              Align(
+                alignment: Alignment.centerLeft,
+                child: AttachPhotoButton(
+                  ownerType: 'clinical_order',
+                  ownerId: order.id,
+                  category: resultCategory(order.type),
+                  label: order.type == ClinicalOrderType.referral ? 'Add letter photo' : 'Add result photo',
+                  onUploaded: (_) => ref.read(ordersVersionProvider.notifier).bump(),
+                ),
+              ),
           ],
         ),
       ),

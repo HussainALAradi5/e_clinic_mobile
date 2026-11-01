@@ -65,11 +65,11 @@ Work pages opened from **More** (each follows its own right, also when opened by
 |---|---|---|
 | **Patient files** | Front desk, doctors, nurses, pharmacy | Search by name, file number or mobile · allergies first, details, insurance, coming visits and history · **Book a visit** |
 | **Calendar & booking** | Front desk, doctors, nurses | A day by provider, two weeks ahead · booking wizard: patient → kind of visit → provider → day → free time → desk or phone |
-| **Order work list** | Doctors, nurses | Open X-ray, scan, lab, ECG and referral orders, urgent first · **Start**, **Write result** (flag abnormal), **Cancel** with a reason |
-| **Pharmacy queue** | Pharmacists | Prescriptions still to hand over · owed quantities preselected, − / + per medicine, a witness for controlled drugs · **Dispense** (stock out first-expiry-first, added to the invoice) |
+| **Order work list** | Doctors, nurses | Open X-ray, scan, lab, ECG and referral orders, urgent first · **Start**, **Write result** (flag abnormal), **Add result photo**, **Cancel** with a reason |
+| **Pharmacy queue** | Pharmacists | Prescriptions still to hand over · owed quantities preselected, − / + per medicine, **scan each pack** to check it is the prescribed medicine, a witness for controlled drugs · **Dispense** (stock out first-expiry-first, added to the invoice) |
 | **Dispensed medicines** | Pharmacy | What left the pharmacy, with batches · **Cancel** returns the stock and reverses the charge |
-| **My leave** | All staff | Days left per leave type · **Request leave** (half day for one day) · send a draft once the certificate is attached · withdraw |
-| **Clock in / out** | Staff with attendance | Today's shift and times |
+| **My leave** | All staff | Days left per leave type · **Request leave** (half day for one day) · photo of the certificate on a sick-leave draft, then **Send** · withdraw |
+| **Clock in / out** | Staff with attendance | Today's shift and times · sends the phone's position, so it works off the clinic network inside the clinic geofence |
 
 Action buttons follow each booking's `allowed_transitions` from the server *and* the user's permissions — the server
 checks both again on every call. Patients never reach staff screens, nor staff the patient screens.
@@ -77,7 +77,12 @@ checks both again on every call. Patients never reach staff screens, nor staff t
 ### For everyone
 
 - Sign-in with email and password, **two-step code** for roles that need it, password reset by emailed code
+- **Two-step sign-in set-up** from the phone: open the authenticator app (or copy the key), type the first code,
+  keep the recovery codes; turn it off with the password where the role allows
 - **Biometric app lock** after time in the background (patient 5 min, staff 2 min)
+- **No screenshots** on Android (`FLAG_SECURE`): medical screens never end up in the gallery or recent-apps list
+- **Deep links** `eclinic://app/<page>` (e.g. `eclinic://app/clinic/appointments/<id>`), after sign-in and unlock
+- **Offline**: staff still see today's schedule from an encrypted copy (wiped on sign-out), with actions off
 - Light and dark themes in the clinic's brand colours; coloured status badges for every enum, labelled by the server
 - Coming back to the page you were on after a reload, an unlock or a deep link
 
@@ -183,8 +188,9 @@ are listed in `DEMO_USERS.md` of the documentation repository.
 | Staff | `pharmacist@demo.eclinic.bh` | Pharmacy queue, dispense, dispensed medicines |
 | Staff | `accountant@demo.eclinic.bh` · `hr@demo.eclinic.bh` | Approvals (two-step code) |
 
-Clocking in works only from the clinic network (`HR_CHECK_IN_NETWORKS` on the server; a local install accepts any
-private address).
+Clocking in works from the clinic network (`HR_CHECK_IN_NETWORKS` on the server; a local install accepts any
+private address), or from the phone inside the clinic geofence once the server has `HR_CLINIC_LATITUDE` /
+`HR_CLINIC_LONGITUDE` (radius `HR_CLINIC_RADIUS_METERS`, 150 m by default).
 
 ---
 
@@ -213,7 +219,6 @@ dispense sends (and when it needs a witness), and which area each account may op
 
 ## Roadmap
 
-- Staff: camera uploads for X-ray / lab results, medication barcode scan while dispensing, offline cache, clinic
-  geofence on clock-in
-- Push notifications (Firebase / APNs), deep links, screenshot protection on medical screens, certificate pinning
-- Setting up two-step sign-in from the phone (signing in with a code works today)
+- Push notifications (Firebase / APNs): needs a free Firebase project and its config files
+- `https://` App Links / Universal Links and certificate pinning: need the clinic's own domain
+- An app-switcher privacy overlay on iOS (Android already blocks screenshots)

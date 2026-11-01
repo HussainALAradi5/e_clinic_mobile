@@ -6,11 +6,20 @@ import '../../utils/formatters.dart';
 /// One prescribed medicine on the dispense screen: how to take it, what is still owed, and a − / + stepper for
 /// how much to hand over now (0 … what is owed).
 class DispenseItemCard extends StatelessWidget {
-  const DispenseItemCard({super.key, required this.item, required this.quantity, required this.onChanged});
+  const DispenseItemCard({
+    super.key,
+    required this.item,
+    required this.quantity,
+    required this.onChanged,
+    this.checked = false,
+  });
 
   final PrescriptionItem item;
   final double quantity;
   final ValueChanged<double> onChanged;
+
+  /// Its pack was scanned and matched.
+  final bool checked;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +40,13 @@ class DispenseItemCard extends StatelessWidget {
                   Row(
                     children: [
                       Flexible(child: Text(item.medication.name, style: theme.textTheme.titleMedium)),
+                      if (checked) ...[
+                        const SizedBox(width: 6),
+                        Tooltip(
+                          message: 'Pack scanned and matched',
+                          child: Icon(Icons.verified_rounded, size: 18, color: theme.colorScheme.primary),
+                        ),
+                      ],
                       if (item.medication.isControlled) ...[
                         const SizedBox(width: 6),
                         Tooltip(

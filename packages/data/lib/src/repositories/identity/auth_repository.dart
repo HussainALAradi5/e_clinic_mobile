@@ -47,6 +47,20 @@ class AuthRepository {
     body: {'current_password': currentPassword, 'password': password, 'password_confirmation': passwordConfirmation},
   );
 
+  /// Starts two-step sign-in: the `otpauth://` link for an authenticator app (it holds the secret key).
+  Future<String> enableTwoFactor() =>
+      _api.post('auth/two-factor/enable', (data) => (data! as Map<String, dynamic>)['otpauth_url'] as String);
+
+  /// Turns two-step sign-in on with a first code from the app; returns the one-time recovery codes.
+  Future<List<String>> confirmTwoFactor(String code) => _api.post(
+    'auth/two-factor/confirm',
+    (data) => [for (final c in (data! as Map<String, dynamic>)['recovery_codes'] as List<dynamic>) c as String],
+    body: {'code': code},
+  );
+
+  /// Turns it off after the password (refused for roles where it is mandatory).
+  Future<void> disableTwoFactor(String password) => _api.delete('auth/two-factor', body: {'password': password});
+
   /// Sends a 6-digit code by email (the answer is the same whether or not the address exists).
   Future<void> forgotPassword(String email) =>
       _api.post('auth/forgot-password', ApiClient.ignore, body: {'email': email});

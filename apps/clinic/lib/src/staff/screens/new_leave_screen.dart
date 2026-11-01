@@ -66,7 +66,7 @@ class _NewLeaveScreenState extends ConsumerState<NewLeaveScreen> {
     if (!mounted) return;
     AppSnack.success(
       context,
-      leave.isDraft ? 'Saved. Attach the certificate on the website, then send it.' : 'Sent to your manager.',
+      leave.isDraft ? 'Saved. Attach a photo of the certificate, then send it.' : 'Sent to your manager.',
     );
     context.pop();
   }
@@ -105,7 +105,7 @@ class _NewLeaveScreenState extends ConsumerState<NewLeaveScreen> {
                   padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
                   child: InfoNote(
                     icon: Icons.attach_file_rounded,
-                    text: 'Needs a certificate: the request is saved as a draft until you attach it on the website.',
+                    text: 'Needs a certificate: the request is saved as a draft until you attach a photo of it.',
                   ),
                 ),
               if (type.minNoticeDays > 0)

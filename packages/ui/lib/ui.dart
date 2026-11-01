@@ -16,6 +16,7 @@ export 'src/widgets/feedback/async_body.dart';
 export 'src/widgets/feedback/empty_state.dart';
 export 'src/widgets/feedback/error_state.dart';
 export 'src/widgets/feedback/info_note.dart';
+export 'src/widgets/feedback/offline_banner.dart';
 export 'src/widgets/feedback/sheets.dart';
 export 'src/widgets/feedback/skeleton_list.dart';
 export 'src/widgets/inputs/chip_bar.dart';

@@ -72,6 +72,12 @@ class SessionController extends AsyncNotifier<Session?> {
     await _end();
   }
 
+  /// Reloads the signed-in user (after a change to the account, such as two-step sign-in).
+  Future<void> refresh() async {
+    final session = await _auth.me();
+    state = AsyncData(session.copyWith(token: null));
+  }
+
   /// The server rejected the token (revoked elsewhere or expired).
   Future<void> expire() async {
     if (state.value != null) await _end();
