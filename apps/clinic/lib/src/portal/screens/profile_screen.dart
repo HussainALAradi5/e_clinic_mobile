@@ -94,6 +94,8 @@ class ProfileScreen extends ConsumerWidget {
                   style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                 ),
               ),
+              const SizedBox(height: 16),
+              const ThemeModeTile(),
               const SectionHeader('More'),
               LinkGroup(
                 links: [

@@ -117,6 +117,11 @@ class _ClockBody extends ConsumerWidget {
             textAlign: large ? TextAlign.center : TextAlign.start,
             style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
           ),
+        // Present / late / absent / on leave … coloured as everywhere else.
+        if (row != null) ...[
+          const SizedBox(height: 8),
+          StatusChip(enumName: 'AttendanceStatus', value: row.status),
+        ],
       ],
     );
 

@@ -7,3 +7,5 @@ export 'src/auth/presentation/auth_paths.dart';
 export 'src/auth/presentation/auth_routing.dart';
 export 'src/auth/presentation/widgets/auth_scaffold.dart' show BrandMark;
 export 'src/run_clinic_app.dart';
+export 'src/settings/theme_mode_controller.dart';
+export 'src/settings/theme_mode_tile.dart';

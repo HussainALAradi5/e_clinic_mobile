@@ -160,6 +160,13 @@ void main() {
     });
   });
 
+  test('units agree with the quantity', () {
+    expect(unitLabel('tablet', 1), 'tablet');
+    expect(unitLabel('tablet', 20), 'tablets');
+    expect(unitLabel('ml', 5), 'ml');
+    expect(unitLabel(null, 2), '');
+  });
+
   test('quantities read the way people write them', () {
     expect(formatQuantity(2), '2');
     expect(formatQuantity(2.5), '2.5');

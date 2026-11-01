@@ -33,6 +33,8 @@ class MoreScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
           ],
+          const ThemeModeTile(),
+          const SizedBox(height: 16),
           LinkGroup(
             links: [
               LinkTile(

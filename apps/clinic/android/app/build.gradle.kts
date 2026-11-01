@@ -5,6 +5,8 @@ plugins {
 }
 
 android {
+    // MainActivity reads BuildConfig.DEBUG (screenshots allowed outside release builds).
+    buildFeatures { buildConfig = true }
     namespace = "bh.clinic.e_clinic_app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion

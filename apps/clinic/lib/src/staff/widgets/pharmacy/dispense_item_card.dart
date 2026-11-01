@@ -26,7 +26,7 @@ class DispenseItemCard extends StatelessWidget {
     final theme = Theme.of(context);
     final muted = theme.colorScheme.onSurfaceVariant;
     final owed = item.outstanding;
-    final unit = item.medication.unit ?? '';
+    final unit = unitLabel(item.medication.unit, item.outstanding);
     final done = owed <= 0;
     return Card(
       child: Padding(

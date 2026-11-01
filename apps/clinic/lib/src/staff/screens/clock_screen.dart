@@ -27,7 +27,7 @@ class ClockScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(4, 16, 4, 0),
               child: Text(
-                'Check in works only on the clinic Wi-Fi. Arriving more than 10 minutes late is marked late; '
+                'Check in at the clinic: on its Wi-Fi, or with your location on. Arriving more than 10 minutes late is marked late; '
                 'staying 15 minutes or more past your shift goes to your manager as overtime. '
                 'Forgot to check in? Ask HR to correct the day.',
                 style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),

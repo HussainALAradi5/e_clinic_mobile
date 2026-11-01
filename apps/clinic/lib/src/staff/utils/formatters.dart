@@ -15,6 +15,12 @@ String formatQuantity(num quantity) {
   return quantity.toStringAsFixed(2).replaceFirst(RegExp(r'0+$'), '');
 }
 
+/// A dispensing unit for a quantity: `1 tablet`, `20 tablets`, `5 ml` (units come singular from the server).
+String unitLabel(String? unit, num quantity) {
+  if (unit == null || unit.isEmpty) return '';
+  return quantity == 1 || unit == 'ml' ? unit : '${unit}s';
+}
+
 /// `2 days, 3 Nov 2026 – 4 Nov 2026` (half days as `2.5 days`).
 String leaveDaysLabel(LeaveRequest leave) {
   final days = double.tryParse(leave.totalDays);

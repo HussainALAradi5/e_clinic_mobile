@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 enum StatusTone { grey, blue, teal, green, amber, red, redOutline, orange, cyan, indigo, purple, pink }
 
 abstract final class StatusColors {
+  /// Same table as the web client (`status-tones.constants.ts`); keep the two in step.
   static const _tones = <String, Map<String, StatusTone>>{
     'GenericStatus': {
       'pending': StatusTone.grey,
@@ -13,7 +14,6 @@ abstract final class StatusColors {
       'cancelled': StatusTone.redOutline,
     },
     'TreatmentPriority': {'medium': StatusTone.grey, 'high': StatusTone.amber, 'urgent': StatusTone.red},
-    // One colour per kind of treatment (same as the web).
     'TreatmentType': {
       'physiotherapy': StatusTone.teal,
       'rehabilitation': StatusTone.green,
@@ -26,23 +26,6 @@ abstract final class StatusColors {
       'dental': StatusTone.amber,
       'other': StatusTone.grey,
     },
-    'AppointmentStatus': {
-      'pending': StatusTone.grey,
-      'confirmed': StatusTone.blue,
-      'checked_in': StatusTone.teal,
-      'in_progress': StatusTone.blue,
-      'completed': StatusTone.green,
-      'cancelled': StatusTone.redOutline,
-      'no_show': StatusTone.red,
-      'rescheduled': StatusTone.amber,
-    },
-    'InvoiceStatus': {
-      'issued': StatusTone.blue,
-      'partially_paid': StatusTone.amber,
-      'paid': StatusTone.green,
-      'cancelled': StatusTone.redOutline,
-    },
-    'PaymentStatus': {'completed': StatusTone.green, 'voided': StatusTone.red},
     'AppointmentType': {
       'consultation': StatusTone.blue,
       'follow_up': StatusTone.teal,
@@ -57,6 +40,112 @@ abstract final class StatusColors {
       'portal': StatusTone.teal,
       'referral': StatusTone.purple,
     },
+    'AuditAction': {
+      'created': StatusTone.green,
+      'updated': StatusTone.blue,
+      'deleted': StatusTone.red,
+      'restored': StatusTone.teal,
+      'status_changed': StatusTone.indigo,
+      'login': StatusTone.cyan,
+      'logout': StatusTone.grey,
+      'login_failed': StatusTone.red,
+      'password_changed': StatusTone.amber,
+      'permission_changed': StatusTone.amber,
+      'exported': StatusTone.purple,
+      'posted': StatusTone.green,
+      'reversed': StatusTone.redOutline,
+      'approved': StatusTone.green,
+    },
+    'BalanceSide': {'debit': StatusTone.blue, 'credit': StatusTone.teal},
+    'TransactionDirection': {'in': StatusTone.green, 'out': StatusTone.red, 'internal': StatusTone.grey},
+    'LoginFailureReason': {
+      'invalid_credentials': StatusTone.red,
+      'account_locked': StatusTone.red,
+      'account_inactive': StatusTone.grey,
+      'too_many_attempts': StatusTone.amber,
+      'invalid_2fa_code': StatusTone.amber,
+    },
+    'ApprovalStatus': {
+      'draft': StatusTone.grey,
+      'pending': StatusTone.grey,
+      'approved': StatusTone.green,
+      'rejected': StatusTone.red,
+      'cancelled': StatusTone.redOutline,
+    },
+    'AppointmentStatus': {
+      'pending': StatusTone.grey,
+      'confirmed': StatusTone.blue,
+      'checked_in': StatusTone.teal,
+      'in_progress': StatusTone.blue,
+      'completed': StatusTone.green,
+      'cancelled': StatusTone.redOutline,
+      'no_show': StatusTone.red,
+      'rescheduled': StatusTone.amber,
+    },
+    'CashSessionStatus': {'open': StatusTone.blue, 'closing': StatusTone.amber, 'closed': StatusTone.green},
+    'EmployeeStatus': {'active': StatusTone.green, 'suspended': StatusTone.amber, 'terminated': StatusTone.red},
+    'ExpiryStatus': {'ok': StatusTone.green, 'expiring': StatusTone.amber, 'expired': StatusTone.red},
+    'AttendanceStatus': {
+      'present': StatusTone.green,
+      'late': StatusTone.amber,
+      'absent': StatusTone.red,
+      'half_day': StatusTone.amber,
+      'on_leave': StatusTone.blue,
+      'holiday': StatusTone.teal,
+      'weekend': StatusTone.grey,
+    },
+    'PayrollStatus': {
+      'draft': StatusTone.grey,
+      'calculated': StatusTone.blue,
+      'approved': StatusTone.teal,
+      'paid': StatusTone.green,
+      'cancelled': StatusTone.redOutline,
+    },
+    'FileScanStatus': {'clean': StatusTone.green, 'infected': StatusTone.red},
+    'FiscalStatus': {'open': StatusTone.green, 'closed': StatusTone.grey, 'locked': StatusTone.red},
+    'JournalEntryStatus': {'draft': StatusTone.grey, 'posted': StatusTone.green, 'reversed': StatusTone.redOutline},
+    'InvoiceStatus': {
+      'issued': StatusTone.blue,
+      'partially_paid': StatusTone.amber,
+      'paid': StatusTone.green,
+      'cancelled': StatusTone.redOutline,
+    },
+    'NotificationStatus': {
+      'sent': StatusTone.blue,
+      'delivered': StatusTone.green,
+      'failed': StatusTone.red,
+      'cancelled': StatusTone.redOutline,
+    },
+    'PaymentStatus': {'completed': StatusTone.green, 'voided': StatusTone.red},
+    'StockMovementType': {
+      'receipt': StatusTone.green,
+      'dispense': StatusTone.blue,
+      'return': StatusTone.teal,
+      'adjustment': StatusTone.amber,
+      'expiry_writeoff': StatusTone.red,
+    },
+    'UserStatus': {'active': StatusTone.green, 'locked': StatusTone.red},
+    'TicketStatus': {
+      'open': StatusTone.blue,
+      'in_progress': StatusTone.amber,
+      'resolved': StatusTone.green,
+      'closed': StatusTone.grey,
+    },
+    'TicketPriority': {
+      'low': StatusTone.grey,
+      'normal': StatusTone.blue,
+      'high': StatusTone.amber,
+      'urgent': StatusTone.red,
+    },
+    'TicketCategory': {
+      'technical': StatusTone.indigo,
+      'access': StatusTone.purple,
+      'equipment': StatusTone.orange,
+      'data': StatusTone.cyan,
+      'other': StatusTone.grey,
+    },
+    'ConversationType': {'direct': StatusTone.blue, 'group': StatusTone.purple},
+    'ParticipantRole': {'admin': StatusTone.teal, 'member': StatusTone.grey},
   };
 
   /// Handed out in option order to enums without a hand-picked map; red and grey stay reserved for meaning.
