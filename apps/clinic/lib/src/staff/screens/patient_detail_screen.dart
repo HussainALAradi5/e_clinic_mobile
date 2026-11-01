@@ -1,4 +1,3 @@
-import 'package:e_clinic_core/core.dart';
 import 'package:e_clinic_features/features.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
@@ -45,12 +44,19 @@ class PatientDetailScreen extends ConsumerWidget {
                 child: ProfileHeader(
                   name: patient.fullName,
                   lines: [
-                    [
-                      patient.code,
-                      if (patient.age != null) '${patient.age} years',
-                      humanise(patient.gender),
-                    ].join(' · '),
+                    [patient.code, if (patient.age != null) '${patient.age} years'].join(' · '),
                     patient.phone,
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 6,
+                  children: [
+                    StatusChip(enumName: 'Gender', value: patient.gender),
+                    if (patient.person.nationality case final n?) FlagBadge(countryCode: n.code, label: n.nationality),
                   ],
                 ),
               ),

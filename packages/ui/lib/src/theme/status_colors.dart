@@ -65,6 +65,7 @@ abstract final class StatusColors {
       'too_many_attempts': StatusTone.amber,
       'invalid_2fa_code': StatusTone.amber,
     },
+    'Gender': {'male': StatusTone.blue, 'female': StatusTone.pink},
     'ApprovalStatus': {
       'draft': StatusTone.grey,
       'pending': StatusTone.grey,

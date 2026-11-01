@@ -22,3 +22,10 @@ String initials(String name) {
   final last = parts.length > 1 ? parts.last[0] : '';
   return (first + last).toUpperCase();
 }
+
+/// The flag emoji of a country code (`BH` → 🇧🇭); empty for anything that is not two letters.
+String flagEmoji(String? countryCode) {
+  final code = countryCode?.trim().toUpperCase() ?? '';
+  if (!RegExp(r'^[A-Z]{2}$').hasMatch(code)) return '';
+  return String.fromCharCodes(code.codeUnits.map((c) => 0x1F1E6 + c - 0x41));
+}

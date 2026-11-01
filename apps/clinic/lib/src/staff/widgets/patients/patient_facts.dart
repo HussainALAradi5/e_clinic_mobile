@@ -29,7 +29,6 @@ class PatientFacts extends StatelessWidget {
         (label: 'Chronic conditions', value: p.chronicConditions),
         (label: 'Date of birth', value: ClinicClock.date(p.dateOfBirth)),
         (label: 'ID number', value: p.person.nationalId),
-        (label: 'Nationality', value: p.person.nationality?.nationality),
         (label: 'Email', value: p.email),
         (label: 'Address', value: p.person.address?.formatted),
         (label: 'Insurance', value: insurance),

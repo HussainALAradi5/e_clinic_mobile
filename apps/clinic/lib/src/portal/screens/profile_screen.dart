@@ -17,7 +17,6 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final catalog = ref.watch(enumCatalogProvider).value ?? EnumCatalog.empty;
     return Scaffold(
       appBar: AppBar(title: const Text('My profile')),
       body: AsyncBody(
@@ -30,13 +29,20 @@ class ProfileScreen extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
             children: [
               ProfileHeader(name: p.fullName, lines: ['Patient number ${p.code}']),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8,
+                runSpacing: 6,
+                children: [
+                  StatusChip(enumName: 'Gender', value: p.gender),
+                  if (p.person.nationality case final n?) FlagBadge(countryCode: n.code, label: n.nationality),
+                ],
+              ),
               const SectionHeader('Personal'),
               Card(
                 child: FactList(
                   facts: [
                     (label: 'Date of birth', value: ClinicClock.date(p.dateOfBirth)),
-                    (label: 'Gender', value: catalog.label('Gender', p.gender)),
-                    (label: 'Nationality', value: p.person.nationality?.nationality),
                     (label: 'ID number', value: p.person.nationalId),
                   ],
                 ),

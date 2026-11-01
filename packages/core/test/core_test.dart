@@ -5,6 +5,13 @@ import 'package:flutter_test/flutter_test.dart';
 enum _Status { checkedIn, noShow }
 
 void main() {
+  test('a country code becomes its flag; anything else stays empty', () {
+    expect(flagEmoji('BH'), '\u{1F1E7}\u{1F1ED}');
+    expect(flagEmoji('pk'), '\u{1F1F5}\u{1F1F0}');
+    expect(flagEmoji('BHR'), '');
+    expect(flagEmoji(null), '');
+  });
+
   test('requests go to <api>/<path> whether or not the configured URL ends in a slash', () {
     for (final url in ['http://10.0.2.2:8000/api/v1', 'http://10.0.2.2:8000/api/v1/']) {
       final container = ProviderContainer(overrides: [appConfigProvider.overrideWithValue(AppConfig(apiBaseUrl: url))]);
