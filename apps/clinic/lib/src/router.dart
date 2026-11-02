@@ -13,6 +13,7 @@ import 'portal/screens/notifications_screen.dart';
 import 'portal/screens/prescriptions_screen.dart';
 import 'portal/screens/profile_screen.dart';
 import 'portal/screens/results_screen.dart';
+import 'portal/screens/sick_leaves_screen.dart';
 import 'portal/screens/treatments_screen.dart';
 import 'portal/widgets/shell/patient_shell.dart';
 import 'staff/screens/appointment_detail_screen.dart';
@@ -88,6 +89,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       page(PortalPaths.book, const BookingScreen()),
       page(PortalPaths.treatments, const TreatmentsScreen()),
       page(PortalPaths.prescriptions, const PrescriptionsScreen()),
+      page(PortalPaths.sickLeaves, const SickLeavesScreen()),
       page(PortalPaths.messages, const NotificationsScreen()),
 
       // Staff — one branch per StaffTab, in the same order.

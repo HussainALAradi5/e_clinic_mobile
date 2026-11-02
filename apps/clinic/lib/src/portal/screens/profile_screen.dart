@@ -116,6 +116,11 @@ class ProfileScreen extends ConsumerWidget {
                     onTap: () => context.push(PortalPaths.prescriptions),
                   ),
                   LinkTile(
+                    icon: Icons.sick_outlined,
+                    label: 'My sick leaves',
+                    onTap: () => context.push(PortalPaths.sickLeaves),
+                  ),
+                  LinkTile(
                     icon: Icons.notifications_none_rounded,
                     label: 'Messages',
                     onTap: () => context.push(PortalPaths.messages),

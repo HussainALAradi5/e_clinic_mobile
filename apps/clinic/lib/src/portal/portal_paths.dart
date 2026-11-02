@@ -6,11 +6,12 @@ abstract final class PortalPaths {
   static const treatments = '/treatments';
   static const results = '/results';
   static const prescriptions = '/prescriptions';
+  static const sickLeaves = '/sick-leaves';
   static const invoices = '/invoices';
   static const messages = '/notifications';
   static const profile = '/profile';
 
-  static const _roots = [home, visits, treatments, results, prescriptions, invoices, messages, profile];
+  static const _roots = [home, visits, treatments, results, prescriptions, sickLeaves, invoices, messages, profile];
 
   /// The path is part of the patient area.
   static bool owns(String path) => _roots.any((root) => path == root || path.startsWith('$root/'));
@@ -21,6 +22,7 @@ abstract final class PortalPaths {
     'treatment' => treatments,
     'clinical_order' => results,
     'prescription' => prescriptions,
+    'sick_leave' => sickLeaves,
     'invoice' || 'payment' => invoices,
     _ => null,
   };

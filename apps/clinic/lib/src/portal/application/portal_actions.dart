@@ -26,6 +26,19 @@ abstract final class PortalActions {
     hint: 'Show this at the clinic pharmacy to collect your medicines.',
   );
 
+  /// The certificate's QR: an employer scans it to check the dates with the clinic (never the reason).
+  static Future<void> showSickLeaveCode(BuildContext context, SickLeave leave) => showCodeSheet(
+    context,
+    entity: 'sick_leave',
+    id: leave.id,
+    title: 'Sick leave ${leave.code}',
+    lines: [
+      '${leave.days} ${leave.days == 1 ? 'day' : 'days'}: ${ClinicClock.date(leave.startDate)} – ${ClinicClock.date(leave.endDate)}',
+      leave.doctor.fullName,
+    ],
+    hint: 'Your employer or school scans this to check the certificate with the clinic. It shows the dates only.',
+  );
+
   /// Asks why, cancels and returns the updated visit; null when the patient kept it.
   static Future<Appointment?> cancelVisit(BuildContext context, WidgetRef ref, Appointment visit) async {
     final reason = await showReasonSheet(

@@ -320,6 +320,13 @@ Taken on a real Android phone (debug build; release builds block screenshots wit
 | Chat row menu | <img src="docs/screenshots/light/68-chat-row-menu.png" width="220"> | <img src="docs/screenshots/dark/68-chat-row-menu.png" width="220"> |
 | Chat delete confirm | <img src="docs/screenshots/light/69-chat-delete-confirm.png" width="220"> | <img src="docs/screenshots/dark/69-chat-delete-confirm.png" width="220"> |
 
+### Patient — sick leaves
+
+| Screen | Light | Dark |
+|---|---|---|
+| Patient sick leaves | <img src="docs/screenshots/light/70-patient-sick-leaves.png" width="220"> | <img src="docs/screenshots/dark/70-patient-sick-leaves.png" width="220"> |
+| Patient sick leave code | <img src="docs/screenshots/light/71-patient-sick-leave-code.png" width="220"> | <img src="docs/screenshots/dark/71-patient-sick-leave-code.png" width="220"> |
+
 ### Admin — support desk and notifications
 
 | Screen | Light | Dark |

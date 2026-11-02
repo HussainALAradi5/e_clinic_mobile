@@ -116,3 +116,9 @@ final invoicesProvider = FutureProvider.autoDispose<List<Invoice>>(
 final invoiceDetailProvider = FutureProvider.autoDispose.family<Invoice, String>(
   (ref, id) => ref.watch(invoiceRepositoryProvider).get(id),
 );
+
+/// My sick leave certificates, newest first.
+final sickLeavesProvider = FutureProvider.autoDispose<List<SickLeave>>(
+  (ref) async =>
+      (await ref.watch(sickLeaveRepositoryProvider).list(const ListQuery(perPage: 100, sort: ['-issuedAt']))).items,
+);
