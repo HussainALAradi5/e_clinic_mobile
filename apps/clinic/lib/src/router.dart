@@ -19,6 +19,8 @@ import 'staff/screens/appointment_detail_screen.dart';
 import 'staff/screens/approvals_screen.dart';
 import 'staff/screens/book_screen.dart';
 import 'staff/screens/calendar_screen.dart';
+import 'staff/screens/chat_screen.dart';
+import 'staff/screens/chats_screen.dart';
 import 'staff/screens/clock_screen.dart';
 import 'staff/screens/dispensations_screen.dart';
 import 'staff/screens/dispense_screen.dart';
@@ -128,6 +130,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       page(StaffPaths.leaves, const LeavesScreen()),
       page(StaffPaths.newLeave, const NewLeaveScreen()),
       page(StaffPaths.inbox, const InboxScreen()),
+      page(StaffPaths.chats, const ChatsScreen()),
+      GoRoute(
+        path: StaffPaths.chatPattern,
+        builder: (_, state) => ChatScreen(id: state.pathParameters['id']!),
+      ),
       page(StaffPaths.tickets, const TicketsScreen()),
       // `new` before `:id`, so it is not read as a ticket id.
       page(StaffPaths.newTicket, const NewTicketScreen()),

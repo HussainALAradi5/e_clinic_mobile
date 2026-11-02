@@ -63,9 +63,16 @@ void main() {
       final pharmacist = _access({'dispensing.create', 'dispensing.dispense', 'dispensing.read_all'});
       expect(StaffPage.visible(pharmacist), [StaffPage.inbox, StaffPage.dispense, StaffPage.dispensations]);
 
-      final nurse = _access({'patients.read_own', 'leaves.read_own', 'attendance.self', 'tickets.read_own'});
+      final nurse = _access({
+        'patients.read_own',
+        'leaves.read_own',
+        'attendance.self',
+        'tickets.read_own',
+        'chat.read_own',
+      });
       expect(StaffPage.visible(nurse), [
         StaffPage.inbox,
+        StaffPage.chat,
         StaffPage.tickets,
         StaffPage.patients,
         StaffPage.leaves,
@@ -78,7 +85,9 @@ void main() {
       expect(StaffPaths.accessFor(StaffPaths.ticket('t1')), 'tickets.read_own | tickets.read_all');
       expect(StaffPaths.forNotification('support_ticket', 't1'), '/support/tickets/t1');
       expect(StaffPaths.forNotification('appointment', 'a1'), '/clinic/appointments/a1');
-      expect(StaffPaths.forNotification('conversation', 'c1'), isNull);
+      expect(StaffPaths.forNotification('conversation', 'c1'), '/chat/c1');
+      expect(StaffPaths.owns(StaffPaths.chat('c1')), isTrue);
+      expect(StaffPaths.accessFor(StaffPaths.chat('c1')), 'chat.read_own | chat.read_all');
       expect(StaffPaths.forNotification(null, null), isNull);
     });
   });

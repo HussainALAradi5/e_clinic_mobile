@@ -27,6 +27,8 @@ abstract final class StaffPaths {
   static const tickets = '/support/tickets';
   static const newTicket = '/support/tickets/new';
   static const ticketPattern = '/support/tickets/:id';
+  static const chats = '/chat';
+  static const chatPattern = '/chat/:id';
 
   static String appointment(String id) => '/clinic/appointments/$id';
 
@@ -40,9 +42,12 @@ abstract final class StaffPaths {
 
   static String ticket(String id) => '$tickets/$id';
 
+  static String chat(String id) => '$chats/$id';
+
   /// The staff page a notification opens, by its related record (null when the app has no page for it).
   static String? forNotification(String? type, String? id) => switch ((type, id)) {
     ('support_ticket', final String id) => ticket(id),
+    ('conversation', final String id) => chat(id),
     ('appointment', final String id) => appointment(id),
     ('clinical_order', final String id) => order(id),
     ('patient', final String id) => patient(id),
@@ -51,7 +56,7 @@ abstract final class StaffPaths {
     _ => null,
   };
 
-  static const _roots = [today, scan, approvals, more, inbox, '/clinic', '/hr', '/pharmacy', '/support'];
+  static const _roots = [today, scan, approvals, more, inbox, '/clinic', '/hr', '/pharmacy', '/support', chats];
 
   /// The path is part of the staff area.
   static bool owns(String path) => _roots.any((root) => _under(path, root));
@@ -128,6 +133,7 @@ enum StaffTab {
 /// Work pages linked from More, in menu order; a link shows only when the user holds its permission expression.
 enum StaffPage {
   inbox(StaffPaths.inbox, 'Notifications', Icons.notifications_outlined, Access.authenticated),
+  chat(StaffPaths.chats, 'Chat', Icons.forum_outlined, 'chat.read_own | chat.read_all'),
   tickets(StaffPaths.tickets, 'Support tickets', Icons.support_agent_rounded, 'tickets.read_own | tickets.read_all'),
   patients(StaffPaths.patients, 'Patient files', Icons.folder_shared_outlined, 'patients.read_all | patients.read_own'),
   calendar(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../application/chat_providers.dart';
 import '../application/support_providers.dart';
 import '../staff_paths.dart';
 
@@ -18,6 +19,7 @@ class MoreScreen extends ConsumerWidget {
     final user = session?.user;
     final access = ref.watch(accessProvider);
     final unread = ref.watch(staffUnreadProvider).value ?? 0;
+    final chatUnread = access.can('chat.read_own | chat.read_all') ? ref.watch(chatUnreadProvider).value ?? 0 : 0;
     return Scaffold(
       appBar: AppBar(title: const Text('More')),
       body: ListView(
@@ -33,7 +35,12 @@ class MoreScreen extends ConsumerWidget {
                   LinkTile(
                     icon: page.icon,
                     label: page.label,
-                    subtitle: page == StaffPage.inbox && unread > 0 ? '$unread unread' : null,
+                    subtitle: switch (page) {
+                      StaffPage.inbox when unread > 0 => '$unread unread',
+                      StaffPage.chat when chatUnread > 0 =>
+                        '$chatUnread unread ${chatUnread == 1 ? 'message' : 'messages'}',
+                      _ => null,
+                    },
                     onTap: () => context.push(page.path),
                   ),
               ],

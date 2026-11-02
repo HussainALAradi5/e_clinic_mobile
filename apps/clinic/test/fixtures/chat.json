@@ -1,0 +1,183 @@
+{
+ "conversation": {
+  "id": "01a19819-08ec-71e9-86ab-022e060f09a6",
+  "type": "direct",
+  "title": "Sara Nasser",
+  "partner_id": "01a1881d-8271-73c9-a05a-30abc80d4357",
+  "avatar_url": "https://clinic.example/files/signed",
+  "my_role": "member",
+  "members": [
+   {
+    "user_id": "01a1881d-8232-73a2-8b29-bc152832408e",
+    "full_name": "Omar Khalil",
+    "avatar_url": null,
+    "user_type": "doctor",
+    "role": "member",
+    "is_me": true,
+    "last_read_at": "2026-11-01T21:00:04+00:00"
+   },
+   {
+    "user_id": "01a1881d-8271-73c9-a05a-30abc80d4357",
+    "full_name": "Sara Nasser",
+    "avatar_url": "https://clinic.example/files/signed",
+    "user_type": "doctor",
+    "role": "member",
+    "is_me": false,
+    "last_read_at": "2026-10-31T15:12:00+00:00"
+   }
+  ],
+  "last_message": {
+   "id": "01a198e3-0c61-7214-868c-09ab13f73d0f",
+   "conversation_id": "01a19819-08ec-71e9-86ab-022e060f09a6",
+   "kind": "text",
+   "body": "see",
+   "mentions": [],
+   "sender": {
+    "id": "01a1881d-8232-73a2-8b29-bc152832408e",
+    "full_name": "Omar Khalil",
+    "avatar_url": null,
+    "role": null
+   },
+   "reply_to": null,
+   "attachments": [],
+   "reactions": [],
+   "created_at": "2026-11-01T20:52:59+00:00"
+  },
+  "unread_count": 0,
+  "messages_count": 5,
+  "last_message_at": "2026-11-01T20:52:59+00:00",
+  "created_at": "2026-11-01T17:12:19+00:00",
+  "deleted_at": null,
+  "deleted_by": null
+ },
+ "messages": [
+  {
+   "id": "01a198d1-3c36-70b2-acdd-b11460d0aac1",
+   "conversation_id": "01a19819-06d8-7386-98ab-c9bd9b61aed6",
+   "kind": "text",
+   "body": "On it — I will check and report back.",
+   "mentions": [],
+   "sender": {
+    "id": "01a1881d-8271-73c9-a05a-30abc80d4357",
+    "full_name": "Sara Nasser",
+    "avatar_url": "https://clinic.example/files/signed",
+    "role": "member"
+   },
+   "reply_to": {
+    "id": "01a19819-0781-7149-a1db-ddb1fa058316",
+    "sender_id": "01a1881d-8232-73a2-8b29-bc152832408e",
+    "sender_name": "Omar Khalil",
+    "kind": "text",
+    "excerpt": "Thanks @Grace Dela Cruz — looks good, go ahead.",
+    "file_name": null
+   },
+   "attachments": [],
+   "reactions": [],
+   "created_at": "2026-11-01T20:33:31+00:00"
+  },
+  {
+   "id": "01a19819-0797-7390-8e8f-9401b4e491e9",
+   "conversation_id": "01a19819-06d8-7386-98ab-c9bd9b61aed6",
+   "kind": "media",
+   "body": "Wound dressing changed, healing well.",
+   "mentions": [],
+   "sender": {
+    "id": "01a1881d-82b3-7033-963e-9324c61beeba",
+    "full_name": "Maria Santos",
+    "avatar_url": "https://clinic.example/files/signed",
+    "role": "member"
+   },
+   "reply_to": null,
+   "attachments": [
+    {
+     "id": "01a19819-07b7-7204-ab84-f0930d75a40f",
+     "name": "dressing-bed4.png",
+     "mime_type": "image/png",
+     "size_bytes": 4472,
+     "url": "https://clinic.example/files/signed"
+    }
+   ],
+   "reactions": [],
+   "created_at": "2026-11-01T05:05:00+00:00"
+  }
+ ],
+ "contacts": [
+  {
+   "id": "01a1881d-a104-7099-9d33-ef803cae670e",
+   "full_name": "Ali Hasan",
+   "avatar_url": null,
+   "user_type": "cashier"
+  },
+  {
+   "id": "01a1881d-7fbd-7098-bb05-e1e5ee20a196",
+   "full_name": "Amal Haddad",
+   "avatar_url": "https://clinic.example/files/signed",
+   "user_type": "admin"
+  }
+ ],
+ "settings": {
+  "bubble_style": "minimal",
+  "my_color": "purple",
+  "others_color": "green",
+  "notify_messages": true,
+  "count_in_badge": true,
+  "reactions": [
+   "👍",
+   "❤️",
+   "😂",
+   "😮",
+   "😢",
+   "🙏"
+  ],
+  "all_reactions": [
+   "👍",
+   "❤️",
+   "😂",
+   "😮",
+   "😢",
+   "🙏",
+   "😀",
+   "😊",
+   "🥰",
+   "😍",
+   "😎",
+   "🤔",
+   "😅",
+   "🙂",
+   "😉",
+   "🤗",
+   "😴",
+   "😬",
+   "😡",
+   "🥲",
+   "😭",
+   "🤩",
+   "👏",
+   "🙌",
+   "👌",
+   "✌️",
+   "🤝",
+   "💪",
+   "👀",
+   "👎",
+   "🫡",
+   "🤞",
+   "🔥",
+   "✨",
+   "🎉",
+   "💯",
+   "✅",
+   "❌",
+   "⚠️",
+   "⭐",
+   "💡",
+   "📌",
+   "⏰",
+   "☕",
+   "🩺",
+   "💊",
+   "🚑",
+   "❤️‍🩹"
+  ]
+ }
+}
