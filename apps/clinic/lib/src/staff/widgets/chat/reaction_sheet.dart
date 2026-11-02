@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+/// Emoji in colour: the default text font draws plain glyphs for some (❤️, ⚠️) on Android.
+const emojiStyle = TextStyle(
+  fontFamily: 'Noto Color Emoji',
+  fontFamilyFallback: ['Apple Color Emoji', 'Segoe UI Emoji'],
+);
+
 /// What the long-press sheet of a message answered.
 sealed class MessageAction {
   const MessageAction();
@@ -74,14 +80,15 @@ class _ActionsSheetState extends State<_ActionsSheet> {
                     border: Border.all(color: scheme.primary.withValues(alpha: 0.6), width: 2),
                   )
                 : null,
-            child: Text(e, style: const TextStyle(fontSize: 28)),
+            child: Text(e, style: emojiStyle.copyWith(fontSize: 28)),
           ),
         ),
       );
     }
 
+    // Clear of the system navigation bar.
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+      padding: EdgeInsets.fromLTRB(12, 0, 12, 16 + MediaQuery.viewPaddingOf(context).bottom),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,

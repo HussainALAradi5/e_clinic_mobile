@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'chat_avatar.dart';
+import 'reaction_sheet.dart' show emojiStyle;
 
 /// Colours of the bubbles (the web's defaults): mine blue, others green, a group leader's amber.
 abstract final class BubbleColors {
@@ -304,7 +305,15 @@ class _ReactionPill extends StatelessWidget {
             borderRadius: BorderRadius.circular(999),
             border: Border.all(color: mine ? const Color(0xFF60A5FA) : scheme.outlineVariant),
           ),
-          child: Text('${reaction.emoji} ${reaction.count}', style: const TextStyle(fontSize: 13)),
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(text: reaction.emoji, style: emojiStyle),
+                TextSpan(text: ' ${reaction.count}'),
+              ],
+            ),
+            style: const TextStyle(fontSize: 13),
+          ),
         ),
       ),
     );

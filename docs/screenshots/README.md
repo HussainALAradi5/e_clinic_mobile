@@ -76,6 +76,21 @@ Taken on a real Android phone (debug build; release builds block screenshots wit
 | Patient invoices | <img src="light/53-patient-invoices.png" width="220"> | <img src="dark/53-patient-invoices.png" width="220"> |
 | Patient profile | <img src="light/54-patient-profile.png" width="220"> | <img src="dark/54-patient-profile.png" width="220"> |
 
+## Nurse — chat
+
+| Screen | Light | Dark |
+|---|---|---|
+| Chat list | <img src="light/60-chat-list.png" width="220"> | <img src="dark/60-chat-list.png" width="220"> |
+| Chat group | <img src="light/61-chat-group.png" width="220"> | <img src="dark/61-chat-group.png" width="220"> |
+| Chat reactions sheet | <img src="light/62-chat-reactions-sheet.png" width="220"> | <img src="dark/62-chat-reactions-sheet.png" width="220"> |
+| Chat more emojis | <img src="light/63-chat-more-emojis.png" width="220"> | <img src="dark/63-chat-more-emojis.png" width="220"> |
+| Chat replying | <img src="light/64-chat-replying.png" width="220"> | <img src="dark/64-chat-replying.png" width="220"> |
+| Chat reply sent | <img src="light/65-chat-reply-sent.png" width="220"> | <img src="dark/65-chat-reply-sent.png" width="220"> |
+| Chat sent | <img src="light/66-chat-sent.png" width="220"> | <img src="dark/66-chat-sent.png" width="220"> |
+| Chat new | <img src="light/67-chat-new.png" width="220"> | <img src="dark/67-chat-new.png" width="220"> |
+| Chat row menu | <img src="light/68-chat-row-menu.png" width="220"> | <img src="dark/68-chat-row-menu.png" width="220"> |
+| Chat delete confirm | <img src="light/69-chat-delete-confirm.png" width="220"> | <img src="dark/69-chat-delete-confirm.png" width="220"> |
+
 ## Admin — support desk and notifications
 
 | Screen | Light | Dark |
