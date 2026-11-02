@@ -6,33 +6,8 @@ import '../shared/money.dart';
 part 'invoice.freezed.dart';
 part 'invoice.g.dart';
 
-@freezed
-abstract class InvoiceItem with _$InvoiceItem {
-  const factory InvoiceItem({
-    required String id,
-    required String description,
-    required String quantity,
-    required Money unitPrice,
-    required Money lineTotal,
-  }) = _InvoiceItem;
-
-  factory InvoiceItem.fromJson(Map<String, dynamic> json) => _$InvoiceItemFromJson(json);
-}
-
-@freezed
-abstract class Payment with _$Payment {
-  const factory Payment({
-    required String id,
-    required String code,
-    required Money amount,
-    required String method,
-    required String status,
-    String? cardLast4,
-    required DateTime paidAt,
-  }) = _Payment;
-
-  factory Payment.fromJson(Map<String, dynamic> json) => _$PaymentFromJson(json);
-}
+part 'invoice_invoice_item.dart';
+part 'invoice_payment.dart';
 
 /// Mirror of InvoiceResource — lines and payments on the detail only.
 @freezed

@@ -7,50 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../widgets/staff/orders/complete_order_sheet.dart';
 import 'order_providers.dart';
 
-/// Steps of a clinical order. One shows when the order may move to its target status **and** the user holds the
-/// right (same expressions as the server routes, which check again).
-enum OrderAction {
-  start('Start', Icons.play_arrow_rounded, GenericStatus.inProgress, 'orders.write & orders.perform'),
-  complete('Write result', Icons.task_alt_rounded, GenericStatus.completed, 'orders.write & orders.perform'),
-  cancel('Cancel order', Icons.cancel_outlined, GenericStatus.cancelled, 'orders.write');
-
-  const OrderAction(this.label, this.icon, this.target, this.access);
-
-  final String label;
-  final IconData icon;
-  final GenericStatus target;
-  final String access;
-
-  /// What this user can do with the order now, the main step first.
-  static List<OrderAction> available(ClinicalOrder order, Access access) => [
-    for (final action in values)
-      if (order.canMoveTo(action.target) && access.can(action.access)) action,
-  ];
-
-  /// The big button: start or write the result (cancelling stays in the menu).
-  static OrderAction? primary(List<OrderAction> actions) => actions.where((a) => a != cancel).firstOrNull;
-}
-
-/// What a step needs from the user: the result to complete, the reason to cancel, nothing to start.
-sealed class OrderInput {
-  const OrderInput();
-}
-
-final class NoInput extends OrderInput {
-  const NoInput();
-}
-
-final class ResultInput extends OrderInput {
-  const ResultInput(this.result);
-
-  final OrderResult result;
-}
-
-final class ReasonInput extends OrderInput {
-  const ReasonInput(this.reason);
-
-  final String reason;
-}
+part 'order_actions_no_input.dart';
+part 'order_actions_order_action.dart';
+part 'order_actions_order_input.dart';
+part 'order_actions_reason_input.dart';
+part 'order_actions_result_input.dart';
 
 abstract final class OrderActions {
   /// Asks what [action] needs before anything locks; null when the user backs out.

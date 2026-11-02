@@ -8,6 +8,9 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../controllers/auth/session_controller.dart';
 import 'code_field.dart';
 
+part 'two_factor_sheets_two_factor_disable_sheet.dart';
+part 'two_factor_sheets_two_factor_disable_sheet_state.dart';
+
 /// The secret key inside an `otpauth://` link, for typing into an authenticator by hand.
 String? otpSecret(String otpauthUrl) => Uri.tryParse(otpauthUrl)?.queryParameters['secret'];
 
@@ -133,53 +136,4 @@ class _TwoFactorSetupSheetState extends ConsumerState<TwoFactorSetupSheet> {
             ),
     );
   }
-}
-
-/// Turns two-step sign-in off after the password.
-class TwoFactorDisableSheet extends ConsumerStatefulWidget {
-  const TwoFactorDisableSheet({super.key});
-
-  @override
-  ConsumerState<TwoFactorDisableSheet> createState() => _TwoFactorDisableSheetState();
-}
-
-class _TwoFactorDisableSheetState extends ConsumerState<TwoFactorDisableSheet> {
-  final _password = TextEditingController();
-
-  @override
-  void dispose() {
-    _password.dispose();
-    super.dispose();
-  }
-
-  Future<void> _disable() async {
-    if (_password.text.isEmpty) throw const ActionCancelled();
-    await ref.read(authRepositoryProvider).disableTwoFactor(_password.text);
-    await ref.read(sessionProvider.notifier).refresh();
-    if (mounted) Navigator.pop(context, true);
-  }
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: EdgeInsets.fromLTRB(20, 8, 20, 20 + MediaQuery.viewInsetsOf(context).bottom),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text('Turn off two-step sign-in?', style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: 4),
-        const Text('Signing in will need only your password again.'),
-        const SizedBox(height: 16),
-        TextField(
-          controller: _password,
-          obscureText: true,
-          autofocus: true,
-          autofillHints: const [AutofillHints.password],
-          decoration: const InputDecoration(labelText: 'Your password'),
-        ),
-        const SizedBox(height: 16),
-        AppButton(label: 'Turn off', icon: Icons.no_encryption_outlined, expand: true, onPressed: _disable),
-      ],
-    ),
-  );
 }

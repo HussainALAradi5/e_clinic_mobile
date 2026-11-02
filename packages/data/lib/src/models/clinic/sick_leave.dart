@@ -3,6 +3,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'sick_leave.freezed.dart';
 part 'sick_leave.g.dart';
 
+part 'sick_leave_sick_leave_doctor.dart';
+
 /// Mirror of SickLeaveResource — a sick leave certificate (`SLV-…`) the doctor gave at a visit.
 @freezed
 abstract class SickLeave with _$SickLeave {
@@ -24,11 +26,4 @@ abstract class SickLeave with _$SickLeave {
   }) = _SickLeave;
 
   factory SickLeave.fromJson(Map<String, dynamic> json) => _$SickLeaveFromJson(json);
-}
-
-@freezed
-abstract class SickLeaveDoctor with _$SickLeaveDoctor {
-  const factory SickLeaveDoctor({required String id, required String fullName, String? jobTitle}) = _SickLeaveDoctor;
-
-  factory SickLeaveDoctor.fromJson(Map<String, dynamic> json) => _$SickLeaveDoctorFromJson(json);
 }

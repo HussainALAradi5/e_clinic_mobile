@@ -13,6 +13,9 @@ import '../../screens/auth/splash_screen.dart';
 import '../../screens/auth/two_factor_screen.dart';
 import 'auth_paths.dart';
 
+part 'auth_routing_app_lock_scope.dart';
+part 'auth_routing_app_lock_scope_state.dart';
+
 /// Routes of the sign-in feature; add them at the top level of the app router.
 List<RouteBase> authRoutes() => [
   GoRoute(path: AuthPaths.splash, builder: (_, _) => const SplashScreen()),
@@ -71,36 +74,4 @@ class AuthRefresh extends ChangeNotifier {
       ..listen(sessionProvider, (_, _) => notifyListeners())
       ..listen(appLockProvider, (_, _) => notifyListeners());
   }
-}
-
-/// Tells the app lock when the app goes to the background and comes back.
-class AppLockScope extends ConsumerStatefulWidget {
-  const AppLockScope({super.key, required this.child});
-
-  final Widget child;
-
-  @override
-  ConsumerState<AppLockScope> createState() => _AppLockScopeState();
-}
-
-class _AppLockScopeState extends ConsumerState<AppLockScope> {
-  late final AppLifecycleListener _listener;
-
-  @override
-  void initState() {
-    super.initState();
-    _listener = AppLifecycleListener(
-      onHide: () => ref.read(appLockProvider.notifier).paused(),
-      onShow: () => ref.read(appLockProvider.notifier).resumed(),
-    );
-  }
-
-  @override
-  void dispose() {
-    _listener.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => widget.child;
 }

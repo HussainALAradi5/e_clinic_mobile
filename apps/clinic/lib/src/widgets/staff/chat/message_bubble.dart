@@ -7,12 +7,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'chat_avatar.dart';
 import 'reaction_sheet.dart' show emojiStyle;
 
-/// Colours of the bubbles (the web's defaults): mine blue, others green, a group leader's amber.
-abstract final class BubbleColors {
-  static const mine = Color(0xFF1D4ED8);
-  static const others = Color(0xFF15803D);
-  static const leader = Color(0xFFB45309);
-}
+part 'message_bubble_bubble_colors.dart';
+part 'message_bubble_pending.dart';
+part 'message_bubble_quote.dart';
+part 'message_bubble_reaction_pill.dart';
 
 /// One message: mine on the right, others on the left with their avatar and name (first of a run). A quote card
 /// when it is a reply (tap: show the original), photos, files, a voice note, time, and reaction pills under it.
@@ -230,104 +228,4 @@ class _MessageBubbleState extends State<MessageBubble> {
   }
 
   Future<void> _open(String url) => launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-}
-
-class _Quote extends StatelessWidget {
-  const _Quote({required this.quote, required this.meId, required this.onTap});
-
-  final ChatReplyQuote quote;
-  final String meId;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final text = Theme.of(context).textTheme;
-    const white = Colors.white;
-    final what = switch (quote.kind) {
-      'voice' => '🎤 Voice note',
-      'media' => '📎 ${quote.excerpt.isNotEmpty ? quote.excerpt : quote.fileName ?? 'File'}',
-      _ => quote.excerpt,
-    };
-    return Semantics(
-      button: true,
-      label: 'Show the message from ${quote.senderName}',
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 6),
-          padding: const EdgeInsets.fromLTRB(8, 5, 8, 6),
-          decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.16),
-            borderRadius: BorderRadius.circular(8),
-            border: const Border(left: BorderSide(color: white, width: 3)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                quote.senderId == meId ? 'You' : quote.senderName,
-                style: text.labelMedium?.copyWith(color: white, fontWeight: FontWeight.w700),
-              ),
-              Text(
-                what,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: text.bodySmall?.copyWith(color: white.withValues(alpha: 0.88)),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ReactionPill extends StatelessWidget {
-  const _ReactionPill({required this.reaction, required this.mine, required this.onTap});
-
-  final ChatReaction reaction;
-  final bool mine;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Semantics(
-      button: true,
-      label: '${reaction.emoji} ${reaction.count}: ${reaction.names.join(', ')}',
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(999),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-          decoration: BoxDecoration(
-            color: mine ? const Color(0xFF60A5FA).withValues(alpha: 0.2) : scheme.surfaceContainerLowest,
-            borderRadius: BorderRadius.circular(999),
-            border: Border.all(color: mine ? const Color(0xFF60A5FA) : scheme.outlineVariant),
-          ),
-          child: Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(text: reaction.emoji, style: emojiStyle),
-                TextSpan(text: ' ${reaction.count}'),
-              ],
-            ),
-            style: const TextStyle(fontSize: 13),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Pending extends StatelessWidget {
-  const _Pending();
-
-  @override
-  Widget build(BuildContext context) => Container(
-    height: 80,
-    color: Colors.black26,
-    alignment: Alignment.center,
-    child: const Text('Checking file…', style: TextStyle(color: Colors.white)),
-  );
 }

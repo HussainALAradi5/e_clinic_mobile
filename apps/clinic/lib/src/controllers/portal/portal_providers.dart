@@ -4,6 +4,8 @@ import 'package:e_clinic_core/core.dart';
 import 'package:e_clinic_data/data.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+part 'portal_providers_profile.dart';
+
 /// Bumped after a booking or cancellation, so every visit list and the home page reload.
 class VisitsVersion extends Notifier<int> {
   @override
@@ -64,14 +66,6 @@ final glancesProvider = FutureProvider.autoDispose<Glances>((ref) async {
 final unreadCountProvider = FutureProvider.autoDispose<int>(
   (ref) => ref.watch(notificationRepositoryProvider).unreadCount(),
 );
-
-/// The patient's file; [Profile.replace] after an edit.
-class Profile extends AsyncNotifier<Patient> {
-  @override
-  Future<Patient> build() => ref.watch(portalRepositoryProvider).profile();
-
-  void replace(Patient patient) => state = AsyncData(patient);
-}
 
 final profileProvider = AsyncNotifierProvider.autoDispose<Profile, Patient>(Profile.new);
 

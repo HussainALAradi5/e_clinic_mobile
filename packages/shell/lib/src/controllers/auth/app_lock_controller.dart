@@ -5,13 +5,7 @@ import 'package:local_auth/local_auth.dart';
 
 import 'session_controller.dart';
 
-/// Whether the app lock is on, and whether the app is locked right now.
-class AppLockState {
-  const AppLockState({required this.enabled, required this.locked});
-
-  final bool enabled;
-  final bool locked;
-}
+part 'app_lock_controller_app_lock_state.dart';
 
 /// Biometric app lock: on cold start and after [AppConfig.lockAfterFor] the signed-in account (staff lock sooner) in
 /// the background, when the user turned it on.

@@ -4,13 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app_lock_controller.dart';
 
-/// A sign-in waiting for its two-factor code (memory only — never stored).
-class TwoFactorChallenge {
-  const TwoFactorChallenge({required this.token, required this.email});
-
-  final String token;
-  final String email;
-}
+part 'session_controller_two_factor_challenge.dart';
 
 /// The signed-in session: restored from the stored token on start (GET /auth/me), null when signed out.
 class SessionController extends AsyncNotifier<Session?> {

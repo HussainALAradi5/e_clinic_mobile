@@ -5,6 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'schedule_cache.dart';
 
+part 'staff_providers_approvals_version.dart';
+part 'staff_providers_only_mine.dart';
+part 'staff_providers_sessions_day.dart';
+part 'staff_providers_today_clock.dart';
+part 'staff_providers_visit_stage.dart';
+
 /// Bumped after a check-in, start, complete or no-show, so the schedule, sessions and open bookings reload.
 class ScheduleVersion extends Notifier<int> {
   @override
@@ -15,43 +21,10 @@ class ScheduleVersion extends Notifier<int> {
 
 final scheduleVersionProvider = NotifierProvider<ScheduleVersion, int>(ScheduleVersion.new);
 
-/// Bumped after a decision, so the approvals list and the tab badge reload.
-class ApprovalsVersion extends Notifier<int> {
-  @override
-  int build() => 0;
-
-  void bump() => state++;
-}
-
 final approvalsVersionProvider = NotifierProvider<ApprovalsVersion, int>(ApprovalsVersion.new);
-
-/// Where a booking is in the visit: one chip each on the Today page.
-enum VisitStage {
-  all('All', []),
-  expected('Expected', [AppointmentStatus.pending, AppointmentStatus.confirmed]),
-  waiting('Waiting', [AppointmentStatus.checkedIn]),
-  withProvider('With doctor', [AppointmentStatus.inProgress]),
-  done('Done', [AppointmentStatus.completed, AppointmentStatus.noShow]);
-
-  const VisitStage(this.label, this.statuses);
-
-  final String label;
-  final List<AppointmentStatus> statuses;
-
-  bool includes(Appointment visit) => this == all || statuses.contains(visit.status);
-}
 
 /// Cancelled and moved bookings never show on a day's schedule.
 const offSchedule = [AppointmentStatus.cancelled, AppointmentStatus.rescheduled];
-
-/// Only my own bookings. Starts on for people who treat patients; front desk staff start with the whole clinic.
-/// (Accounts that can only read their own bookings get just those from the server either way.)
-class OnlyMine extends Notifier<bool> {
-  @override
-  bool build() => ref.watch(accessProvider).can('appointments.treat');
-
-  void set(bool value) => state = value;
-}
 
 final onlyMineProvider = NotifierProvider<OnlyMine, bool>(OnlyMine.new);
 
@@ -103,14 +76,6 @@ final todayScheduleProvider = FutureProvider.autoDispose<TodaySchedule>((ref) as
   }
 });
 
-/// The day shown on the Sessions page (`YYYY-MM-DD`).
-class SessionsDay extends Notifier<String> {
-  @override
-  String build() => ClinicClock.today();
-
-  void set(String day) => state = day;
-}
-
 final sessionsDayProvider = NotifierProvider<SessionsDay, String>(SessionsDay.new);
 
 /// My treatment sessions on the chosen day.
@@ -152,15 +117,6 @@ final patientTodayProvider = FutureProvider.autoDispose.family<List<Appointment>
       );
   return page.items;
 });
-
-/// The signed-in staff member's attendance today and their shift.
-class TodayClock extends AsyncNotifier<TodayAttendance> {
-  @override
-  Future<TodayAttendance> build() => ref.watch(attendanceRepositoryProvider).today();
-
-  /// Puts a fresh check-in / check-out on screen without another request.
-  void replace(Attendance row) => state = AsyncData((state.value ?? const TodayAttendance()).copyWith(attendance: row));
-}
 
 final todayClockProvider = AsyncNotifierProvider.autoDispose<TodayClock, TodayAttendance>(TodayClock.new);
 

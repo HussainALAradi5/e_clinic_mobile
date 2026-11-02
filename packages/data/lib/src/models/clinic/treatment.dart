@@ -7,43 +7,10 @@ import '../shared/refs.dart';
 part 'treatment.freezed.dart';
 part 'treatment.g.dart';
 
-@freezed
-abstract class NextSession with _$NextSession {
-  const factory NextSession({required String id, required String scheduledDate, required String startTime}) =
-      _NextSession;
-
-  factory NextSession.fromJson(Map<String, dynamic> json) => _$NextSessionFromJson(json);
-}
-
-/// Attendance and progress computed by the server from the session appointments.
-@freezed
-abstract class TreatmentProgress with _$TreatmentProgress {
-  const factory TreatmentProgress({
-    @Default(0) int attendedSessions,
-    @Default(0) int absentSessions,
-    @Default(0) int upcomingSessions,
-    @Default(0) int remainingSessions,
-    @Default(0) int consecutiveAbsences,
-    double? attendanceRate,
-    NextSession? nextSession,
-  }) = _TreatmentProgress;
-
-  factory TreatmentProgress.fromJson(Map<String, dynamic> json) => _$TreatmentProgressFromJson(json);
-}
-
-/// How a treatment plan is going — drives the colour of its progress bar.
-enum ProgressHealth {
-  notStarted('Not started'),
-  onTrack('On track'),
-  slipping('Missing sessions'),
-  atRisk('At risk'),
-  done('Completed'),
-  stopped('Stopped');
-
-  const ProgressHealth(this.label);
-
-  final String label;
-}
+part 'treatment_next_session.dart';
+part 'treatment_progress_health.dart';
+part 'treatment_treatment_progress.dart';
+part 'treatment_treatment_session.dart';
 
 /// Mirror of TreatmentResource.
 @freezed
@@ -83,21 +50,4 @@ abstract class Treatment with _$Treatment {
 
   /// 0.0 – 1.0 of the planned sessions attended.
   double get completion => plannedSessions == 0 ? 0 : (attended / plannedSessions).clamp(0, 1).toDouble();
-}
-
-/// One session of a plan (GET /treatments/{id}/sessions).
-@freezed
-abstract class TreatmentSession with _$TreatmentSession {
-  const factory TreatmentSession({
-    required String id,
-    required int sessionNumber,
-    required String scheduledDate,
-    required String startTime,
-    PersonRef? provider,
-    NamedRef? room,
-    @JsonKey(unknownEnumValue: AppointmentStatus.unknown) required AppointmentStatus status,
-    @Default(false) bool isAttended,
-  }) = _TreatmentSession;
-
-  factory TreatmentSession.fromJson(Map<String, dynamic> json) => _$TreatmentSessionFromJson(json);
 }

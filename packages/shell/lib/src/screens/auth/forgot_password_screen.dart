@@ -9,7 +9,7 @@ import '../../config/routes/auth_paths.dart';
 import '../../widgets/auth/auth_scaffold.dart';
 import '../../widgets/auth/code_field.dart';
 
-enum _Step { email, code, password }
+part 'forgot_password_screen_step.dart';
 
 /// `/password/forgot` — email → 6-digit code from the email → new password. Also completes a portal invitation.
 class ForgotPasswordScreen extends ConsumerStatefulWidget {

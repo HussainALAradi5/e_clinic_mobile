@@ -2,8 +2,7 @@ import 'package:e_clinic_core/core.dart';
 
 import '../../models/identity/app_notification.dart';
 
-/// Which notifications the inbox shows.
-enum InboxRead { all, unread, read }
+part 'notification_repository_inbox_read.dart';
 
 /// The signed-in user's in-app inbox and push devices.
 class NotificationRepository {

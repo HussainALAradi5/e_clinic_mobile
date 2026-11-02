@@ -10,6 +10,9 @@ import '../../widgets/staff/requests/ask_request_sheet.dart';
 import '../../widgets/staff/requests/request_tone.dart';
 import '../../widgets/staff/requests/staff_request_card.dart';
 
+part 'staff_requests_screen_ask_button.dart';
+part 'staff_requests_screen_askable_day_card.dart';
+
 /// `/hr/requests` — my days I can still ask about (late in amber, overtime in blue: tap to ask HR, with an optional
 /// reason), then my requests with HR's decision and reason. HR decides them under Approvals.
 class StaffRequestsScreen extends ConsumerWidget {
@@ -100,93 +103,4 @@ class StaffRequestsScreen extends ConsumerWidget {
       ),
     ),
   );
-}
-
-/// A day with late minutes and / or overtime: one coloured button per kind of request it still allows.
-class _AskableDayCard extends StatelessWidget {
-  const _AskableDayCard({required this.day, required this.onAsk});
-
-  final AskableDay day;
-  final void Function(String type) onAsk;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final a = day.attendance;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                Expanded(child: Text(ClinicClock.day(a.date), style: theme.textTheme.titleSmall)),
-                Text(
-                  '${clockTime(a.checkInAt)} – ${clockTime(a.checkOutAt)}',
-                  style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            for (final type in day.types) ...[
-              _AskButton(
-                late: type == StaffRequestTypes.lateExcuse,
-                minutes: type == StaffRequestTypes.lateExcuse ? a.lateMinutes : a.overtimeMinutes,
-                onTap: () => onAsk(type),
-              ),
-              const SizedBox(height: 6),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _AskButton extends StatelessWidget {
-  const _AskButton({required this.late, required this.minutes, required this.onTap});
-
-  final bool late;
-  final int minutes;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final tone = RequestTone.of(context, late: late);
-    final style = Theme.of(context).textTheme.bodyLarge?.copyWith(color: tone);
-    return Material(
-      color: RequestTone.soft(context, late: late),
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          child: Row(
-            children: [
-              Icon(RequestTone.icon(late: late), color: tone),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text.rich(
-                  TextSpan(
-                    text: late ? 'Late ' : 'Overtime ',
-                    children: [
-                      TextSpan(
-                        text: formatMinutes(minutes),
-                        style: const TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                      TextSpan(text: late ? ' · ask to excuse' : ' · ask to pay'),
-                    ],
-                  ),
-                  style: style,
-                ),
-              ),
-              Icon(Icons.arrow_forward_rounded, color: tone),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }

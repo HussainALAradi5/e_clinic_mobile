@@ -2,8 +2,7 @@ import 'package:e_clinic_core/core.dart';
 
 import '../../models/communication/chat.dart';
 
-/// Chat list filters (sent to the server as `type` / `read`).
-enum ChatFilter { all, unread, groups, direct }
+part 'chat_repository_chat_filter.dart';
 
 /// Staff chat: my chats (filtered and paged on the server), messages 50 at a time going back, sending text and
 /// photos (optionally as a reply), reactions, read receipts, starting a chat and soft-deleting one.

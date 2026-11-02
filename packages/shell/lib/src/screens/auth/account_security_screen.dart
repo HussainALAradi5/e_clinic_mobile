@@ -9,6 +9,10 @@ import '../../controllers/auth/app_lock_controller.dart';
 import '../../controllers/auth/session_controller.dart';
 import '../../widgets/auth/two_factor_sheets.dart';
 
+part 'account_security_screen_change_password_sheet.dart';
+part 'account_security_screen_change_password_sheet_state.dart';
+part 'account_security_screen_two_factor_tile.dart';
+
 /// `/account/security` — change password, two-step sign-in, app lock with fingerprint / face, sign out everywhere.
 class AccountSecurityScreen extends ConsumerWidget {
   const AccountSecurityScreen({super.key});
@@ -89,94 +93,4 @@ class AccountSecurityScreen extends ConsumerWidget {
     );
     if ((saved ?? false) && context.mounted) AppSnack.success(context, 'Your password is changed.');
   }
-}
-
-class _ChangePasswordSheet extends ConsumerStatefulWidget {
-  const _ChangePasswordSheet();
-
-  @override
-  ConsumerState<_ChangePasswordSheet> createState() => _ChangePasswordSheetState();
-}
-
-class _ChangePasswordSheetState extends ConsumerState<_ChangePasswordSheet> {
-  final _form = GlobalKey<FormState>();
-  final _current = TextEditingController();
-  final _password = TextEditingController();
-  final _confirm = TextEditingController();
-
-  @override
-  void dispose() {
-    for (final c in [_current, _password, _confirm]) {
-      c.dispose();
-    }
-    super.dispose();
-  }
-
-  Future<void> _save() async {
-    if (!(_form.currentState?.validate() ?? false)) throw const ActionCancelled();
-    await ref
-        .read(authRepositoryProvider)
-        .changePassword(currentPassword: _current.text, password: _password.text, passwordConfirmation: _confirm.text);
-    if (mounted) Navigator.of(context).pop(true);
-  }
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: EdgeInsets.fromLTRB(24, 0, 24, 24 + MediaQuery.viewInsetsOf(context).bottom),
-    child: Form(
-      key: _form,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text('Change password', style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 20),
-          PasswordField(
-            controller: _current,
-            label: 'Current password',
-            validator: (v) => (v ?? '').isEmpty ? 'Enter your current password.' : null,
-          ),
-          const SizedBox(height: 16),
-          NewPasswordFields(password: _password, confirm: _confirm),
-          const SizedBox(height: 24),
-          AppButton(label: 'Save new password', expand: true, lock: ButtonLock.once, onPressed: _save),
-        ],
-      ),
-    ),
-  );
-}
-
-/// Two-step sign-in: on / off with its sheet; roles that must keep it cannot turn it off.
-class _TwoFactorTile extends StatelessWidget {
-  const _TwoFactorTile({required this.state});
-
-  final TwoFactorState state;
-
-  Future<void> _open(BuildContext context, Widget sheet, String done) async {
-    final changed = await showModalBottomSheet<bool>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      builder: (_) => sheet,
-    );
-    if ((changed ?? false) && context.mounted) AppSnack.success(context, done);
-  }
-
-  @override
-  Widget build(BuildContext context) => ListTile(
-    leading: Icon(state.enabled ? Icons.verified_user_rounded : Icons.shield_outlined),
-    title: const Text('Two-step sign-in'),
-    subtitle: Text(switch ((state.enabled, state.mandatory)) {
-      (true, true) => 'On — your role requires it.',
-      (true, false) => 'On — a code from your authenticator app at sign-in.',
-      (false, true) => 'Your role requires it: turn it on now.',
-      (false, false) => 'Off — add a code from an authenticator app at sign-in.',
-    }),
-    trailing: state.enabled && state.mandatory ? null : const Icon(Icons.chevron_right_rounded),
-    onTap: switch ((state.enabled, state.mandatory)) {
-      (true, true) => null,
-      (true, false) => () => _open(context, const TwoFactorDisableSheet(), 'Two-step sign-in is off.'),
-      _ => () => _open(context, const TwoFactorSetupSheet(), 'Two-step sign-in is on.'),
-    },
-  );
 }

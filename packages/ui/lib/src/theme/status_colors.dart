@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Badge colour of any enum value, the same as the web: hand-picked where a value carries meaning (completed is always
-/// green), otherwise a stable colour from the value's place in the enum.
-enum StatusTone { grey, blue, teal, green, amber, red, redOutline, orange, cyan, indigo, purple, pink }
+part 'status_colors_status_tone.dart';
 
 abstract final class StatusColors {
   /// Same table as the web client (`status-tones.constants.ts`); keep the two in step.

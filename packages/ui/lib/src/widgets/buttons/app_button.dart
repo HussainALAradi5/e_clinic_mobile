@@ -6,17 +6,10 @@ import 'package:flutter/services.dart';
 import '../feedback/app_snack.dart';
 import '../feedback/sheets.dart';
 
-/// `untilDone`: usable again after the action finishes. `once`: stays locked after success (submit, book, pay).
-enum ButtonLock { untilDone, once }
-
-enum ButtonVariant { filled, tonal, outlined, text }
-
-enum _Phase { idle, busy, done, locked }
-
-/// Thrown by an action that stopped on purpose (e.g. the form is invalid): the button resets without a message.
-class ActionCancelled implements Exception {
-  const ActionCancelled();
-}
+part 'app_button_action_cancelled.dart';
+part 'app_button_button_lock.dart';
+part 'app_button_button_variant.dart';
+part 'app_button_phase.dart';
 
 /// The only button for actions that call the server: locks on tap (a second tap is ignored), shows a spinner,
 /// then a tick; optional confirmation sheet; errors show as a snack and unlock the button.

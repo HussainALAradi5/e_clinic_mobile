@@ -9,7 +9,7 @@ import '../../config/routes/portal_paths.dart';
 import '../../controllers/portal/portal_providers.dart';
 import '../../widgets/portal/visits/visit_card.dart';
 
-enum _View { upcoming, past }
+part 'appointments_screen_view.dart';
 
 /// `/appointments` — upcoming visits (soonest first) with check-in code and cancel; past ones newest first.
 class AppointmentsScreen extends ConsumerStatefulWidget {

@@ -1,8 +1,7 @@
 import 'package:e_clinic_core/core.dart';
 import '../../models/clinic/clinical_order.dart';
 
-/// What a file is (AttachmentCategory): decides the allowed types and size on the server.
-enum AttachmentCategory { xrayImage, labResult, clinicalDocument, referralLetter, medicalCertificate, ticketAttachment }
+part 'attachment_repository_attachment_category.dart';
 
 /// Attachments — files open through short-lived signed links.
 class AttachmentRepository {

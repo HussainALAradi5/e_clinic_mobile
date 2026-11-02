@@ -13,6 +13,10 @@ import '../../config/routes/staff_paths.dart';
 import '../../controllers/staff/chat_providers.dart';
 import '../../widgets/staff/chat/chat_avatar.dart';
 
+part 'chats_screen_chat_row.dart';
+part 'chats_screen_contact_picker.dart';
+part 'chats_screen_contact_picker_state.dart';
+
 /// `/chat` — my chats, newest activity first: search (every word of a name), chips All · Unread · Groups ·
 /// One-to-one (on the server), paging as you scroll, unread badges. Long-press a chat for Open / Mark as read /
 /// Delete chat (a soft delete). "New chat" starts a one-to-one chat with a colleague. Refreshes every 20 s.
@@ -200,146 +204,4 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
       ),
     );
   }
-}
-
-class _ChatRow extends StatelessWidget {
-  const _ChatRow({required this.chat, required this.meId, required this.onTap, required this.onLongPress});
-
-  final Conversation chat;
-  final String meId;
-  final VoidCallback onTap;
-  final VoidCallback onLongPress;
-
-  String get _preview {
-    final m = chat.lastMessage;
-    if (m == null) return chat.isGroup ? 'Group created' : 'Say hello';
-    final who = m.sender.id == meId ? 'You: ' : (chat.isGroup ? '${m.sender.fullName.split(' ').first}: ' : '');
-    final what = switch (m.kind) {
-      'voice' => '🎤 Voice note',
-      'media' when (m.body ?? '').isEmpty => '📎 ${m.attachments.firstOrNull?.isImage ?? false ? 'Photo' : 'File'}',
-      _ => m.body ?? '',
-    };
-    return '$who$what';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final unread = chat.unreadCount > 0;
-    final when = chat.activity;
-    return ListTile(
-      onTap: onTap,
-      onLongPress: onLongPress,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-      leading: ChatAvatar(name: chat.title, seed: chat.partnerId ?? chat.id, url: chat.avatarUrl, group: chat.isGroup),
-      title: Row(
-        children: [
-          Flexible(
-            child: Text(
-              chat.title,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.titleMedium?.copyWith(fontWeight: unread ? FontWeight.w700 : null),
-            ),
-          ),
-          if (chat.isGroup && chat.iLead) ...[
-            const SizedBox(width: 4),
-            Icon(Icons.star_rounded, size: 16, color: Colors.amber.shade700, semanticLabel: 'You lead this group'),
-          ],
-        ],
-      ),
-      subtitle: Text(_preview, maxLines: 1, overflow: TextOverflow.ellipsis),
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          if (when != null)
-            Text(
-              ClinicClock.ago(when),
-              style: theme.textTheme.labelSmall?.copyWith(color: unread ? const Color(0xFF15803D) : null),
-            ),
-          const SizedBox(height: 4),
-          if (unread)
-            Badge(
-              label: Text(chat.unreadCount > 99 ? '99+' : '${chat.unreadCount}'),
-              backgroundColor: const Color(0xFF15803D),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Pick a colleague (server search as you type).
-class _ContactPicker extends ConsumerStatefulWidget {
-  const _ContactPicker();
-
-  @override
-  ConsumerState<_ContactPicker> createState() => _ContactPickerState();
-}
-
-class _ContactPickerState extends ConsumerState<_ContactPicker> {
-  var _search = '';
-  late Future<List<ChatContact>> _contacts = ref.read(chatRepositoryProvider).contacts();
-  Timer? _debounce;
-
-  @override
-  void dispose() {
-    _debounce?.cancel();
-    super.dispose();
-  }
-
-  void _changed(String value) {
-    _search = value;
-    _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), () {
-      if (mounted) {
-        setState(
-          () => _contacts = ref.read(chatRepositoryProvider).contacts(search: _search.trim().isEmpty ? null : _search),
-        );
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) => SizedBox(
-    height: MediaQuery.sizeOf(context).height * 0.75,
-    child: Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('New chat', style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 8),
-              SearchField(hint: 'Search a colleague', onChanged: _changed),
-            ],
-          ),
-        ),
-        Expanded(
-          child: FutureBuilder<List<ChatContact>>(
-            future: _contacts,
-            builder: (context, snap) {
-              if (snap.hasError) return ErrorState(error: snap.error!);
-              final list = snap.data;
-              if (list == null) return const Center(child: CircularProgressIndicator());
-              if (list.isEmpty) return const EmptyState(icon: Icons.person_search_outlined, title: 'Nobody found');
-              return ListView.builder(
-                itemCount: list.length,
-                itemBuilder: (context, i) {
-                  final c = list[i];
-                  return ListTile(
-                    leading: ChatAvatar(name: c.fullName, seed: c.id, url: c.avatarUrl, size: 40),
-                    title: Text(c.fullName),
-                    subtitle: c.userType == null ? null : Text(c.userType!.replaceAll('_', ' ')),
-                    onTap: () => Navigator.pop(context, c),
-                  );
-                },
-              );
-            },
-          ),
-        ),
-      ],
-    ),
-  );
 }

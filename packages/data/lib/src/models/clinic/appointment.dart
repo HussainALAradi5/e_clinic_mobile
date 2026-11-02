@@ -7,6 +7,8 @@ import '../shared/refs.dart';
 part 'appointment.freezed.dart';
 part 'appointment.g.dart';
 
+part 'appointment_slot.dart';
+
 /// Mirror of AppointmentResource (the fields the apps use).
 @freezed
 abstract class Appointment with _$Appointment {
@@ -47,12 +49,4 @@ abstract class Appointment with _$Appointment {
   String get patientName => patient?.fullName ?? 'Patient';
 
   bool canMoveTo(AppointmentStatus next) => allowedTransitions.contains(next);
-}
-
-/// A free time (GET /portal/slots).
-@freezed
-abstract class Slot with _$Slot {
-  const factory Slot({required String startTime, required String endTime}) = _Slot;
-
-  factory Slot.fromJson(Map<String, dynamic> json) => _$SlotFromJson(json);
 }
