@@ -8,7 +8,7 @@ the web client, where staff pages and the patient portal also live in one app.
 
 It talks to the same REST API as the web client, so a feature looks and behaves the same everywhere.
 
-**Screenshots:** taken on a real phone, light and dark, for each role — [docs/screenshots](docs/screenshots/README.md).
+**Screenshots:** taken on a real phone, light and dark, for each role — [below](#screenshots).
 
 ## Live demo
 
@@ -225,3 +225,114 @@ dispense sends (and when it needs a witness), and which area each account may op
 - Push notifications (Firebase / APNs): needs a free Firebase project and its config files
 - `https://` App Links / Universal Links and certificate pinning: need the clinic's own domain
 - An app-switcher privacy overlay on iOS (Android already blocks screenshots)
+
+<!-- screenshots:start -->
+## Screenshots
+
+Taken on a real Android phone (debug build; release builds block screenshots with `FLAG_SECURE`) against the local API with the demo data, signed in as each demo user. Each screen in **light** and **dark** (the system dark mode).
+
+### Sign in
+
+| Screen | Light | Dark |
+|---|---|---|
+| Sign in | <img src="docs/screenshots/light/01-sign-in.png" width="220"> | <img src="docs/screenshots/dark/01-sign-in.png" width="220"> |
+
+### Doctor
+
+| Screen | Light | Dark |
+|---|---|---|
+| Doctor today | <img src="docs/screenshots/light/10-doctor-today.png" width="220"> | <img src="docs/screenshots/dark/10-doctor-today.png" width="220"> |
+| Doctor more | <img src="docs/screenshots/light/11-doctor-more.png" width="220"> | <img src="docs/screenshots/dark/11-doctor-more.png" width="220"> |
+| Patient files | <img src="docs/screenshots/light/12-patient-files.png" width="220"> | <img src="docs/screenshots/dark/12-patient-files.png" width="220"> |
+| Patient file | <img src="docs/screenshots/light/13-patient-file.png" width="220"> | <img src="docs/screenshots/dark/13-patient-file.png" width="220"> |
+| Calendar | <img src="docs/screenshots/light/14-calendar.png" width="220"> | <img src="docs/screenshots/dark/14-calendar.png" width="220"> |
+| Order work list | <img src="docs/screenshots/light/15-order-work-list.png" width="220"> | <img src="docs/screenshots/dark/15-order-work-list.png" width="220"> |
+| Order detail | <img src="docs/screenshots/light/16-order-detail.png" width="220"> | <img src="docs/screenshots/dark/16-order-detail.png" width="220"> |
+| My leave | <img src="docs/screenshots/light/17-my-leave.png" width="220"> | <img src="docs/screenshots/dark/17-my-leave.png" width="220"> |
+| Emergency access | <img src="docs/screenshots/light/18-emergency-access.png" width="220"> | <img src="docs/screenshots/dark/18-emergency-access.png" width="220"> |
+| Doctor more menu | <img src="docs/screenshots/light/doctor-more-menu.png" width="220"> | <img src="docs/screenshots/dark/doctor-more-menu.png" width="220"> |
+| Doctor new ticket invalid | <img src="docs/screenshots/light/doctor-new-ticket-invalid.png" width="220"> | <img src="docs/screenshots/dark/doctor-new-ticket-invalid.png" width="220"> |
+| Doctor new ticket opened | <img src="docs/screenshots/light/doctor-new-ticket-opened.png" width="220"> | <img src="docs/screenshots/dark/doctor-new-ticket-opened.png" width="220"> |
+| Doctor new ticket | <img src="docs/screenshots/light/doctor-new-ticket.png" width="220"> | <img src="docs/screenshots/dark/doctor-new-ticket.png" width="220"> |
+| Doctor notifications | <img src="docs/screenshots/light/doctor-notifications.png" width="220"> | <img src="docs/screenshots/dark/doctor-notifications.png" width="220"> |
+| Doctor ticket solved | <img src="docs/screenshots/light/doctor-ticket-solved.png" width="220"> | <img src="docs/screenshots/dark/doctor-ticket-solved.png" width="220"> |
+| Doctor tickets | <img src="docs/screenshots/light/doctor-tickets.png" width="220"> | <img src="docs/screenshots/dark/doctor-tickets.png" width="220"> |
+
+### Pharmacist
+
+| Screen | Light | Dark |
+|---|---|---|
+| Pharmacist today | <img src="docs/screenshots/light/20-pharmacist-today.png" width="220"> | <img src="docs/screenshots/dark/20-pharmacist-today.png" width="220"> |
+| Pharmacist more | <img src="docs/screenshots/light/21-pharmacist-more.png" width="220"> | <img src="docs/screenshots/dark/21-pharmacist-more.png" width="220"> |
+| Pharmacy queue | <img src="docs/screenshots/light/22-pharmacy-queue.png" width="220"> | <img src="docs/screenshots/dark/22-pharmacy-queue.png" width="220"> |
+| Dispense | <img src="docs/screenshots/light/23-dispense.png" width="220"> | <img src="docs/screenshots/dark/23-dispense.png" width="220"> |
+| Pack scan | <img src="docs/screenshots/light/24-pack-scan.png" width="220"> | <img src="docs/screenshots/dark/24-pack-scan.png" width="220"> |
+| Wrong pack | <img src="docs/screenshots/light/25-wrong-pack.png" width="220"> | — |
+
+### Reception
+
+| Screen | Light | Dark |
+|---|---|---|
+| Reception today | <img src="docs/screenshots/light/30-reception-today.png" width="220"> | <img src="docs/screenshots/dark/30-reception-today.png" width="220"> |
+| Reception more | <img src="docs/screenshots/light/31-reception-more.png" width="220"> | <img src="docs/screenshots/dark/31-reception-more.png" width="220"> |
+| Reception patient file | <img src="docs/screenshots/light/32-reception-patient-file.png" width="220"> | <img src="docs/screenshots/dark/32-reception-patient-file.png" width="220"> |
+| Booking wizard | <img src="docs/screenshots/light/33-booking-wizard.png" width="220"> | <img src="docs/screenshots/dark/33-booking-wizard.png" width="220"> |
+| Appearance switch | <img src="docs/screenshots/light/34-appearance-switch.png" width="220"> | <img src="docs/screenshots/dark/34-appearance-switch.png" width="220"> |
+| Clock | <img src="docs/screenshots/light/35-clock.png" width="220"> | <img src="docs/screenshots/dark/35-clock.png" width="220"> |
+
+### Nurse — support tickets and notifications
+
+| Screen | Light | Dark |
+|---|---|---|
+| Nurse today | <img src="docs/screenshots/light/40-nurse-today.png" width="220"> | <img src="docs/screenshots/dark/40-nurse-today.png" width="220"> |
+| Nurse sessions | <img src="docs/screenshots/light/41-nurse-sessions.png" width="220"> | <img src="docs/screenshots/dark/41-nurse-sessions.png" width="220"> |
+| Tickets coloured filters | <img src="docs/screenshots/light/45-tickets-coloured-filters.png" width="220"> | <img src="docs/screenshots/dark/45-tickets-coloured-filters.png" width="220"> |
+| New ticket coloured choices | <img src="docs/screenshots/light/46-new-ticket-coloured-choices.png" width="220"> | <img src="docs/screenshots/dark/46-new-ticket-coloured-choices.png" width="220"> |
+| Nurse confirmed | <img src="docs/screenshots/light/nurse-confirmed.png" width="220"> | <img src="docs/screenshots/dark/nurse-confirmed.png" width="220"> |
+| Nurse decline sheet | <img src="docs/screenshots/light/nurse-decline-sheet.png" width="220"> | <img src="docs/screenshots/dark/nurse-decline-sheet.png" width="220"> |
+| Nurse declined | <img src="docs/screenshots/light/nurse-declined.png" width="220"> | <img src="docs/screenshots/dark/nurse-declined.png" width="220"> |
+| Nurse did this fix it | <img src="docs/screenshots/light/nurse-did-this-fix-it.png" width="220"> | <img src="docs/screenshots/dark/nurse-did-this-fix-it.png" width="220"> |
+| Nurse my tickets solved | <img src="docs/screenshots/light/nurse-my-tickets-solved.png" width="220"> | <img src="docs/screenshots/dark/nurse-my-tickets-solved.png" width="220"> |
+| Nurse notifications resolved | <img src="docs/screenshots/light/nurse-notifications-resolved.png" width="220"> | <img src="docs/screenshots/dark/nurse-notifications-resolved.png" width="220"> |
+
+### Patient
+
+| Screen | Light | Dark |
+|---|---|---|
+| Patient home | <img src="docs/screenshots/light/50-patient-home.png" width="220"> | <img src="docs/screenshots/dark/50-patient-home.png" width="220"> |
+| Patient visits | <img src="docs/screenshots/light/51-patient-visits.png" width="220"> | <img src="docs/screenshots/dark/51-patient-visits.png" width="220"> |
+| Patient results | <img src="docs/screenshots/light/52-patient-results.png" width="220"> | <img src="docs/screenshots/dark/52-patient-results.png" width="220"> |
+| Patient invoices | <img src="docs/screenshots/light/53-patient-invoices.png" width="220"> | <img src="docs/screenshots/dark/53-patient-invoices.png" width="220"> |
+| Patient profile | <img src="docs/screenshots/light/54-patient-profile.png" width="220"> | <img src="docs/screenshots/dark/54-patient-profile.png" width="220"> |
+
+### Nurse — chat
+
+| Screen | Light | Dark |
+|---|---|---|
+| Chat list | <img src="docs/screenshots/light/60-chat-list.png" width="220"> | <img src="docs/screenshots/dark/60-chat-list.png" width="220"> |
+| Chat group | <img src="docs/screenshots/light/61-chat-group.png" width="220"> | <img src="docs/screenshots/dark/61-chat-group.png" width="220"> |
+| Chat reactions sheet | <img src="docs/screenshots/light/62-chat-reactions-sheet.png" width="220"> | <img src="docs/screenshots/dark/62-chat-reactions-sheet.png" width="220"> |
+| Chat more emojis | <img src="docs/screenshots/light/63-chat-more-emojis.png" width="220"> | <img src="docs/screenshots/dark/63-chat-more-emojis.png" width="220"> |
+| Chat replying | <img src="docs/screenshots/light/64-chat-replying.png" width="220"> | <img src="docs/screenshots/dark/64-chat-replying.png" width="220"> |
+| Chat reply sent | <img src="docs/screenshots/light/65-chat-reply-sent.png" width="220"> | <img src="docs/screenshots/dark/65-chat-reply-sent.png" width="220"> |
+| Chat sent | <img src="docs/screenshots/light/66-chat-sent.png" width="220"> | <img src="docs/screenshots/dark/66-chat-sent.png" width="220"> |
+| Chat new | <img src="docs/screenshots/light/67-chat-new.png" width="220"> | <img src="docs/screenshots/dark/67-chat-new.png" width="220"> |
+| Chat row menu | <img src="docs/screenshots/light/68-chat-row-menu.png" width="220"> | <img src="docs/screenshots/dark/68-chat-row-menu.png" width="220"> |
+| Chat delete confirm | <img src="docs/screenshots/light/69-chat-delete-confirm.png" width="220"> | <img src="docs/screenshots/dark/69-chat-delete-confirm.png" width="220"> |
+
+### Admin — support desk and notifications
+
+| Screen | Light | Dark |
+|---|---|---|
+| Admin mark solved | <img src="docs/screenshots/light/admin-mark-solved.png" width="220"> | <img src="docs/screenshots/dark/admin-mark-solved.png" width="220"> |
+| Admin notifications page2 | <img src="docs/screenshots/light/admin-notifications-page2.png" width="220"> | <img src="docs/screenshots/dark/admin-notifications-page2.png" width="220"> |
+| Admin notifications support | <img src="docs/screenshots/light/admin-notifications-support.png" width="220"> | <img src="docs/screenshots/dark/admin-notifications-support.png" width="220"> |
+| Admin solve steps sheet | <img src="docs/screenshots/light/admin-solve-steps-sheet.png" width="220"> | <img src="docs/screenshots/dark/admin-solve-steps-sheet.png" width="220"> |
+| Admin solve with solution | <img src="docs/screenshots/light/admin-solve-with-solution.png" width="220"> | <img src="docs/screenshots/dark/admin-solve-with-solution.png" width="220"> |
+| Admin solved awaiting | <img src="docs/screenshots/light/admin-solved-awaiting.png" width="220"> | <img src="docs/screenshots/dark/admin-solved-awaiting.png" width="220"> |
+| Admin ticket desk urgent | <img src="docs/screenshots/light/admin-ticket-desk-urgent.png" width="220"> | <img src="docs/screenshots/dark/admin-ticket-desk-urgent.png" width="220"> |
+| Admin ticket desk | <img src="docs/screenshots/light/admin-ticket-desk.png" width="220"> | <img src="docs/screenshots/dark/admin-ticket-desk.png" width="220"> |
+| Admin ticket pending | <img src="docs/screenshots/light/admin-ticket-pending.png" width="220"> | <img src="docs/screenshots/dark/admin-ticket-pending.png" width="220"> |
+| Admin ticket solved | <img src="docs/screenshots/light/admin-ticket-solved.png" width="220"> | <img src="docs/screenshots/dark/admin-ticket-solved.png" width="220"> |
+| Admin ticket with photo | <img src="docs/screenshots/light/admin-ticket-with-photo.png" width="220"> | <img src="docs/screenshots/dark/admin-ticket-with-photo.png" width="220"> |
+<!-- screenshots:end -->
