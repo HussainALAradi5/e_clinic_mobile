@@ -98,18 +98,24 @@ One [pub workspace](https://dart.dev/tools/pub/workspaces) — a single `flutter
 ```text
 e_clinic_mobile/
 ├── apps/
-│   └── clinic/         The app: one router with a patient and a staff area
-│       ├── lib/src/portal/   Patient tabs and screens
-│       └── lib/src/staff/    Staff tabs (filtered by rights), screens and actions
+│   └── clinic/         The app: one router with a patient (portal) and a staff area
+│       └── lib/src/        Layer-first, each layer split into portal / staff / common:
+│           ├── config/routes/   Route paths (portal, staff — staff pages filtered by rights)
+│           ├── controllers/     Riverpod providers and actions
+│           ├── screens/         One screen per route
+│           ├── widgets/         Screen parts, grouped by screen area
+│           └── utilities/       Formatters, visit timing, dispense plan, clock location
 ├── packages/
-│   ├── core/           AppConfig, Dio client + interceptors, ApiException & error codes,
-│   │                   ListQuery filter grammar, token storage, permission expressions,
-│   │                   clinic clock (Asia/Bahrain), money in fils
+│   ├── core/           config/ (AppConfig, providers), services/ (Dio ApiClient, ApiException,
+│   │                   token storage), middlewares/ (interceptors), dtos/ (ListQuery, Page),
+│   │                   constants/ (error codes), utilities/ (permission expressions,
+│   │                   clinic clock Asia/Bahrain, money in fils, text)
 │   ├── data/           freezed models (snake_case on the wire) and repositories —
 │   │                   one method per endpoint
 │   ├── ui/             Theme and widget kit
-│   └── features/       Shared sign-in: login, two-step code, password reset, app lock,
-│                       password & security, auth routing
+│   └── shell/          App shell shared by the apps: start-up (runClinicApp), sign-in, two-step
+│                       code, password reset, app lock, password & security, appearance —
+│                       controllers/, screens/, widgets/, config/routes/
 └── tools/
     └── patch_platforms.dart   Adds internet, biometric, camera and dev-HTTP settings
                                to the generated Android / iOS folders

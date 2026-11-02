@@ -1,10 +1,10 @@
-import 'package:e_clinic_features/features.dart';
+import 'package:e_clinic_shell/shell.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'controllers/staff/schedule_cache.dart';
 import 'router.dart';
-import 'staff/application/schedule_cache.dart';
 
 class EClinicApp extends ConsumerWidget {
   const EClinicApp({super.key});

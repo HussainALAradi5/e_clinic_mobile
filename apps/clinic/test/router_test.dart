@@ -1,6 +1,6 @@
-import 'package:e_clinic_app/src/portal/portal_paths.dart';
+import 'package:e_clinic_app/src/config/routes/portal_paths.dart';
+import 'package:e_clinic_app/src/config/routes/staff_paths.dart';
 import 'package:e_clinic_app/src/router.dart';
-import 'package:e_clinic_app/src/staff/staff_paths.dart';
 import 'package:e_clinic_core/core.dart';
 import 'package:e_clinic_data/data.dart';
 import 'package:flutter_test/flutter_test.dart';

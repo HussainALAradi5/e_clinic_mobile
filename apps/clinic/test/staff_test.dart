@@ -1,7 +1,7 @@
-import 'package:e_clinic_app/src/staff/application/visit_actions.dart';
-import 'package:e_clinic_app/src/staff/staff_paths.dart';
-import 'package:e_clinic_app/src/staff/utils/formatters.dart';
-import 'package:e_clinic_app/src/staff/utils/visit_timing.dart';
+import 'package:e_clinic_app/src/config/routes/staff_paths.dart';
+import 'package:e_clinic_app/src/controllers/staff/visit_actions.dart';
+import 'package:e_clinic_app/src/utilities/staff/formatters.dart';
+import 'package:e_clinic_app/src/utilities/staff/visit_timing.dart';
 import 'package:e_clinic_core/core.dart';
 import 'package:e_clinic_data/data.dart';
 import 'package:flutter_test/flutter_test.dart';

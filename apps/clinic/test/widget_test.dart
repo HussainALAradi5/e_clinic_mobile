@@ -1,4 +1,4 @@
-import 'package:e_clinic_app/src/portal/portal_paths.dart';
+import 'package:e_clinic_app/src/config/routes/portal_paths.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

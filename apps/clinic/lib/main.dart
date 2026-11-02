@@ -1,4 +1,4 @@
-import 'package:e_clinic_features/features.dart';
+import 'package:e_clinic_shell/shell.dart';
 
 import 'src/app.dart';
 

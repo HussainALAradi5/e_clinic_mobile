@@ -1,8 +1,8 @@
-import 'package:e_clinic_app/src/staff/application/calendar_providers.dart';
-import 'package:e_clinic_app/src/staff/application/order_actions.dart';
-import 'package:e_clinic_app/src/staff/staff_paths.dart';
-import 'package:e_clinic_app/src/staff/utils/dispense_plan.dart';
-import 'package:e_clinic_app/src/staff/utils/formatters.dart';
+import 'package:e_clinic_app/src/config/routes/staff_paths.dart';
+import 'package:e_clinic_app/src/controllers/staff/calendar_providers.dart';
+import 'package:e_clinic_app/src/controllers/staff/order_actions.dart';
+import 'package:e_clinic_app/src/utilities/staff/dispense_plan.dart';
+import 'package:e_clinic_app/src/utilities/staff/formatters.dart';
 import 'package:e_clinic_core/core.dart';
 import 'package:e_clinic_data/data.dart';
 import 'package:flutter_test/flutter_test.dart';

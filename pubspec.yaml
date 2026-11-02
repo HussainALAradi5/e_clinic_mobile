@@ -9,7 +9,7 @@ workspace:
   - packages/core
   - packages/data
   - packages/ui
-  - packages/features
+  - packages/shell
   - apps/clinic
 
 dev_dependencies:

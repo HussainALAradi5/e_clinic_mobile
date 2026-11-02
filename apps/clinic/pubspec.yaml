@@ -15,8 +15,8 @@ dependencies:
     path: ../../packages/core
   e_clinic_data:
     path: ../../packages/data
-  e_clinic_features:
-    path: ../../packages/features
+  e_clinic_shell:
+    path: ../../packages/shell
   e_clinic_ui:
     path: ../../packages/ui
   flutter_riverpod: ^3.0.0
