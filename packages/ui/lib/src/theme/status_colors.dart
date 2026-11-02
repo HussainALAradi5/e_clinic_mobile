@@ -127,6 +127,19 @@ abstract final class StatusColors {
     },
     'UserStatus': {'active': StatusTone.green, 'locked': StatusTone.red},
     'ShiftType': {'fixed': StatusTone.blue, 'flexible': StatusTone.purple},
+    // Late is amber everywhere; overtime blue.
+    'StaffRequestType': {'late_excuse': StatusTone.amber, 'overtime': StatusTone.blue},
+    'PayslipItemType': {
+      'basic': StatusTone.grey,
+      'allowance': StatusTone.teal,
+      'overtime': StatusTone.blue,
+      'deduction': StatusTone.orange,
+      'absence': StatusTone.red,
+      'lateness': StatusTone.amber,
+      'unpaid_leave': StatusTone.purple,
+      'social_insurance': StatusTone.indigo,
+      'adjustment': StatusTone.cyan,
+    },
     'TicketConfirmation': {'awaiting': StatusTone.amber, 'confirmed': StatusTone.green, 'declined': StatusTone.red},
     'TicketCategory': {
       'technical': StatusTone.indigo,

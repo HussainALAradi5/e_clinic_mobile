@@ -102,6 +102,28 @@ abstract final class ApprovalActions {
     approved: 'Overtime approved.',
   );
 
+  /// A late excuse or overtime request: approving excuses the minutes or pays them; a rejection needs a reason.
+  static Decision staffRequest(WidgetRef ref, StaffRequest request) {
+    final name = request.employee?.fullName ?? 'Staff member';
+    final day = request.attendance == null ? '' : ' on ${ClinicClock.date(request.attendance!.date)}';
+    final amount = request.details?.amount;
+    return Decision(
+      approveConfirm: ConfirmConfig(
+        title: request.isLate ? 'Excuse the late arrival?' : 'Pay the overtime?',
+        message: request.isLate
+            ? '$name: ${formatMinutes(request.minutes)} late$day. It will not be deducted'
+                  '${amount == null ? '' : ' (${amount.label})'}.'
+            : '$name: ${formatMinutes(request.minutes)}$day'
+                  '${amount == null ? '' : ', ${amount.label}'}. It is paid with the month\'s payroll.',
+        confirmLabel: 'Approve',
+      ),
+      approve: (_) => ref.read(staffRequestRepositoryProvider).approve(request.id),
+      approved: request.isLate ? 'Late arrival excused.' : 'Overtime approved.',
+      rejectTitle: request.isLate ? 'Reject the excuse?' : 'Reject the overtime?',
+      reject: (reason) => ref.read(staffRequestRepositoryProvider).reject(request.id, reason),
+    );
+  }
+
   /// The reason sheet of a reject; null when the user backed out.
   static Future<String?> askReason(BuildContext context, String title) => showReasonSheet(
     context,

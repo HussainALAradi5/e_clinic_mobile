@@ -90,6 +90,12 @@ void main() {
       expect(StaffPaths.accessFor(StaffPaths.chat('c1')), 'chat.read_own | chat.read_all');
       expect(StaffPaths.forNotification(null, null), isNull);
     });
+
+    test('a late excuse or overtime decision opens my requests, which need a staff request right', () {
+      expect(StaffPaths.forNotification('staff_request', 'r1'), StaffPaths.requests);
+      expect(StaffPaths.accessFor(StaffPaths.requests), 'staff_requests.read_own | staff_requests.read_all');
+      expect(StaffTab.approvals.access, contains('staff_requests.review'));
+    });
   });
 
   test('the calendar groups a day by provider, in time order, without cancelled bookings', () {

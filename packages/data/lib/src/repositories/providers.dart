@@ -16,6 +16,7 @@ import 'communication/ticket_repository.dart';
 import 'finance/expense_repository.dart';
 import 'hr/attendance_repository.dart';
 import 'hr/leave_repository.dart';
+import 'hr/staff_request_repository.dart';
 import 'identity/attachment_repository.dart';
 import 'identity/auth_repository.dart';
 import 'identity/code_repository.dart';
@@ -42,6 +43,7 @@ final expenseRepositoryProvider = Provider((ref) => ExpenseRepository(ref.watch(
 final patientRepositoryProvider = Provider((ref) => PatientRepository(ref.watch(apiClientProvider)));
 final dispensationRepositoryProvider = Provider((ref) => DispensationRepository(ref.watch(apiClientProvider)));
 final leaveRepositoryProvider = Provider((ref) => LeaveRepository(ref.watch(apiClientProvider)));
+final staffRequestRepositoryProvider = Provider((ref) => StaffRequestRepository(ref.watch(apiClientProvider)));
 final sickLeaveRepositoryProvider = Provider((ref) => SickLeaveRepository(ref.watch(apiClientProvider)));
 final chatRepositoryProvider = Provider((ref) => ChatRepository(ref.watch(apiClientProvider)));
 final ticketRepositoryProvider = Provider((ref) => TicketRepository(ref.watch(apiClientProvider)));

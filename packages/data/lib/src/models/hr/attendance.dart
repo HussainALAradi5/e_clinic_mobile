@@ -20,6 +20,9 @@ abstract class Attendance with _$Attendance {
     @Default(0) int overtimeMinutes,
     bool? overtimeApproved,
 
+    /// HR accepted the excuse: these late minutes are not deducted.
+    @Default(false) bool lateExcused,
+
     /// AttendanceStatus wire value (`present`, `late`, `absent` …).
     required String status,
     String? notes,

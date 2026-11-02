@@ -23,6 +23,7 @@ abstract final class StaffPaths {
   static const dispensations = '/pharmacy/dispensing';
   static const leaves = '/hr/leaves';
   static const newLeave = '/hr/leaves/new';
+  static const requests = '/hr/requests';
   static const inbox = '/inbox';
   static const tickets = '/support/tickets';
   static const newTicket = '/support/tickets/new';
@@ -52,6 +53,7 @@ abstract final class StaffPaths {
     ('clinical_order', final String id) => order(id),
     ('patient', final String id) => patient(id),
     ('leave_request', _) => leaves,
+    ('staff_request', _) => requests,
     ('attendance', _) => clock,
     _ => null,
   };
@@ -105,7 +107,7 @@ enum StaffTab {
     'Approvals',
     Icons.fact_check_outlined,
     Icons.fact_check_rounded,
-    'refunds.approve | expenses.approve | leaves.approve | attendance.approve_overtime',
+    'refunds.approve | expenses.approve | leaves.approve | attendance.approve_overtime | staff_requests.review',
   ),
   more(StaffPaths.more, 'More', Icons.menu_rounded, Icons.menu_open_rounded, Access.authenticated);
 
@@ -151,6 +153,12 @@ enum StaffPage {
     'dispensing.read_all | dispensing.read_own',
   ),
   leaves(StaffPaths.leaves, 'My leave', Icons.beach_access_outlined, 'leaves.read_all | leaves.read_own'),
+  requests(
+    StaffPaths.requests,
+    'Late & overtime requests',
+    Icons.more_time_rounded,
+    'staff_requests.read_own | staff_requests.read_all',
+  ),
   clock(StaffPaths.clock, 'Clock in / out', Icons.schedule_rounded, 'attendance.self');
 
   const StaffPage(this.path, this.label, this.icon, this.access);

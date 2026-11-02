@@ -171,6 +171,7 @@ typedef Approvals = ({
   List<Expense> expenses,
   List<LeaveRequest> leaves,
   List<Attendance> overtime,
+  List<StaffRequest> requests,
 });
 
 final approvalsProvider = FutureProvider.autoDispose<Approvals>((ref) async {
@@ -182,21 +183,32 @@ final approvalsProvider = FutureProvider.autoDispose<Approvals>((ref) async {
   Future<List<T>> load<T>(String right, Future<Paged<T>> Function() list) async =>
       access.can(right) ? (await list()).items : <T>[];
 
-  final (refunds, expenses, leaves, overtime) = await (
+  // With overtime requests on, overtime is approved from the employee's request (the bare list would be refused).
+  final overtimeByRequest =
+      access.can('settings.read_all') && await ref.read(staffRequestRepositoryProvider).overtimeByRequest();
+  final (refunds, expenses, leaves, overtime, requests) = await (
     load<Refund>('refunds.write & refunds.approve', () => ref.read(refundRepositoryProvider).list(pending)),
     load<Expense>('expenses.write & expenses.approve', () => ref.read(expenseRepositoryProvider).list(pending)),
     load<LeaveRequest>('leaves.write & leaves.approve', () => ref.read(leaveRepositoryProvider).list(pending)),
     load<Attendance>(
       'attendance.write & attendance.approve_overtime',
+      () => overtimeByRequest
+          ? Future.value(const Paged<Attendance>(items: [], meta: PageMeta(perPage: 0)))
+          : ref
+                .read(attendanceRepositoryProvider)
+                .list(
+                  const ListQuery(
+                    perPage: 50,
+                    sort: ['-date'],
+                    filter: AllOf([Where('overtimeMinutes', 'gt', 0), Where.eq('overtimeApproved', false)]),
+                  ),
+                ),
+    ),
+    load<StaffRequest>(
+      'staff_requests.write & staff_requests.review',
       () => ref
-          .read(attendanceRepositoryProvider)
-          .list(
-            const ListQuery(
-              perPage: 50,
-              sort: ['-date'],
-              filter: AllOf([Where('overtimeMinutes', 'gt', 0), Where.eq('overtimeApproved', false)]),
-            ),
-          ),
+          .read(staffRequestRepositoryProvider)
+          .list(const ListQuery(perPage: 50, sort: ['-createdAt'], filter: AllOf([Where.eq('status', 'pending')]))),
     ),
   ).wait;
   return (
@@ -204,6 +216,7 @@ final approvalsProvider = FutureProvider.autoDispose<Approvals>((ref) async {
     expenses: expenses.where((e) => e.submittedBy?.id != me).toList(),
     leaves: leaves.where((l) => l.employeeId != me).toList(),
     overtime: overtime.where((a) => a.employeeId != me).toList(),
+    requests: requests.where((r) => r.employeeId != me).toList(),
   );
 });
 
@@ -211,9 +224,11 @@ final approvalsProvider = FutureProvider.autoDispose<Approvals>((ref) async {
 final approvalsCountProvider = FutureProvider.autoDispose<int>((ref) async {
   if (!ref
       .watch(accessProvider)
-      .can('refunds.approve | expenses.approve | leaves.approve | attendance.approve_overtime')) {
+      .can(
+        'refunds.approve | expenses.approve | leaves.approve | attendance.approve_overtime | staff_requests.review',
+      )) {
     return 0;
   }
   final a = await ref.watch(approvalsProvider.future);
-  return a.refunds.length + a.expenses.length + a.leaves.length + a.overtime.length;
+  return a.refunds.length + a.expenses.length + a.leaves.length + a.overtime.length + a.requests.length;
 });

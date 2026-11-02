@@ -9,7 +9,8 @@ import '../application/staff_providers.dart';
 import '../utils/formatters.dart';
 import '../widgets/approvals/decision_card.dart';
 
-/// `/approvals` — everything waiting for this user's decision: refunds, expenses, leave and overtime (each section
+/// `/approvals` — everything waiting for this user's decision: refunds, expenses, leave, late excuse and overtime
+/// requests, and overtime (each section
 /// only with the matching right). Approve asks to confirm; reject asks for a reason the requester sees.
 class ApprovalsScreen extends ConsumerWidget {
   const ApprovalsScreen({super.key});
@@ -32,7 +33,12 @@ class ApprovalsScreen extends ConsumerWidget {
                 children: [ErrorState(error: error, onRetry: () => ref.invalidate(approvalsProvider))],
               ),
               data: (a) {
-                final empty = a.refunds.isEmpty && a.expenses.isEmpty && a.leaves.isEmpty && a.overtime.isEmpty;
+                final empty =
+                    a.refunds.isEmpty &&
+                    a.expenses.isEmpty &&
+                    a.leaves.isEmpty &&
+                    a.overtime.isEmpty &&
+                    a.requests.isEmpty;
                 if (empty) {
                   return ListView(
                     children: const [
@@ -89,6 +95,23 @@ class ApprovalsScreen extends ConsumerWidget {
                             ),
                           ],
                           decision: ApprovalActions.leave(ref, l),
+                        ),
+                    ],
+                    if (a.requests.isNotEmpty) ...[
+                      SectionHeader('Late & overtime · ${a.requests.length}'),
+                      for (final r in a.requests)
+                        DecisionCard(
+                          title: r.employee?.fullName ?? r.code,
+                          subtitle:
+                              '${catalog.label('StaffRequestType', r.type)} · ${formatMinutes(r.minutes)}'
+                              '${r.attendance == null ? '' : ' on ${ClinicClock.date(r.attendance!.date)}'}',
+                          facts: [
+                            (label: 'Role', value: r.employee?.jobTitle),
+                            (label: 'Reason', value: r.reason ?? 'No reason given'),
+                            (label: r.isLate ? 'If not excused' : 'To pay', value: r.details?.amount?.label),
+                            (label: 'Asked', value: r.createdAt == null ? null : ClinicClock.ago(r.createdAt!)),
+                          ],
+                          decision: ApprovalActions.staffRequest(ref, r),
                         ),
                     ],
                     if (a.overtime.isNotEmpty) ...[

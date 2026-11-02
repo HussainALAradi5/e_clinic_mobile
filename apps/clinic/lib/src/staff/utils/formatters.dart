@@ -9,6 +9,13 @@ String formatMinutes(int minutes) {
   return m == 0 ? '$h h' : '$h h $m min';
 }
 
+/// `08:27` on the clinic clock, `—` when there is no time.
+String clockTime(DateTime? instant) {
+  if (instant == null) return '—';
+  final l = ClinicClock.local(instant);
+  return '${l.hour.toString().padLeft(2, '0')}:${l.minute.toString().padLeft(2, '0')}';
+}
+
 /// A medicine quantity as people write it: `2`, `2.5`, `0.25` (no trailing zeros).
 String formatQuantity(num quantity) {
   if (quantity == quantity.roundToDouble()) return '${quantity.round()}';
