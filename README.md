@@ -342,4 +342,13 @@ Taken on a real Android phone (debug build; release builds block screenshots wit
 | Admin ticket pending | <img src="docs/screenshots/light/admin-ticket-pending.png" width="220"> | <img src="docs/screenshots/dark/admin-ticket-pending.png" width="220"> |
 | Admin ticket solved | <img src="docs/screenshots/light/admin-ticket-solved.png" width="220"> | <img src="docs/screenshots/dark/admin-ticket-solved.png" width="220"> |
 | Admin ticket with photo | <img src="docs/screenshots/light/admin-ticket-with-photo.png" width="220"> | <img src="docs/screenshots/dark/admin-ticket-with-photo.png" width="220"> |
+
+### Staff — late & overtime requests
+
+| Screen | Light | Dark |
+|---|---|---|
+| Nurse my requests | <img src="docs/screenshots/light/80-nurse-my-requests.png" width="220"> | <img src="docs/screenshots/dark/80-nurse-my-requests.png" width="220"> |
+| Nurse ask excuse | <img src="docs/screenshots/light/81-nurse-ask-excuse.png" width="220"> | <img src="docs/screenshots/dark/81-nurse-ask-excuse.png" width="220"> |
+| HR approvals requests | <img src="docs/screenshots/light/82-hr-approvals-requests.png" width="220"> | <img src="docs/screenshots/dark/82-hr-approvals-requests.png" width="220"> |
+| HR approve overtime | <img src="docs/screenshots/light/83-hr-approve-overtime.png" width="220"> | <img src="docs/screenshots/dark/83-hr-approve-overtime.png" width="220"> |
 <!-- screenshots:end -->
