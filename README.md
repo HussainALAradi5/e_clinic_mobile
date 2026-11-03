@@ -17,9 +17,9 @@ It talks to the same REST API as the web client, so a feature looks and behaves 
 | Web app (staff and patient portal) | https://e-clinic-web.onrender.com |
 | API | https://e-clinic-api.onrender.com/api/v1 |
 
-Free Render instances sleep when idle: the first visit can take about a minute to wake the API. Demo accounts are
-listed in [DEMO_USERS.md](https://github.com/HussainALAradi5/e_clinic_documentation/blob/main/DEMO_USERS.md)
-(the repositories are private).
+Free Render instances sleep when idle: the first visit can take about a minute to wake the API. Demo accounts
+(one per role: patient, receptionist, doctor, nurse, pharmacist, cashier, accountant, HR, admin) are available on
+request.
 
 The phone app is not in a store yet; build it with `--dart-define=API_URL=https://e-clinic-api.onrender.com/api/v1`
 to use the live API.
@@ -30,7 +30,7 @@ to use the live API.
 | **Stack** | Flutter 3.32+ (Dart 3.8+) · Riverpod 3 · go_router · Dio · freezed + json_serializable · Material 3 |
 | **Backend** | [e_clinic_server](https://github.com/HussainALAradi5/e_clinic_server) (Laravel, REST JSON, Sanctum tokens) |
 | **Web client** | [e_clinic_client](https://github.com/HussainALAradi5/e_clinic_client) (Angular) |
-| **Documentation** | [e_clinic_documentation](https://github.com/HussainALAradi5/e_clinic_documentation) → `mobile/` |
+| **Documentation** | Technical documentation (screens, widgets, controllers) — available on request |
 
 ---
 
@@ -186,7 +186,7 @@ flutter run --dart-define=API_URL=http://127.0.0.1:8000/api/v1      # iOS simula
 ### Demo accounts (local seed data only)
 
 The server's demo seeder creates these accounts on non-production installs; the password and the fixed two-step code
-are listed in `DEMO_USERS.md` of the documentation repository.
+are available on request.
 
 | Area | Account | Try |
 |---|---|---|
