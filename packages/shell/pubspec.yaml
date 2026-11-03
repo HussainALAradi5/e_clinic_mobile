@@ -21,3 +21,4 @@ dependencies:
   local_auth: ^2.3.0
   url_launcher: ^6.3.0
   shared_preferences: ^2.3.0
+  flutter_local_notifications: ^22.3.3

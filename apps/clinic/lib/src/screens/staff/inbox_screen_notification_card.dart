@@ -8,16 +8,6 @@ class _NotificationCard extends StatelessWidget {
 
   static const _blue = Color(0xFF2563EB);
 
-  static IconData _icon(String? type) => switch (type) {
-    'support_ticket' => Icons.support_agent_rounded,
-    'appointment' => Icons.event_rounded,
-    'clinical_order' => Icons.biotech_rounded,
-    'conversation' => Icons.forum_rounded,
-    'leave_request' => Icons.beach_access_rounded,
-    'payslip' => Icons.payments_rounded,
-    _ => Icons.notifications_rounded,
-  };
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -39,15 +29,7 @@ class _NotificationCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundColor: item.unread ? _blue : scheme.surfaceContainerHighest,
-                child: Icon(
-                  _icon(item.relatedType),
-                  size: 20,
-                  color: item.unread ? Colors.white : scheme.onSurfaceVariant,
-                ),
-              ),
+              NotificationKindIcon(kind: item.kind, unread: item.unread),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(

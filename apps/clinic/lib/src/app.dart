@@ -3,6 +3,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'config/routes/portal_paths.dart';
+import 'config/routes/staff_paths.dart';
 import 'controllers/staff/schedule_cache.dart';
 import 'router.dart';
 
@@ -17,6 +19,12 @@ class EClinicApp extends ConsumerWidget {
       // A different account starts from a clean stack: Back must never return to the last user's pages (the router
       // checks the area on navigation, not on Back).
       if (previous?.id != next?.id) ref.read(routerProvider).go(next == null ? AuthPaths.login : homeFor(next));
+    });
+    // New inbox messages pop up on the phone while the app runs (when the person's switch is on); a tap opens the inbox.
+    ref.watch(inboxWatcherProvider);
+    ref.listen(notificationTapsProvider, (_, _) {
+      final user = ref.read(currentUserProvider);
+      if (user != null) ref.read(routerProvider).go(user.isPatient ? PortalPaths.messages : StaffPaths.inbox);
     });
     return AppLockScope(
       child: MaterialApp.router(

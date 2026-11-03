@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../config/routes/portal_paths.dart';
 import '../../controllers/portal/portal_providers.dart';
+import '../../widgets/common/notification_kind_icon.dart';
 
 /// `/notifications` — the in-app inbox: reminders, confirmations, results ready; each leads to its page.
 class NotificationsScreen extends ConsumerStatefulWidget {
@@ -79,17 +80,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 6, right: 12),
-                    child: Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: item.unread ? scheme.primary : Colors.transparent,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
+                  NotificationKindIcon(kind: item.kind, unread: item.unread),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../config/routes/staff_paths.dart';
 import '../../controllers/staff/support_providers.dart';
+import '../../widgets/common/notification_kind_icon.dart';
 
 part 'inbox_screen_notification_card.dart';
 

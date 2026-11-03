@@ -48,6 +48,7 @@ class MoreScreen extends ConsumerWidget {
             const SizedBox(height: 16),
           ],
           const ThemeModeTile(),
+          const PhoneNotificationsTile(),
           const SizedBox(height: 16),
           LinkGroup(
             links: [

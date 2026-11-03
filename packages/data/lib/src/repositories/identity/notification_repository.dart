@@ -27,6 +27,13 @@ class NotificationRepository {
 
   Future<void> markAllRead() => _api.patch('notifications/mine/read-all', ApiClient.ignore);
 
+  /// The person's phone and browser notifications switch (the server's `push` opt-out).
+  Future<bool> pushEnabled() async =>
+      (await _api.get('notifications/settings', objectOf((json) => json)))['push'] == true;
+
+  Future<bool> setPushEnabled(bool on) async =>
+      (await _api.put('notifications/settings', objectOf((json) => json), body: {'push': on}))['push'] == true;
+
   Future<void> registerDevice({
     required String token,
     required MobileApp app,
