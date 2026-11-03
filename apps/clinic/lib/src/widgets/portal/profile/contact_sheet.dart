@@ -4,7 +4,9 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Phone, email and emergency contact (PUT /portal/profile).
+import 'emergency_contacts_editor.dart';
+
+/// Phone, email and up to three emergency contacts (PUT /portal/profile).
 class ContactSheet extends ConsumerStatefulWidget {
   const ContactSheet({super.key, required this.patient});
 
@@ -18,14 +20,12 @@ class _ContactSheetState extends ConsumerState<ContactSheet> {
   final _form = GlobalKey<FormState>();
   late final _phone = TextEditingController(text: widget.patient.phone);
   late final _email = TextEditingController(text: widget.patient.email);
-  late final _contactName = TextEditingController(text: widget.patient.emergencyContactName);
-  late final _contactRelation = TextEditingController(text: widget.patient.emergencyContactRelation);
-  late final _contactPhone = TextEditingController(text: widget.patient.emergencyContactPhone);
+  late var _contacts = widget.patient.emergencyContacts;
   ApiException? _error;
 
   @override
   void dispose() {
-    for (final c in [_phone, _email, _contactName, _contactRelation, _contactPhone]) {
+    for (final c in [_phone, _email]) {
       c.dispose();
     }
     super.dispose();
@@ -45,9 +45,7 @@ class _ContactSheetState extends ConsumerState<ContactSheet> {
             personVersion: p.person.version,
             phone: _phone.text.trim(),
             email: _blankToNull(_email),
-            emergencyContactName: _blankToNull(_contactName),
-            emergencyContactPhone: _blankToNull(_contactPhone),
-            emergencyContactRelation: _blankToNull(_contactRelation),
+            emergencyContacts: _contacts,
           );
       if (mounted) Navigator.of(context).pop(saved);
     } on ApiException catch (error) {
@@ -92,31 +90,10 @@ class _ContactSheetState extends ConsumerState<ContactSheet> {
                 decoration: field('Email', 'email', Icons.mail_outline_rounded),
               ),
               const SizedBox(height: 20),
-              Text('Emergency contact', style: Theme.of(context).textTheme.titleSmall),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _contactName,
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.next,
-                decoration: field('Name', 'emergency_contact_name', Icons.person_outline_rounded),
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _contactRelation,
-                textCapitalization: TextCapitalization.sentences,
-                textInputAction: TextInputAction.next,
-                decoration: field(
-                  'Relation (e.g. wife, son)',
-                  'emergency_contact_relation',
-                  Icons.diversity_1_outlined,
-                ),
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _contactPhone,
-                keyboardType: TextInputType.phone,
-                textInputAction: TextInputAction.done,
-                decoration: field('Phone', 'emergency_contact_phone', Icons.call_outlined),
+              EmergencyContactsEditor(
+                initial: widget.patient.emergencyContacts,
+                onChanged: (contacts) => _contacts = contacts,
+                errorFor: (key) => _error?.fieldError(key),
               ),
               const SizedBox(height: 24),
               AppButton(label: 'Save', icon: Icons.check_rounded, expand: true, onPressed: _save),

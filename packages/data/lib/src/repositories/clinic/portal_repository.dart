@@ -12,15 +12,13 @@ class PortalRepository {
 
   Future<Patient> profile() => _api.get('portal/profile', objectOf(Patient.fromJson));
 
-  /// Contact details and emergency contact; `version` / `personVersion` lock the patient file and the person.
+  /// Contact details and emergency contacts (up to three; [] removes them); `version` / `personVersion` lock the patient file and the person.
   Future<Patient> updateProfile({
     required int version,
     required int personVersion,
     required String phone,
     String? email,
-    String? emergencyContactName,
-    String? emergencyContactPhone,
-    String? emergencyContactRelation,
+    List<EmergencyContact>? emergencyContacts,
   }) => _api.put(
     'portal/profile',
     objectOf(Patient.fromJson),
@@ -29,9 +27,7 @@ class PortalRepository {
       'person_version': personVersion,
       'phone': phone,
       'email': ?email,
-      'emergency_contact_name': emergencyContactName,
-      'emergency_contact_phone': emergencyContactPhone,
-      'emergency_contact_relation': emergencyContactRelation,
+      if (emergencyContacts != null) 'emergency_contacts': [for (final c in emergencyContacts) c.toJson()],
     },
   );
 

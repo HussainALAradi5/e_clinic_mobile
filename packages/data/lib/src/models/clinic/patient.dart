@@ -6,6 +6,7 @@ part 'patient.freezed.dart';
 part 'patient.g.dart';
 
 part 'patient_address.dart';
+part 'patient_emergency_contact.dart';
 part 'patient_nationality.dart';
 part 'patient_patient_lookup.dart';
 part 'patient_person.dart';
@@ -24,9 +25,9 @@ abstract class Patient with _$Patient {
     required String phone,
     String? email,
     required Person person,
-    String? emergencyContactName,
-    String? emergencyContactPhone,
-    String? emergencyContactRelation,
+
+    /// Up to three, all optional.
+    @Default([]) List<EmergencyContact> emergencyContacts,
     NamedRef? insurer,
     String? insurancePolicyNumber,
     String? insuranceExpiryDate,

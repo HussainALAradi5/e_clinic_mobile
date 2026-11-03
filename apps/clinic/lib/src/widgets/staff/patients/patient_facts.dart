@@ -12,11 +12,7 @@ class PatientFacts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = patient;
-    final emergency = [
-      p.emergencyContactName,
-      if (p.emergencyContactRelation != null) '(${p.emergencyContactRelation})',
-      p.emergencyContactPhone,
-    ].whereType<String>().join(' ');
+    final emergency = p.emergencyContacts.map((c) => c.line).join('\n');
     final insurance = p.insurer == null
         ? 'Self-paying'
         : [
@@ -39,7 +35,7 @@ class PatientFacts extends StatelessWidget {
           label: 'Insurance expires',
           value: p.insuranceExpiryDate == null ? null : ClinicClock.date(p.insuranceExpiryDate!),
         ),
-        (label: 'Emergency contact', value: emergency.isEmpty ? null : emergency),
+        (label: 'Emergency contacts', value: emergency.isEmpty ? null : emergency),
         (label: 'Front-desk notes', value: p.notes),
       ],
     );

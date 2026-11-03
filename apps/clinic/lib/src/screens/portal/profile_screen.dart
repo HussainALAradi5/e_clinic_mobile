@@ -10,7 +10,7 @@ import '../../widgets/portal/profile/contact_sheet.dart';
 import '../../widgets/portal/profile/insurance_card.dart';
 import '../../widgets/portal/profile/profile_links.dart';
 
-/// `/profile` — the patient's file as the clinic holds it. Contact details and the emergency contact can be changed
+/// `/profile` — the patient's file as the clinic holds it. Contact details and up to three emergency contacts can be changed
 /// here; name, ID and insurance change at the front desk (they need documents).
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -61,14 +61,7 @@ class ProfileScreen extends ConsumerWidget {
                     (label: 'Mobile', value: p.phone),
                     (label: 'Email', value: p.email),
                     (label: 'Address', value: p.person.address?.formatted),
-                    (
-                      label: 'Emergency contact',
-                      value: [
-                        p.emergencyContactName,
-                        p.emergencyContactRelation,
-                        p.emergencyContactPhone,
-                      ].whereType<String>().where((v) => v.isNotEmpty).join(' · '),
-                    ),
+                    (label: 'Emergency contacts', value: p.emergencyContacts.map((c) => c.line).join('\n')),
                   ],
                 ),
               ),
