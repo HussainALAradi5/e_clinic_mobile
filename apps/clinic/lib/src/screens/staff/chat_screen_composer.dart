@@ -1,37 +1,63 @@
 part of 'chat_screen.dart';
 
-/// The box: a "Replying to …" card while replying, the chosen photo, the text, photo and send buttons.
-class _Composer extends StatelessWidget {
+/// The box: a "Replying to …" card while replying, the chosen photo, the text, photo and send buttons. It owns
+/// the text and the photo, and clears them once [onSend] reports the message was sent.
+class _Composer extends StatefulWidget {
   const _Composer({
-    required this.text,
-    required this.focus,
     required this.sending,
     required this.replyTo,
     required this.meId,
-    required this.photo,
     required this.onCancelReply,
-    required this.onPhoto,
-    required this.onRemovePhoto,
     required this.onSend,
   });
 
-  final TextEditingController text;
-  final FocusNode focus;
   final bool sending;
   final ChatMessage? replyTo;
   final String meId;
-  final XFile? photo;
   final VoidCallback onCancelReply;
-  final VoidCallback onPhoto;
-  final VoidCallback onRemovePhoto;
-  final VoidCallback onSend;
+
+  /// Sends the text and photo; true when it was sent.
+  final Future<bool> Function(String body, XFile? photo) onSend;
+
+  @override
+  State<_Composer> createState() => _ComposerState();
+}
+
+class _ComposerState extends State<_Composer> {
+  final _text = TextEditingController();
+  final _focus = FocusNode();
+  XFile? _photo;
+
+  @override
+  void initState() {
+    super.initState();
+    _text.addListener(() => setState(() {}));
+  }
+
+  @override
+  void didUpdateWidget(_Composer old) {
+    super.didUpdateWidget(old);
+    if (widget.replyTo != null && widget.replyTo != old.replyTo) _focus.requestFocus();
+  }
+
+  @override
+  void dispose() {
+    _text.dispose();
+    _focus.dispose();
+    super.dispose();
+  }
+
+  Future<void> _send() async {
+    if (!await widget.onSend(_text.text.trim(), _photo) || !mounted) return;
+    _text.clear();
+    setState(() => _photo = null);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final canSend = !sending && (text.text.trim().isNotEmpty || photo != null);
+    final canSend = !widget.sending && (_text.text.trim().isNotEmpty || _photo != null);
     return Material(
-      color: scheme.surfaceContainerLow,
+      color: Theme.of(context).colorScheme.surfaceContainerLow,
       child: SafeArea(
         top: false,
         child: Padding(
@@ -39,60 +65,32 @@ class _Composer extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (replyTo case final r?)
-                Container(
-                  margin: const EdgeInsets.only(bottom: 6),
-                  padding: const EdgeInsets.fromLTRB(10, 6, 4, 6),
-                  decoration: BoxDecoration(
-                    color: scheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border(left: BorderSide(color: scheme.primary, width: 3)),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.reply_rounded, color: scheme.primary),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Replying to ${r.sender.id == meId ? 'yourself' : r.sender.fullName}',
-                              style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w700),
-                            ),
-                            Text(
-                              r.body?.isNotEmpty == true ? r.body! : (r.attachments.firstOrNull?.name ?? 'File'),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                      IconButton(
-                        tooltip: 'Cancel reply',
-                        onPressed: onCancelReply,
-                        icon: const Icon(Icons.close_rounded),
-                      ),
-                    ],
-                  ),
-                ),
-              if (photo case final p?)
+              if (widget.replyTo case final r?)
+                _ReplyPreview(replyTo: r, meId: widget.meId, onCancel: widget.onCancelReply),
+              if (_photo case final p?)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 6),
                   child: InputChip(
                     avatar: const Icon(Icons.image_outlined),
                     label: Text(p.name, overflow: TextOverflow.ellipsis),
-                    onDeleted: onRemovePhoto,
+                    onDeleted: () => setState(() => _photo = null),
                   ),
                 ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  IconButton(tooltip: 'Add a photo', onPressed: onPhoto, icon: const Icon(Icons.photo_camera_outlined)),
+                  IconButton(
+                    tooltip: 'Add a photo',
+                    onPressed: () async {
+                      final picked = await pickPhoto(context);
+                      if (picked != null && mounted) setState(() => _photo = picked);
+                    },
+                    icon: const Icon(Icons.photo_camera_outlined),
+                  ),
                   Expanded(
                     child: TextField(
-                      controller: text,
-                      focusNode: focus,
+                      controller: _text,
+                      focusNode: _focus,
                       minLines: 1,
                       maxLines: 5,
                       maxLength: 4000,
@@ -108,8 +106,8 @@ class _Composer extends StatelessWidget {
                   const SizedBox(width: 6),
                   IconButton.filled(
                     tooltip: 'Send',
-                    onPressed: canSend ? onSend : null,
-                    icon: sending
+                    onPressed: canSend ? _send : null,
+                    icon: widget.sending
                         ? const SizedBox.square(dimension: 20, child: CircularProgressIndicator(strokeWidth: 2))
                         : const Icon(Icons.send_rounded),
                   ),

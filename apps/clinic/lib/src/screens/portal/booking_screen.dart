@@ -6,10 +6,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/portal_paths.dart';
+import '../../controllers/portal/booking_actions.dart';
 import '../../controllers/portal/booking_providers.dart';
-import '../../controllers/portal/portal_providers.dart';
-import '../../widgets/portal/booking/doctor_tile.dart';
+import '../../widgets/common/booking_bar.dart';
+import '../../widgets/common/reason_field.dart';
+import '../../widgets/portal/booking/doctor_list.dart';
 import '../../widgets/portal/booking/slot_choices.dart';
+import '../../widgets/portal/booking/specialty_chips.dart';
+import '../../widgets/portal/booking/visit_type_picker.dart';
 
 /// `/appointments/new` — kind of visit → specialty → doctor → day → free time → optional reason → book.
 /// Times are at least two hours ahead; the booking stays pending until the clinic confirms it.
@@ -23,7 +27,6 @@ class BookingScreen extends ConsumerStatefulWidget {
 class _BookingScreenState extends ConsumerState<BookingScreen> {
   /// Days offered in the strip (most patients look at the next three weeks).
   static const _daysShown = 21;
-  static const _types = [(AppointmentType.consultation, 'New problem'), (AppointmentType.followUp, 'Follow-up')];
 
   final _days = [for (var i = 0; i < _daysShown; i++) ClinicClock.addDays(ClinicClock.today(), i)];
   final _reason = TextEditingController();
@@ -42,37 +45,27 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
     super.dispose();
   }
 
-  Money? _price(Doctor doctor) =>
-      (_type == AppointmentType.followUp ? doctor.followUpService : doctor.consultationService)?.price;
-
   Future<void> _book() async {
-    final doctor = _doctor;
-    final slot = _slot;
-    if (doctor == null || slot == null) throw const ActionCancelled();
-    try {
-      await ref
-          .read(portalRepositoryProvider)
-          .book(
-            doctorId: doctor.id,
-            type: _type,
-            date: _date,
-            startTime: slot.startTime,
-            reason: _reason.text.trim().isEmpty ? null : _reason.text.trim(),
-            idempotencyKey: _idempotencyKey,
-          );
-    } on ApiException catch (error) {
-      // Someone else may have taken the time: show fresh times and let the patient pick again.
-      if (!error.isOffline && mounted) {
-        _idempotencyKey = ApiClient.newIdempotencyKey();
-        ref.invalidate(slotsProvider(_slotKey!));
-        setState(() => _slot = null);
-      }
-      rethrow;
-    }
-    ref.read(visitsVersionProvider.notifier).bump();
+    final (key, slot) = (_slotKey, _slot);
+    if (key == null || slot == null) throw const ActionCancelled();
+    final reason = _reason.text.trim();
+    await PortalBookingActions.book(
+      ref,
+      slotKey: key,
+      slot: slot,
+      reason: reason.isEmpty ? null : reason,
+      idempotencyKey: _idempotencyKey,
+      onTimeGone: _pickAgain,
+    );
     if (!mounted) return;
     AppSnack.success(context, 'Booking sent. The clinic will confirm it shortly.');
     context.go(PortalPaths.visits);
+  }
+
+  /// Someone else took the time: a new key, and the patient picks again from fresh times.
+  void _pickAgain() {
+    _idempotencyKey = ApiClient.newIdempotencyKey();
+    if (mounted) setState(() => _slot = null);
   }
 
   @override
@@ -89,66 +82,37 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             padding: const EdgeInsets.only(bottom: 24),
             children: [
               const SectionHeader('What is the visit for?'),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: SegmentedButton<AppointmentType>(
-                  showSelectedIcon: false,
-                  segments: [for (final (value, label) in _types) ButtonSegment(value: value, label: Text(label))],
-                  selected: {_type},
-                  onSelectionChanged: (s) => setState(() {
-                    _type = s.first;
-                    _slot = null;
-                  }),
-                ),
+              VisitTypePicker(
+                selected: _type,
+                onChanged: (type) => setState(() {
+                  _type = type;
+                  _slot = null;
+                }),
               ),
               if (data.specialties.length > 1) ...[
                 const SectionHeader('Specialty'),
-                SizedBox(
-                  height: 48,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    children: [
-                      for (final s in [null, ...data.specialties])
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: ChoiceChip(
-                            label: Text(s?.name ?? 'All'),
-                            selected: _specialtyId == s?.id,
-                            onSelected: (_) => setState(() {
-                              _specialtyId = s?.id;
-                              if (_doctor != null && s != null && _doctor!.specialtyId != s.id) {
-                                _doctor = null;
-                                _slot = null;
-                              }
-                            }),
-                          ),
-                        ),
-                    ],
-                  ),
+                SpecialtyChips(
+                  specialties: data.specialties,
+                  selectedId: _specialtyId,
+                  onSelected: (s) => setState(() {
+                    _specialtyId = s?.id;
+                    if (_doctor != null && s != null && _doctor!.specialtyId != s.id) {
+                      _doctor = null;
+                      _slot = null;
+                    }
+                  }),
                 ),
               ],
               const SectionHeader('Doctor'),
-              if (doctors.isEmpty)
-                const EmptyState(
-                  icon: Icons.person_search_rounded,
-                  title: 'No doctor takes online bookings here yet',
-                  message: 'Call the clinic and the front desk will book you in.',
-                )
-              else
-                for (final doctor in doctors)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                    child: DoctorTile(
-                      doctor: doctor,
-                      price: _price(doctor),
-                      selected: _doctor?.id == doctor.id,
-                      onTap: () => setState(() {
-                        _doctor = doctor;
-                        _slot = null;
-                      }),
-                    ),
-                  ),
+              DoctorList(
+                doctors: doctors,
+                type: _type,
+                selectedId: _doctor?.id,
+                onPick: (doctor) => setState(() {
+                  _doctor = doctor;
+                  _slot = null;
+                }),
+              ),
               if (_doctor != null) ...[
                 const SectionHeader('Day'),
                 DayStrip(
@@ -162,33 +126,18 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                 const SectionHeader('Time'),
                 SlotChoices(slotKey: _slotKey!, selected: _slot, onPick: (slot) => setState(() => _slot = slot)),
                 const SectionHeader('Anything the doctor should know? (optional)'),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: TextField(
-                    controller: _reason,
-                    maxLength: 500,
-                    minLines: 2,
-                    maxLines: 4,
-                    textCapitalization: TextCapitalization.sentences,
-                    decoration: const InputDecoration(hintText: 'e.g. knee pain for two weeks'),
-                  ),
-                ),
+                ReasonField(controller: _reason, hint: 'e.g. knee pain for two weeks', minLines: 2, maxLines: 4),
               ],
             ],
           );
         },
       ),
-      bottomNavigationBar: BottomBar(
+      bottomNavigationBar: BookingBar(
         summary: _doctor != null && _slot != null
             ? '${ClinicClock.day(_date)} at ${_slot!.startTime} with ${_doctor!.displayName}'
             : null,
-        child: AppButton(
-          label: _slot == null ? 'Pick a doctor and a time' : 'Book visit',
-          icon: Icons.event_available_rounded,
-          lock: ButtonLock.once,
-          expand: true,
-          onPressed: _doctor != null && _slot != null ? _book : null,
-        ),
+        label: _slot == null ? 'Pick a doctor and a time' : 'Book visit',
+        onBook: _doctor != null && _slot != null ? _book : null,
       ),
     );
   }

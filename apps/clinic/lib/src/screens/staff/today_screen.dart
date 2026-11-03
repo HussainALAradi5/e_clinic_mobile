@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../controllers/staff/staff_providers.dart';
-import '../../widgets/staff/appointments/appointment_card.dart';
 import '../../widgets/staff/clock/clock_card.dart';
 import '../../widgets/staff/today/no_schedule_notice.dart';
+import '../../widgets/staff/today/schedule_visits.dart';
 
 /// `/` — the staff member's day: clock in / out, then today's bookings by stage (expected → waiting → with the
 /// doctor → done) with the next step on each card. Front-desk staff can switch between their own and everyone's.
@@ -119,34 +119,8 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
       schedule.when(
         loading: () => const SkeletonList(count: 3, height: 140),
         error: (error, _) => ErrorState(error: error, onRetry: () => ref.invalidate(todayScheduleProvider)),
-        data: (day) {
-          final visits = day.visits;
-          final shown = visits.where(_stage.includes).toList();
-          final offline = day.cachedAt == null
-              ? null
-              : Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                  child: OfflineBanner(savedAt: day.cachedAt!, onRetry: () => ref.invalidate(todayScheduleProvider)),
-                );
-          return Column(
-            children: [
-              ?offline,
-              if (shown.isEmpty)
-                EmptyState(
-                  icon: Icons.event_available_outlined,
-                  title: visits.isEmpty ? 'Nothing booked today' : 'No bookings here',
-                  message: visits.isEmpty
-                      ? (mine ? 'No patients are booked with you today.' : 'The clinic has no bookings today.')
-                      : 'Pick another stage to see the rest of the day.',
-                ),
-              for (final visit in shown)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                  child: AppointmentCard(visit: visit, showProvider: !mine, readOnly: offline != null),
-                ),
-            ],
-          );
-        },
+        data: (day) =>
+            ScheduleVisits(day: day, stage: _stage, mine: mine, onRetry: () => ref.invalidate(todayScheduleProvider)),
       ),
     ];
   }

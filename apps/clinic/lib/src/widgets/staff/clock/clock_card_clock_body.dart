@@ -1,24 +1,17 @@
 part of 'clock_card.dart';
 
-class _ClockBody extends ConsumerWidget {
+class _ClockBody extends StatelessWidget {
   const _ClockBody({required this.today, required this.large});
 
   final TodayAttendance today;
   final bool large;
 
-  String _time(DateTime? instant) {
-    if (instant == null) return '—';
-    final l = ClinicClock.local(instant);
-    return '${l.hour.toString().padLeft(2, '0')}:${l.minute.toString().padLeft(2, '0')}';
-  }
-
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final row = today.attendance;
     final shift = today.shift;
-    final repository = ref.read(attendanceRepositoryProvider);
 
     final notIn = row == null || !row.checkedIn;
     final working = row != null && row.checkedIn && !row.checkedOut;
@@ -33,7 +26,7 @@ class _ClockBody extends ConsumerWidget {
           ? '${shift.name}: arrive by ${shift.start}.'
           : '${shift.name ?? 'Your shift'} starts at ${shift.start}.';
     } else if (working) {
-      title = 'Checked in at ${_time(row.checkInAt)}';
+      title = 'Checked in at ${clockTime(row.checkInAt)}';
       detail = [
         if (row.lateMinutes > 0) '${formatMinutes(row.lateMinutes)} late',
         if (shift.end != null) 'Shift ends at ${shift.end}',
@@ -42,52 +35,11 @@ class _ClockBody extends ConsumerWidget {
       final worked = row.workedMinutes;
       title = 'Done for today';
       detail =
-          '${_time(row.checkInAt)} – ${_time(row.checkOutAt)}'
+          '${clockTime(row.checkInAt)} – ${clockTime(row.checkOutAt)}'
           '${worked == null ? '' : ' · ${formatMinutes(worked)} worked'}';
     }
 
-    final Widget? button = switch ((notIn, working)) {
-      (true, _) => AppButton(
-        label: 'Check in',
-        icon: Icons.login_rounded,
-        expand: true,
-        onPressed: () async {
-          final row = await repository.checkIn(position: await clockPosition());
-          ref.read(todayClockProvider.notifier).replace(row);
-          final late = row.lateMinutes;
-          if (context.mounted) {
-            late > 0
-                ? AppSnack.info(context, 'Checked in — ${formatMinutes(late)} late for ${shift.name ?? 'your shift'}.')
-                : AppSnack.success(context, 'Checked in on time. Have a good shift.');
-          }
-        },
-      ),
-      (_, true) => AppButton(
-        label: 'Check out',
-        icon: Icons.logout_rounded,
-        variant: ButtonVariant.tonal,
-        expand: true,
-        confirm: const ConfirmConfig(
-          title: 'Check out now?',
-          message: 'Staying 15 minutes or more past your shift is sent for overtime approval.',
-          confirmLabel: 'Check out',
-        ),
-        onPressed: () async {
-          final row = await repository.checkOut(position: await clockPosition());
-          ref.read(todayClockProvider.notifier).replace(row);
-          final overtime = row.overtimeMinutes;
-          if (context.mounted) {
-            AppSnack.success(
-              context,
-              overtime > 0
-                  ? 'Checked out — ${formatMinutes(overtime)} overtime, sent for approval.'
-                  : 'Checked out. See you next time.',
-            );
-          }
-        },
-      ),
-      _ => null,
-    };
+    final button = notIn || working ? _ClockButton(today: today) : null;
 
     final icon = Container(
       width: large ? 64 : 44,
@@ -149,26 +101,7 @@ class _ClockBody extends ConsumerWidget {
             ),
           ),
         ),
-        if (row != null) ...[
-          const SectionHeader('Today'),
-          Card(
-            child: FactList(
-              facts: [
-                (label: 'Checked in', value: row.checkInAt == null ? null : _time(row.checkInAt)),
-                (label: 'Checked out', value: row.checkOutAt == null ? null : _time(row.checkOutAt)),
-                (label: 'Late', value: row.lateMinutes > 0 ? formatMinutes(row.lateMinutes) : null),
-                (
-                  label: 'Overtime',
-                  value: row.overtimeMinutes > 0
-                      ? '${formatMinutes(row.overtimeMinutes)}'
-                            '${row.overtimeApproved ?? false ? ' (approved)' : ' (waiting for approval)'}'
-                      : null,
-                ),
-                (label: 'Shift', value: shift.label),
-              ],
-            ),
-          ),
-        ],
+        if (row != null) ...[const SectionHeader('Today'), _TodayFacts(row: row, shift: shift)],
       ],
     );
   }

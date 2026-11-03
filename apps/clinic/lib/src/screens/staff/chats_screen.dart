@@ -10,10 +10,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/staff_paths.dart';
+import '../../controllers/staff/chat_actions.dart';
 import '../../controllers/staff/chat_providers.dart';
 import '../../widgets/staff/chat/chat_avatar.dart';
 
+part 'chats_screen_chat_filters.dart';
+part 'chats_screen_chat_menu.dart';
+part 'chats_screen_chat_menu_choice.dart';
 part 'chats_screen_chat_row.dart';
+part 'chats_screen_chat_toolbar.dart';
 part 'chats_screen_contact_picker.dart';
 part 'chats_screen_contact_picker_state.dart';
 
@@ -65,78 +70,23 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
   }
 
   Future<void> _menu(Conversation chat) async {
-    unawaited(HapticFeedback.mediumImpact());
-    final choice = await showModalBottomSheet<String>(
-      context: context,
-      showDragHandle: true,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(title: Text(chat.title, style: Theme.of(context).textTheme.titleMedium)),
-            ListTile(
-              leading: const Icon(Icons.chat_outlined),
-              title: const Text('Open'),
-              onTap: () => Navigator.pop(context, 'open'),
-            ),
-            if (chat.unreadCount > 0)
-              ListTile(
-                leading: const Icon(Icons.done_all_rounded),
-                title: const Text('Mark as read'),
-                onTap: () => Navigator.pop(context, 'read'),
-              ),
-            if (chat.canDelete)
-              ListTile(
-                leading: Icon(Icons.delete_outline_rounded, color: Theme.of(context).colorScheme.error),
-                title: Text('Delete chat', style: TextStyle(color: Theme.of(context).colorScheme.error)),
-                onTap: () => Navigator.pop(context, 'delete'),
-              ),
-          ],
-        ),
-      ),
-    );
+    final choice = await _ChatMenu.show(context, chat);
     if (!mounted || choice == null) return;
     final repo = ref.read(chatRepositoryProvider);
     switch (choice) {
-      case 'open':
+      case _ChatMenuChoice.open:
         await _open(chat);
-      case 'read':
+      case _ChatMenuChoice.read:
         await repo.markRead(chat.id);
         ref.invalidate(chatUnreadProvider);
         setState(() => _version++);
-      case 'delete':
-        final ok = await showConfirmSheet(
-          context,
-          ConfirmConfig(
-            title: 'Delete "${chat.title}"?',
-            message: chat.isGroup
-                ? 'The group disappears for every member. Nothing is erased — an admin can restore it.'
-                : 'The chat disappears for both of you. Nothing is erased — an admin can restore it.',
-            confirmLabel: 'Delete chat',
-            danger: true,
-          ),
-        );
-        if (!ok || !mounted) return;
-        try {
-          await repo.delete(chat.id);
-          if (mounted) {
-            AppSnack.success(context, 'Chat deleted.');
-            setState(() => _version++);
-          }
-        } catch (e) {
-          if (mounted) AppSnack.error(context, e);
-        }
+      case _ChatMenuChoice.delete:
+        if (await ChatActions.delete(context, ref, chat) && mounted) setState(() => _version++);
     }
   }
 
   Future<void> _newChat() async {
-    final contact = await showModalBottomSheet<ChatContact>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      useSafeArea: true,
-      builder: (_) => const _ContactPicker(),
-    );
+    final contact = await _ContactPicker.show(context);
     if (contact == null || !mounted) return;
     try {
       final chat = await ref.read(chatRepositoryProvider).startDirect(contact.id);
@@ -161,25 +111,12 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-            child: SearchField(hint: 'Search chats or people', onChanged: (v) => setState(() => _search = v)),
+          _ChatToolbar(
+            filter: _filter,
+            total: _total,
+            onSearch: (v) => setState(() => _search = v),
+            onFilter: (v) => setState(() => _filter = v),
           ),
-          ChipBar<ChatFilter>(
-            options: const [
-              (value: ChatFilter.all, label: 'All', count: null),
-              (value: ChatFilter.unread, label: 'Unread', count: null),
-              (value: ChatFilter.groups, label: 'Groups', count: null),
-              (value: ChatFilter.direct, label: 'One-to-one', count: null),
-            ],
-            selected: _filter,
-            onSelected: (v) => setState(() => _filter = v),
-          ),
-          if (_total != null)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-              child: Text('$_total ${_total == 1 ? 'chat' : 'chats'}', style: Theme.of(context).textTheme.labelMedium),
-            ),
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async => setState(() => _version++),

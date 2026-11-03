@@ -6,6 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../controllers/staff/leave_providers.dart';
+import '../../widgets/common/reason_field.dart';
+import '../../widgets/staff/leaves/leave_days_field.dart';
+import '../../widgets/staff/leaves/leave_type_picker.dart';
 
 /// `/hr/leaves/new` — type, days (a half day when it is one day), reason; goes to the manager, or waits as a
 /// draft when the type needs a certificate. The server counts working days and checks the balance.
@@ -22,30 +25,10 @@ class _NewLeaveScreenState extends ConsumerState<NewLeaveScreen> {
   DateTimeRange? _range;
   var _halfDay = false;
 
-  bool get _oneDay => _range != null && DateUtils.isSameDay(_range!.start, _range!.end);
-
   @override
   void dispose() {
     _reason.dispose();
     super.dispose();
-  }
-
-  Future<void> _pickDays() async {
-    final today = ClinicClock.parse(ClinicClock.today());
-    final picked = await showDateRangePicker(
-      context: context,
-      // Sick leave is often asked for afterwards.
-      firstDate: today.subtract(const Duration(days: 30)),
-      lastDate: today.add(const Duration(days: 365)),
-      initialDateRange: _range,
-      helpText: 'Days off',
-    );
-    if (picked != null) {
-      setState(() {
-        _range = picked;
-        if (!_oneDay) _halfDay = false;
-      });
-    }
   }
 
   Future<void> _send() async {
@@ -73,8 +56,7 @@ class _NewLeaveScreenState extends ConsumerState<NewLeaveScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final range = _range;
-    final ready = _type != null && range != null;
+    final ready = _type != null && _range != null;
     return Scaffold(
       appBar: AppBar(title: const Text('Request leave')),
       body: AsyncBody(
@@ -84,69 +66,19 @@ class _NewLeaveScreenState extends ConsumerState<NewLeaveScreen> {
           padding: const EdgeInsets.only(bottom: 24),
           children: [
             const SectionHeader('Kind of leave'),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  for (final t in types)
-                    ChoiceChip(
-                      label: Text(t.name),
-                      selected: _type?.id == t.id,
-                      onSelected: (_) => setState(() => _type = t),
-                    ),
-                ],
-              ),
-            ),
-            if (_type case final type?) ...[
-              if (type.requiresAttachment)
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
-                  child: InfoNote(
-                    icon: Icons.attach_file_rounded,
-                    text: 'Needs a certificate: the request is saved as a draft until you attach a photo of it.',
-                  ),
-                ),
-              if (type.minNoticeDays > 0)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                  child: InfoNote(icon: Icons.schedule_rounded, text: 'Ask at least ${type.minNoticeDays} days ahead.'),
-                ),
-            ],
+            LeaveTypePicker(types: types, selected: _type, onSelected: (t) => setState(() => _type = t)),
             const SectionHeader('Days'),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: OutlinedButton.icon(
-                onPressed: _pickDays,
-                icon: const Icon(Icons.date_range_rounded),
-                label: Text(
-                  range == null
-                      ? 'Choose the days'
-                      : _oneDay
-                      ? ClinicClock.day(ClinicClock.isoDate(range.start))
-                      : '${ClinicClock.date(ClinicClock.isoDate(range.start))} – ${ClinicClock.date(ClinicClock.isoDate(range.end))}',
-                ),
-              ),
+            LeaveDaysField(
+              range: _range,
+              halfDay: _halfDay,
+              onRange: (range) => setState(() {
+                _range = range;
+                if (!LeaveDaysField.isOneDay(range)) _halfDay = false;
+              }),
+              onHalfDay: (v) => setState(() => _halfDay = v),
             ),
-            if (_oneDay)
-              SwitchListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                value: _halfDay,
-                onChanged: (v) => setState(() => _halfDay = v),
-                title: const Text('Half day'),
-              ),
             const SectionHeader('Reason (optional)'),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: TextField(
-                controller: _reason,
-                maxLength: 1000,
-                minLines: 2,
-                maxLines: 4,
-                textCapitalization: TextCapitalization.sentences,
-              ),
-            ),
+            ReasonField(controller: _reason, maxLength: 1000, minLines: 2, maxLines: 4),
           ],
         ),
       ),

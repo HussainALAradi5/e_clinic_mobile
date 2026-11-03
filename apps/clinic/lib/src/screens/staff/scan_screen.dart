@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../widgets/staff/scan/camera_unavailable.dart';
+import '../../widgets/staff/scan/scan_frame.dart';
+import '../../widgets/staff/scan/scan_overlay.dart';
 import '../../widgets/staff/scan/scan_result_sheet.dart';
 import '../../widgets/staff/scan/type_code_dialog.dart';
 
@@ -97,7 +99,6 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -111,58 +112,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
               onTypeCode: _typeCode,
             ),
           ),
-          // Target frame, while the camera works.
-          ValueListenableBuilder(
-            valueListenable: _camera,
-            builder: (_, state, _) => state.error != null
-                ? const SizedBox.shrink()
-                : Center(
-                    child: Container(
-                      width: 260,
-                      height: 260,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white, width: 3),
-                        borderRadius: BorderRadius.circular(28),
-                      ),
-                    ),
-                  ),
-          ),
-          SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 8, 8, 0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text('Scan a code', style: theme.textTheme.titleLarge?.copyWith(color: Colors.white)),
-                      ),
-                      IconButton(
-                        tooltip: 'Torch',
-                        color: Colors.white,
-                        onPressed: () => unawaited(_camera.toggleTorch().catchError((Object _) {})),
-                        icon: const Icon(Icons.flashlight_on_outlined),
-                      ),
-                      IconButton(
-                        tooltip: 'Type the code',
-                        color: Colors.white,
-                        onPressed: _busy ? null : _typeCode,
-                        icon: const Icon(Icons.keyboard_outlined),
-                      ),
-                    ],
-                  ),
-                ),
-                const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(32, 0, 32, 32),
-                  child: Text(
-                    'Patient card, check-in code from the patient app, order label, prescription or invoice.',
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white70),
-                  ),
-                ),
-              ],
-            ),
+          ScanFrame(camera: _camera),
+          ScanOverlay(
+            onTorch: () => unawaited(_camera.toggleTorch().catchError((Object _) {})),
+            onTypeCode: _busy ? null : _typeCode,
           ),
           if (_busy)
             const ColoredBox(

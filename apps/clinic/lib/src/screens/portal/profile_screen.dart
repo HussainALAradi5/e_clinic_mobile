@@ -4,11 +4,11 @@ import 'package:e_clinic_shell/shell.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../config/routes/portal_paths.dart';
 import '../../controllers/portal/portal_providers.dart';
 import '../../widgets/portal/profile/contact_sheet.dart';
+import '../../widgets/portal/profile/insurance_card.dart';
+import '../../widgets/portal/profile/profile_links.dart';
 
 /// `/profile` — the patient's file as the clinic holds it. Contact details and the emergency contact can be changed
 /// here; name, ID and insurance change at the front desk (they need documents).
@@ -72,27 +72,7 @@ class ProfileScreen extends ConsumerWidget {
                   ],
                 ),
               ),
-              if (p.insurer != null) ...[
-                const SectionHeader('Insurance'),
-                Card(
-                  child: FactList(
-                    facts: [
-                      (label: 'Insurer', value: p.insurer!.name),
-                      (label: 'Policy number', value: p.insurancePolicyNumber),
-                      (
-                        label: 'Covers',
-                        value: p.insuranceCoveragePercent == null
-                            ? null
-                            : '${double.tryParse(p.insuranceCoveragePercent!)?.round() ?? p.insuranceCoveragePercent} %',
-                      ),
-                      (
-                        label: 'Valid until',
-                        value: p.insuranceExpiryDate == null ? null : ClinicClock.date(p.insuranceExpiryDate!),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              if (p.insurer != null) ...[const SectionHeader('Insurance'), InsuranceCard(patient: p)],
               Padding(
                 padding: const EdgeInsets.fromLTRB(4, 12, 4, 0),
                 child: Text(
@@ -103,35 +83,7 @@ class ProfileScreen extends ConsumerWidget {
               const SizedBox(height: 16),
               const ThemeModeTile(),
               const SectionHeader('More'),
-              LinkGroup(
-                links: [
-                  LinkTile(
-                    icon: Icons.self_improvement_rounded,
-                    label: 'My treatments',
-                    onTap: () => context.push(PortalPaths.treatments),
-                  ),
-                  LinkTile(
-                    icon: Icons.medication_outlined,
-                    label: 'My prescriptions',
-                    onTap: () => context.push(PortalPaths.prescriptions),
-                  ),
-                  LinkTile(
-                    icon: Icons.sick_outlined,
-                    label: 'My sick leaves',
-                    onTap: () => context.push(PortalPaths.sickLeaves),
-                  ),
-                  LinkTile(
-                    icon: Icons.notifications_none_rounded,
-                    label: 'Messages',
-                    onTap: () => context.push(PortalPaths.messages),
-                  ),
-                  LinkTile(
-                    icon: Icons.shield_outlined,
-                    label: 'Password & security',
-                    onTap: () => context.push(AuthPaths.security),
-                  ),
-                ],
-              ),
+              const ProfileLinks(),
               const SizedBox(height: 24),
               AppButton(
                 label: 'Sign out',

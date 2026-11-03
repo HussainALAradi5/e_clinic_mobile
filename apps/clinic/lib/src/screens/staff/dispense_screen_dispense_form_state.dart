@@ -99,35 +99,10 @@ class _DispenseFormState extends ConsumerState<_DispenseForm> {
             ),
           if (witness) ...[
             const SectionHeader('Witness'),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: ref
-                  .watch(witnessesProvider)
-                  .when(
-                    loading: () => const LinearProgressIndicator(),
-                    error: (error, _) => ErrorState(error: error, onRetry: () => ref.invalidate(witnessesProvider)),
-                    data: (people) => DropdownButtonFormField<String>(
-                      initialValue: _witnessId,
-                      decoration: const InputDecoration(
-                        labelText: 'Colleague who checks the controlled drug',
-                        prefixIcon: Icon(Icons.verified_user_outlined),
-                      ),
-                      items: [for (final p in people) DropdownMenuItem(value: p.id, child: Text(p.fullName))],
-                      onChanged: (id) => setState(() => _witnessId = id),
-                    ),
-                  ),
-            ),
+            WitnessPicker(selectedId: _witnessId, onChanged: (id) => setState(() => _witnessId = id)),
           ],
           const SectionHeader('Notes (optional)'),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TextField(
-              controller: _notes,
-              maxLength: 500,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(hintText: 'e.g. patient will collect the rest next week'),
-            ),
-          ),
+          ReasonField(controller: _notes, hint: 'e.g. patient will collect the rest next week', maxLines: 1),
         ],
       ),
       bottomNavigationBar: BottomBar(

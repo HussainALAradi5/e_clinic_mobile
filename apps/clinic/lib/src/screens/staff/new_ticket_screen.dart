@@ -1,4 +1,3 @@
-import 'package:e_clinic_core/core.dart';
 import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../controllers/staff/support_actions.dart';
 import '../../widgets/common/attach_photo_button.dart';
+
+part 'new_ticket_screen_photo_picks.dart';
+part 'new_ticket_screen_tone_choices.dart';
 
 /// `/support/tickets/new` — report a problem: subject, category, priority and what happened. Closes with the new
 /// ticket; the support team is told right away.
@@ -42,29 +45,15 @@ class _NewTicketScreenState extends ConsumerState<NewTicketScreen> {
       setState(() => _tried = true);
       throw const ActionCancelled();
     }
-    final ticket = await ref
-        .read(ticketRepositoryProvider)
-        .open(
-          subject: _subject.text.trim(),
-          description: _description.text.trim(),
-          category: _category,
-          priority: _priority,
-        );
-    if (_photos.isNotEmpty) {
-      try {
-        await ref
-            .read(attachmentRepositoryProvider)
-            .upload(
-              ownerType: 'support_ticket',
-              ownerId: ticket.id,
-              category: AttachmentCategory.ticketAttachment,
-              files: [for (final p in _photos) (path: p.path, name: p.name)],
-            );
-      } on ApiException catch (e) {
-        // The ticket is open either way; photos can be added on its page.
-        if (mounted) AppSnack.error(context, e);
-      }
-    }
+    final ticket = await SupportActions.open(
+      ref,
+      subject: _subject.text.trim(),
+      description: _description.text.trim(),
+      category: _category,
+      priority: _priority,
+      photos: [for (final p in _photos) (path: p.path, name: p.name)],
+      onPhotosFailed: (e) => mounted ? AppSnack.error(context, e) : null,
+    );
     if (mounted) {
       AppSnack.success(context, '${ticket.code} opened — the support team is told.');
       context.pop(ticket);
@@ -73,21 +62,7 @@ class _NewTicketScreenState extends ConsumerState<NewTicketScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final catalog = ref.watch(enumCatalogProvider).value ?? EnumCatalog.empty;
     final theme = Theme.of(context);
-    Widget choices(String enumName, List<String> values, String selected, ValueChanged<String> onSelected) => Wrap(
-      spacing: 8,
-      runSpacing: 4,
-      children: [
-        for (final v in values)
-          ToneChip(
-            label: catalog.label(enumName, v),
-            selected: v == selected,
-            onSelected: () => onSelected(v),
-            tone: StatusColors.tone(enumName, v, order: catalog.values(enumName)),
-          ),
-      ],
-    );
     return Scaffold(
       appBar: AppBar(title: const Text('New support ticket')),
       body: Form(
@@ -113,9 +88,19 @@ class _NewTicketScreenState extends ConsumerState<NewTicketScreen> {
               validator: (v) => (v?.trim().length ?? 0) < 4 ? 'At least 4 characters.' : null,
             ),
             const SectionHeader('Category'),
-            choices('TicketCategory', _categories, _category, (v) => setState(() => _category = v)),
+            _ToneChoices(
+              enumName: 'TicketCategory',
+              values: _categories,
+              selected: _category,
+              onSelected: (v) => setState(() => _category = v),
+            ),
             const SectionHeader('Priority'),
-            choices('TreatmentPriority', _priorities, _priority, (v) => setState(() => _priority = v)),
+            _ToneChoices(
+              enumName: 'TreatmentPriority',
+              values: _priorities,
+              selected: _priority,
+              onSelected: (v) => setState(() => _priority = v),
+            ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _description,
@@ -131,27 +116,10 @@ class _NewTicketScreenState extends ConsumerState<NewTicketScreen> {
               validator: (v) => (v?.trim().length ?? 0) < 10 ? 'At least 10 characters.' : null,
             ),
             const SizedBox(height: 4),
-            Wrap(
-              spacing: 8,
-              runSpacing: 4,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                for (final photo in _photos)
-                  InputChip(
-                    avatar: const Icon(Icons.image_outlined, size: 18),
-                    label: Text(photo.name, overflow: TextOverflow.ellipsis),
-                    onDeleted: () => setState(() => _photos.remove(photo)),
-                  ),
-                if (_photos.length < 5)
-                  TextButton.icon(
-                    onPressed: () async {
-                      final photo = await pickPhoto(context);
-                      if (photo != null) setState(() => _photos.add(photo));
-                    },
-                    icon: const Icon(Icons.add_a_photo_outlined),
-                    label: Text(_photos.isEmpty ? 'Add a photo or screenshot' : 'Add another'),
-                  ),
-              ],
+            _PhotoPicks(
+              photos: _photos,
+              onAdd: (photo) => setState(() => _photos.add(photo)),
+              onRemove: (photo) => setState(() => _photos.remove(photo)),
             ),
             const SizedBox(height: 8),
             AppButton(

@@ -6,11 +6,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/staff_paths.dart';
+import '../../controllers/staff/booking_actions.dart';
 import '../../controllers/staff/calendar_providers.dart';
 import '../../controllers/staff/patient_providers.dart';
-import '../../controllers/staff/staff_providers.dart';
-import '../../widgets/staff/booking/patient_picker_sheet.dart';
-import '../../widgets/staff/patients/patient_tile.dart';
+import '../../widgets/common/booking_bar.dart';
+import '../../widgets/common/reason_field.dart';
+import '../../widgets/staff/booking/booking_source_picker.dart';
+import '../../widgets/staff/booking/patient_field.dart';
+import '../../widgets/staff/booking/provider_chips.dart';
+import '../../widgets/staff/booking/provider_times.dart';
+import '../../widgets/staff/booking/visit_kind_chips.dart';
 
 /// `/clinic/book` — the desk books a visit: patient → kind of visit → provider → day → free time → how they
 /// asked. Desk bookings start confirmed. `?patient=<id>` (from a patient file) starts with that patient.
@@ -25,19 +30,6 @@ class BookScreen extends ConsumerStatefulWidget {
 
 class _BookScreenState extends ConsumerState<BookScreen> {
   static const _daysShown = 21;
-
-  /// Treatment sessions are booked from the treatment plan on the website.
-  static const _types = [
-    AppointmentType.consultation,
-    AppointmentType.followUp,
-    AppointmentType.procedure,
-    AppointmentType.emergency,
-    AppointmentType.teleconsultation,
-  ];
-  static const _sources = [
-    (AppointmentSource.walkIn, 'At the desk', Icons.storefront_outlined),
-    (AppointmentSource.phone, 'By phone', Icons.call_outlined),
-  ];
 
   final _days = [for (var i = 0; i < _daysShown; i++) ClinicClock.addDays(ClinicClock.today(), i)];
   final _reason = TextEditingController();
@@ -70,41 +62,29 @@ class _BookScreenState extends ConsumerState<BookScreen> {
     super.dispose();
   }
 
-  Future<void> _choosePatient() async {
-    final picked = await pickPatient(context);
-    if (picked != null) setState(() => _patient = picked);
+  Future<void> _book() async {
+    final (patient, key, slot) = (_patient, _slotKey, _slot);
+    if (patient == null || key == null || slot == null) throw const ActionCancelled();
+    final reason = _reason.text.trim();
+    final booking = await StaffBookingActions.book(
+      ref,
+      patientId: patient.id,
+      slotKey: key,
+      slot: slot,
+      source: _source,
+      reason: reason.isEmpty ? null : reason,
+      idempotencyKey: _idempotencyKey,
+      onTimeGone: _pickAgain,
+    );
+    if (!mounted) return;
+    AppSnack.success(context, 'Booked for ${patient.fullName}.');
+    context.pushReplacement(StaffPaths.appointment(booking.id));
   }
 
-  Future<void> _book() async {
-    if (!_ready) throw const ActionCancelled();
-    final Appointment booking;
-    try {
-      final reason = _reason.text.trim();
-      booking = await ref
-          .read(appointmentRepositoryProvider)
-          .book(
-            patientId: _patient!.id,
-            providerId: _provider!.id,
-            type: _type,
-            date: _date,
-            startTime: _slot!.startTime,
-            source: _source,
-            reason: reason.isEmpty ? null : reason,
-            idempotencyKey: _idempotencyKey,
-          );
-    } on ApiException catch (error) {
-      // The time may have gone meanwhile: show fresh times and pick again.
-      if (!error.isOffline && mounted) {
-        _idempotencyKey = ApiClient.newIdempotencyKey();
-        ref.invalidate(staffSlotsProvider(_slotKey!));
-        setState(() => _slot = null);
-      }
-      rethrow;
-    }
-    ref.read(scheduleVersionProvider.notifier).bump();
-    if (!mounted) return;
-    AppSnack.success(context, 'Booked for ${_patient!.fullName}.');
-    context.pushReplacement(StaffPaths.appointment(booking.id));
+  /// The time went meanwhile: a new key, and the desk picks again from fresh times.
+  void _pickAgain() {
+    _idempotencyKey = ApiClient.newIdempotencyKey();
+    if (mounted) setState(() => _slot = null);
   }
 
   void _reset({bool provider = false}) {
@@ -114,126 +94,53 @@ class _BookScreenState extends ConsumerState<BookScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final catalog = ref.watch(enumCatalogProvider).value ?? EnumCatalog.empty;
     return Scaffold(
       appBar: AppBar(title: const Text('Book a visit')),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 24),
         children: [
           const SectionHeader('Patient'),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: _patient == null
-                ? OutlinedButton.icon(
-                    onPressed: _choosePatient,
-                    icon: const Icon(Icons.person_search_rounded),
-                    label: const Text('Find the patient'),
-                  )
-                : PatientTile(
-                    patient: _patient!,
-                    onTap: _choosePatient,
-                    trailing: const Icon(Icons.swap_horiz_rounded),
-                  ),
-          ),
+          PatientField(patient: _patient, onChanged: (p) => setState(() => _patient = p)),
           const SectionHeader('Kind of visit'),
-          ChipBar<AppointmentType>(
-            options: [for (final t in _types) (value: t, label: catalog.label('AppointmentType', t), count: null)],
+          VisitKindChips(
             selected: _type,
-            tone: (t) => StatusColors.tone('AppointmentType', wireValue(t)),
             onSelected: (t) => setState(() {
               _type = t;
               _reset(provider: true);
             }),
           ),
           const SectionHeader('With'),
-          ref
-              .watch(bookingProvidersProvider(_type))
-              .when(
-                loading: () => const SkeletonList(count: 2, height: 56),
-                error: (error, _) =>
-                    ErrorState(error: error, onRetry: () => ref.invalidate(bookingProvidersProvider(_type))),
-                data: (providers) => providers.isEmpty
-                    ? const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: InfoNote(icon: Icons.person_off_outlined, text: 'Nobody takes this kind of visit.'),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: [
-                            for (final p in providers)
-                              ChoiceChip(
-                                avatar: CircleAvatar(child: Text(initials(p.fullName))),
-                                label: Text(p.fullName),
-                                tooltip: [p.jobTitle, p.department].whereType<String>().join(' · '),
-                                selected: _provider?.id == p.id,
-                                onSelected: (_) => setState(() {
-                                  _provider = p;
-                                  _reset();
-                                }),
-                              ),
-                          ],
-                        ),
-                      ),
-              ),
-          if (_slotKey case final key?) ...[
-            const SectionHeader('Day'),
-            DayStrip(
+          ProviderChips(
+            type: _type,
+            selectedId: _provider?.id,
+            onSelected: (p) => setState(() {
+              _provider = p;
+              _reset();
+            }),
+          ),
+          if (_slotKey case final key?)
+            ProviderTimes(
+              slotKey: key,
               days: _days,
-              selected: _date,
-              onSelected: (day) => setState(() {
+              selected: _slot,
+              onDay: (day) => setState(() {
                 _date = day;
                 _reset();
               }),
-            ),
-            const SectionHeader('Time'),
-            SlotPicker(
-              slots: ref.watch(staffSlotsProvider(key)),
-              selected: _slot,
               onPick: (slot) => setState(() => _slot = slot),
-              onRetry: () => ref.invalidate(staffSlotsProvider(key)),
             ),
-          ],
           const SectionHeader('How did they book?'),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: SegmentedButton<AppointmentSource>(
-              showSelectedIcon: false,
-              segments: [
-                for (final (value, label, icon) in _sources)
-                  ButtonSegment(value: value, label: Text(label), icon: Icon(icon)),
-              ],
-              selected: {_source},
-              onSelectionChanged: (s) => setState(() => _source = s.first),
-            ),
-          ),
+          BookingSourcePicker(selected: _source, onChanged: (s) => setState(() => _source = s)),
           const SectionHeader('Reason (optional)'),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TextField(
-              controller: _reason,
-              maxLength: 500,
-              minLines: 1,
-              maxLines: 3,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(hintText: 'e.g. follow-up of blood test'),
-            ),
-          ),
+          ReasonField(controller: _reason, hint: 'e.g. follow-up of blood test'),
         ],
       ),
-      bottomNavigationBar: BottomBar(
+      bottomNavigationBar: BookingBar(
         summary: _ready
             ? '${_patient!.fullName} · ${ClinicClock.day(_date)} at ${_slot!.startTime} with ${_provider!.fullName}'
             : null,
-        child: AppButton(
-          label: _ready ? 'Book visit' : 'Choose patient, provider and time',
-          icon: Icons.event_available_rounded,
-          lock: ButtonLock.once,
-          expand: true,
-          onPressed: _ready ? _book : null,
-        ),
+        label: _ready ? 'Book visit' : 'Choose patient, provider and time',
+        onBook: _ready ? _book : null,
       ),
     );
   }

@@ -1,4 +1,3 @@
-import 'package:e_clinic_core/core.dart';
 import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,8 @@ import '../../../utilities/staff/clock_location.dart';
 import '../../../utilities/staff/formatters.dart';
 
 part 'clock_card_clock_body.dart';
+part 'clock_card_clock_button.dart';
+part 'clock_card_today_facts.dart';
 
 /// One-tap clock in / out with today's state. The server accepts it only from the clinic network and works out
 /// late arrival and overtime from the shift.

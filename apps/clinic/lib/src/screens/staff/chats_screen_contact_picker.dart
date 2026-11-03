@@ -4,6 +4,14 @@ part of 'chats_screen.dart';
 class _ContactPicker extends ConsumerStatefulWidget {
   const _ContactPicker();
 
+  static Future<ChatContact?> show(BuildContext context) => showModalBottomSheet<ChatContact>(
+    context: context,
+    isScrollControlled: true,
+    showDragHandle: true,
+    useSafeArea: true,
+    builder: (_) => const _ContactPicker(),
+  );
+
   @override
   ConsumerState<_ContactPicker> createState() => _ContactPickerState();
 }
