@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:e_clinic_data/data.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -6,11 +8,14 @@ import '../auth/session_controller.dart';
 
 part 'phone_notifications_controller_notification_taps.dart';
 
-final notificationTapsProvider = NotifierProvider<NotificationTaps, int>(NotificationTaps.new);
+/// A tapped phone notification: the message and the record it is about.
+typedef TappedNotification = ({String id, String? relatedType, String? relatedId});
+
+final notificationTapsProvider = NotifierProvider<NotificationTaps, TappedNotification?>(NotificationTaps.new);
 
 /// The phone's notification tray, shared by the switch and the inbox watcher.
 final systemNotificationsProvider = Provider<SystemNotifications>(
-  (ref) => SystemNotifications(onTap: () => ref.read(notificationTapsProvider.notifier).tapped()),
+  (ref) => SystemNotifications(onTap: (payload) => ref.read(notificationTapsProvider.notifier).tapped(payload)),
 );
 
 /// The person's switch for phone and browser notifications (the server's `push` opt-out); null while signed out.

@@ -47,7 +47,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   Future<void> _markAllRead() async {
     await _repo.markAllRead();
     ref.invalidate(unreadCountProvider);
-    if (mounted) setState(() => _version++);
+    if (!mounted) return;
+    setState(() => _version++);
+    AppSnack.success(context, 'All messages marked as read.');
   }
 
   @override
@@ -55,7 +57,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     appBar: AppBar(
       title: const Text('Messages'),
       actions: [
-        AppButton(label: 'Mark all read', variant: ButtonVariant.text, onPressed: _markAllRead),
+        if ((ref.watch(unreadCountProvider).value ?? 0) > 0)
+          AppButton(label: 'Mark all read', variant: ButtonVariant.text, onPressed: _markAllRead),
         const SizedBox(width: 8),
       ],
     ),

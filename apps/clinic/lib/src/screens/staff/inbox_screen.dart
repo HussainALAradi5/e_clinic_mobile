@@ -66,7 +66,9 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
   Future<void> _markAllRead() async {
     await _repo.markAllRead();
     ref.invalidate(staffUnreadProvider);
-    if (mounted) setState(() => _version++);
+    if (!mounted) return;
+    setState(() => _version++);
+    AppSnack.success(context, 'All notifications marked as read.');
   }
 
   @override

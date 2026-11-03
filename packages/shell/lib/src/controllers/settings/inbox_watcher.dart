@@ -46,7 +46,7 @@ class InboxWatcher {
         for (final n in fresh) {
           await _ref
               .read(systemNotificationsProvider)
-              .show(id: n.id.hashCode, kind: n.kind, title: n.subject ?? 'e-Clinic', body: n.body);
+              .show(id: n.id.hashCode, kind: n.kind, title: n.subject ?? 'e-Clinic', body: n.body, message: n);
         }
       }
       await prefs.setString(_prefKey, (newest ?? DateTime.now()).toIso8601String());
