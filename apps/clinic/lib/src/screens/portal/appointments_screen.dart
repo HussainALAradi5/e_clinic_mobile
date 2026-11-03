@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../config/routes/portal_paths.dart';
 import '../../controllers/portal/portal_providers.dart';
+import '../../widgets/common/date_range_chip.dart';
 import '../../widgets/common/enum_filter_chips.dart';
 import '../../widgets/portal/visits/visit_card.dart';
 
@@ -22,6 +23,7 @@ class AppointmentsScreen extends ConsumerStatefulWidget {
 class _AppointmentsScreenState extends ConsumerState<AppointmentsScreen> {
   static const _pageSize = 20;
   VisitTiming? _timing;
+  DateTimeRange? _dates;
 
   Future<Paged<Appointment>> _load(int page) {
     final soonestFirst = _timing == VisitTiming.coming || _timing == VisitTiming.today;
@@ -29,6 +31,9 @@ class _AppointmentsScreenState extends ConsumerState<AppointmentsScreen> {
         .read(appointmentRepositoryProvider)
         .list(
           ListQuery(
+            dateField: 'scheduled_date',
+            dateFrom: _dates == null ? null : ClinicClock.isoDate(_dates!.start),
+            dateTo: _dates == null ? null : ClinicClock.isoDate(_dates!.end),
             page: page,
             perPage: _pageSize,
             sort: soonestFirst ? const ['scheduledDate', 'startTime'] : const ['-scheduledDate', '-startTime'],
@@ -48,15 +53,21 @@ class _AppointmentsScreenState extends ConsumerState<AppointmentsScreen> {
         label: const Text('Book a visit'),
       ),
       body: InfiniteList<Appointment>(
-        reloadKey: (_timing, version),
+        reloadKey: (_timing, _dates, version),
         load: _load,
         header: Padding(
           padding: const EdgeInsets.only(top: 4, bottom: 16),
-          child: EnumFilterChips(
-            enumName: 'VisitTiming',
-            values: VisitTiming.filters,
-            selected: _timing,
-            onSelected: (t) => setState(() => _timing = t),
+          child: Column(
+            children: [
+              EnumFilterChips(
+                enumName: 'VisitTiming',
+                values: VisitTiming.filters,
+                selected: _timing,
+                onSelected: (t) => setState(() => _timing = t),
+              ),
+              const SizedBox(height: 8),
+              DateRangeChip(range: _dates, onChanged: (r) => setState(() => _dates = r)),
+            ],
           ),
         ),
         empty: EmptyState(

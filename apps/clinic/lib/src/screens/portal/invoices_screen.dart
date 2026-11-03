@@ -1,9 +1,11 @@
+import 'package:e_clinic_core/core.dart';
 import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../controllers/portal/portal_providers.dart';
+import '../../widgets/common/date_range_chip.dart';
 import '../../widgets/common/enum_filter_chips.dart';
 import '../../widgets/portal/invoices/due_card.dart';
 import '../../widgets/portal/invoices/invoice_card.dart';
@@ -20,12 +22,18 @@ class InvoicesScreen extends ConsumerStatefulWidget {
 class _InvoicesScreenState extends ConsumerState<InvoicesScreen> {
   InvoicePaymentState? _state;
   PaymentMethod? _method;
+  DateTimeRange? _dates;
 
-  InvoiceFilter get _filter => (state: _state, method: _method);
+  InvoiceFilter get _filter => (
+    state: _state,
+    method: _method,
+    from: _dates == null ? null : ClinicClock.isoDate(_dates!.start),
+    to: _dates == null ? null : ClinicClock.isoDate(_dates!.end),
+  );
 
   @override
   Widget build(BuildContext context) {
-    final filtered = _state != null || _method != null;
+    final filtered = _state != null || _method != null || _dates != null;
     return Scaffold(
       appBar: AppBar(title: const Text('My invoices')),
       body: RefreshIndicator(
@@ -46,6 +54,8 @@ class _InvoicesScreenState extends ConsumerState<InvoicesScreen> {
               selected: _method,
               onSelected: (m) => setState(() => _method = m),
             ),
+            const SizedBox(height: 8),
+            DateRangeChip(range: _dates, onChanged: (r) => setState(() => _dates = r)),
             const SizedBox(height: 16),
             AsyncBody(
               value: ref.watch(invoicesProvider(_filter)),

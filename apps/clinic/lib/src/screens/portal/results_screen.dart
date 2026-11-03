@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../controllers/portal/portal_providers.dart';
+import '../../widgets/common/date_range_chip.dart';
 import '../../widgets/common/enum_filter_chips.dart';
 import '../../widgets/portal/results/result_detail.dart';
 
@@ -19,6 +20,13 @@ class ResultsScreen extends ConsumerStatefulWidget {
 
 class _ResultsScreenState extends ConsumerState<ResultsScreen> {
   ClinicalOrderType? _type;
+  DateTimeRange? _dates;
+
+  ResultFilter get _filter => (
+    type: _type,
+    from: _dates == null ? null : ClinicClock.isoDate(_dates!.start),
+    to: _dates == null ? null : ClinicClock.isoDate(_dates!.end),
+  );
 
   static final _types = ClinicalOrderType.values.where((t) => t != ClinicalOrderType.unknown).toList();
 
@@ -37,12 +45,13 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
               onSelected: (t) => setState(() => _type = t),
             ),
           ),
+          DateRangeChip(range: _dates, onChanged: (r) => setState(() => _dates = r)),
           Expanded(
             child: RefreshIndicator(
-              onRefresh: () => ref.refresh(resultsProvider(_type).future),
+              onRefresh: () => ref.refresh(resultsProvider(_filter).future),
               child: AsyncBody(
-                value: ref.watch(resultsProvider(_type)),
-                onRetry: () => ref.invalidate(resultsProvider(_type)),
+                value: ref.watch(resultsProvider(_filter)),
+                onRetry: () => ref.invalidate(resultsProvider(_filter)),
                 data: (results) => results.isEmpty
                     ? ListView(
                         children: const [

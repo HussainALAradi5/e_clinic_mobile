@@ -75,18 +75,23 @@ final treatmentSessionsProvider = FutureProvider.autoDispose.family<List<Treatme
   (ref, id) => ref.watch(treatmentRepositoryProvider).sessions(id),
 );
 
-/// My completed results, narrowed on the server to one kind (null = all).
-final resultsProvider = FutureProvider.autoDispose.family<List<ClinicalOrder>, ClinicalOrderType?>(
-  (ref, type) async =>
+/// My completed results, narrowed on the server to one kind and to result dates (null = all).
+typedef ResultFilter = ({ClinicalOrderType? type, String? from, String? to});
+
+final resultsProvider = FutureProvider.autoDispose.family<List<ClinicalOrder>, ResultFilter>(
+  (ref, filter) async =>
       (await ref
               .watch(clinicalOrderRepositoryProvider)
               .list(
                 ListQuery(
                   perPage: 50,
                   sort: const ['-completedAt'],
+                  dateField: 'completed_at',
+                  dateFrom: filter.from,
+                  dateTo: filter.to,
                   filter: AllOf([
                     const Where.eq('status', GenericStatus.completed),
-                    if (type != null) Where.eq('type', type),
+                    if (filter.type != null) Where.eq('type', filter.type!),
                   ]),
                 ),
               ))
@@ -103,14 +108,20 @@ final prescriptionsProvider = FutureProvider.autoDispose<List<Prescription>>(
 );
 
 /// My invoices, narrowed on the server by payment state and by how they were paid (null = all).
-typedef InvoiceFilter = ({InvoicePaymentState? state, PaymentMethod? method});
+typedef InvoiceFilter = ({InvoicePaymentState? state, PaymentMethod? method, String? from, String? to});
 
 final invoicesProvider = FutureProvider.autoDispose.family<List<Invoice>, InvoiceFilter>(
   (ref, filter) async =>
       (await ref
               .watch(invoiceRepositoryProvider)
               .list(
-                const ListQuery(perPage: 50, sort: ['-issueDate']),
+                ListQuery(
+                  perPage: 50,
+                  sort: const ['-issueDate'],
+                  dateField: 'issue_date',
+                  dateFrom: filter.from,
+                  dateTo: filter.to,
+                ),
                 paymentState: filter.state,
                 method: filter.method,
               ))
