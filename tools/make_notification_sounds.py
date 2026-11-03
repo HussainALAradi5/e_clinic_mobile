@@ -16,7 +16,7 @@ RATE = 44100
 NOTE = {'C5': 523.25, 'D5': 587.33, 'E5': 659.25, 'F5': 698.46, 'G5': 783.99, 'A5': 880.0, 'B5': 987.77,
         'C6': 1046.5, 'E6': 1318.5}
 
-# kind -> [(note, start seconds, length seconds, gain)]; each pattern is played twice (see render).
+# kind -> [(note, start seconds, length seconds, gain)]; each pattern is struck three times (see render).
 PATTERNS = {
     'visit': [('E5', 0.0, 1.2, 0.55), ('A5', 0.22, 1.0, 0.5)],                      # up a fourth: "ding-dong"
     'treatment': [('C5', 0.0, 0.9, 0.45), ('E5', 0.16, 0.9, 0.45), ('G5', 0.32, 1.0, 0.45)],  # calm arpeggio
@@ -37,7 +37,7 @@ def bell(freq, start, length, gain, samples):
     for i in range(int(length * RATE)):
         t = i / RATE
         attack = min(1.0, t / 0.008)
-        decay = math.exp(-t * 2.1)  # slow enough to be heard over a room
+        decay = math.exp(-t * 1.5)  # rings on, so it is heard over a busy room
         value = sum(a * math.sin(2 * math.pi * freq * m * t) * math.exp(-t * m * 0.6) for m, a in partials)
         j = begin + i
         if j < len(samples):
@@ -45,9 +45,9 @@ def bell(freq, start, length, gain, samples):
 
 
 def render(pattern):
-    # Played twice (a second strike after a short gap) so it is noticed; chat stays a quick double pop.
-    span = max(start + min(length, 0.6) for _, start, length, _ in pattern) + 0.25
-    pattern = pattern + [(note, start + span, length, gain) for note, start, length, gain in pattern]
+    # Struck three times (short gaps) so it is noticed; chat stays a quick triple pop.
+    span = max(start + min(length, 0.6) for _, start, length, _ in pattern) + 0.2
+    pattern = [(note, start + span * k, length, gain) for k in range(3) for note, start, length, gain in pattern]
     total = max(start + length for _, start, length, _ in pattern)
     samples = [0.0] * int(total * RATE)
     for note, start, length, gain in pattern:
@@ -55,7 +55,7 @@ def render(pattern):
     # Loud enough to notice: normalise, then a gentle soft clip (tanh) raises the body of the sound without harsh
     # distortion; every kind ends up near full scale (the patterns differ in rhythm and pitch, not in volume).
     peak = max(abs(s) for s in samples) or 1.0
-    shaped = [math.tanh(3.0 * s / peak) for s in samples]
+    shaped = [math.tanh(4.5 * s / peak) for s in samples]
     top = max(abs(s) for s in shaped) or 1.0
     return b''.join(struct.pack('<h', int(s / top * 0.97 * 32767)) for s in shaped)
 

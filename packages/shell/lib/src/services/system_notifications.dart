@@ -17,7 +17,7 @@ class SystemNotifications {
   var _ready = false;
 
   /// Channel ids carry a version: Android keeps a channel's first sound, so new sounds need new channels.
-  static const _channelVersion = 'v2';
+  static const _channelVersion = 'v3';
 
   Future<void> _init() async {
     if (_ready) return;
@@ -35,7 +35,9 @@ class SystemNotifications {
     _ready = true;
     final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
     for (final kind in NotificationKind.values) {
-      await android?.deleteNotificationChannel(channelId: 'clinic_${kind.name}');
+      for (final old in ['clinic_${kind.name}', 'clinic_${kind.name}_v2']) {
+        await android?.deleteNotificationChannel(channelId: old);
+      }
     }
     // A tap that started the app: hand it over like any other tap.
     final launch = await _plugin.getNotificationAppLaunchDetails();
@@ -78,6 +80,8 @@ class SystemNotifications {
           importance: kind == NotificationKind.urgent ? Importance.max : Importance.high,
           priority: Priority.high,
           sound: RawResourceAndroidNotificationSound(kind.sound),
+          // The ringtone volume (usually set louder than notifications), so a message is heard.
+          audioAttributesUsage: AudioAttributesUsage.notificationRingtone,
           color: StatusEdge.of(tone, Brightness.light),
           category: kind == NotificationKind.chat ? AndroidNotificationCategory.message : null,
         ),
