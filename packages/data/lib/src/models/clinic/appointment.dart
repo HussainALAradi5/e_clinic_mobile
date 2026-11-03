@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../enums/clinic/appointment_status.dart';
 import '../../enums/clinic/appointment_type.dart';
+import '../../enums/clinic/visit_timing.dart';
 import '../shared/refs.dart';
 
 part 'appointment.freezed.dart';
@@ -33,6 +34,9 @@ abstract class Appointment with _$Appointment {
 
     /// Statuses the booking may move to next (drives the staff action buttons; the server re-checks).
     @JsonKey(unknownEnumValue: AppointmentStatus.unknown) @Default([]) List<AppointmentStatus> allowedTransitions,
+
+    /// Coming, today, past or missed (worked out by the server from the date and the status).
+    @JsonKey(unknownEnumValue: VisitTiming.unknown) @Default(VisitTiming.unknown) VisitTiming timing,
     String? reason,
     String? cancellationReason,
     DateTime? checkedInAt,

@@ -7,11 +7,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../config/routes/portal_paths.dart';
 import '../../controllers/portal/portal_providers.dart';
+import '../../widgets/common/visit_timing_filter.dart';
 import '../../widgets/portal/visits/visit_card.dart';
 
-part 'appointments_screen_view.dart';
-
-/// `/appointments` — upcoming visits (soonest first) with check-in code and cancel; past ones newest first.
+/// `/appointments` — my visits, coloured by timing, with a filter: All · Coming · Today · Past · Missed. Coming and
+/// today run soonest first; all, past and missed newest first. Visits ahead offer the check-in code and cancel.
 class AppointmentsScreen extends ConsumerStatefulWidget {
   const AppointmentsScreen({super.key});
 
@@ -21,26 +21,25 @@ class AppointmentsScreen extends ConsumerStatefulWidget {
 
 class _AppointmentsScreenState extends ConsumerState<AppointmentsScreen> {
   static const _pageSize = 20;
-  var _view = _View.upcoming;
+  VisitTiming? _timing;
 
   Future<Paged<Appointment>> _load(int page) {
-    final upcoming = _view == _View.upcoming;
+    final soonestFirst = _timing == VisitTiming.coming || _timing == VisitTiming.today;
     return ref
         .read(appointmentRepositoryProvider)
         .list(
           ListQuery(
             page: page,
             perPage: _pageSize,
-            sort: upcoming ? const ['scheduledDate', 'startTime'] : const ['-scheduledDate', '-startTime'],
-            filter: upcoming ? upcomingVisits() : pastVisits(),
+            sort: soonestFirst ? const ['scheduledDate', 'startTime'] : const ['-scheduledDate', '-startTime'],
           ),
+          timing: _timing,
         );
   }
 
   @override
   Widget build(BuildContext context) {
     final version = ref.watch(visitsVersionProvider);
-    final upcoming = _view == _View.upcoming;
     return Scaffold(
       appBar: AppBar(title: const Text('My visits')),
       floatingActionButton: FloatingActionButton.extended(
@@ -49,24 +48,24 @@ class _AppointmentsScreenState extends ConsumerState<AppointmentsScreen> {
         label: const Text('Book a visit'),
       ),
       body: InfiniteList<Appointment>(
-        reloadKey: (_view, version),
+        reloadKey: (_timing, version),
         load: _load,
         header: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-          child: SegmentedButton<_View>(
-            showSelectedIcon: false,
-            segments: const [
-              ButtonSegment(value: _View.upcoming, label: Text('Upcoming')),
-              ButtonSegment(value: _View.past, label: Text('Past')),
-            ],
-            selected: {_view},
-            onSelectionChanged: (selection) => setState(() => _view = selection.first),
-          ),
+          padding: const EdgeInsets.only(top: 4, bottom: 16),
+          child: VisitTimingFilter(selected: _timing, onSelected: (t) => setState(() => _timing = t)),
         ),
         empty: EmptyState(
-          icon: upcoming ? Icons.event_available_rounded : Icons.history_rounded,
-          title: upcoming ? 'No upcoming visits' : 'No past visits yet',
-          message: upcoming ? 'Book a visit and it will show here.' : null,
+          icon: _timing == VisitTiming.past || _timing == VisitTiming.missed
+              ? Icons.history_rounded
+              : Icons.event_available_rounded,
+          title: switch (_timing) {
+            VisitTiming.coming => 'No upcoming visits',
+            VisitTiming.today => 'No visits today',
+            VisitTiming.past => 'No past visits yet',
+            VisitTiming.missed => 'No missed visits',
+            _ => 'No visits yet',
+          },
+          message: _timing == null || _timing == VisitTiming.coming ? 'Book a visit and it will show here.' : null,
         ),
         itemBuilder: (context, visit, replace) => VisitCard(visit: visit, onChanged: replace),
       ),

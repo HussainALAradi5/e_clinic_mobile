@@ -20,10 +20,6 @@ final visitsVersionProvider = NotifierProvider<VisitsVersion, int>(VisitsVersion
 FilterNode upcomingVisits() =>
     AllOf([const Where.oneOf('status', AppointmentStatus.upcoming), Where.gte('scheduledDate', ClinicClock.today())]);
 
-/// Everything else, newest first.
-FilterNode pastVisits() =>
-    AnyOf([const Where.noneOf('status', AppointmentStatus.upcoming), Where.lt('scheduledDate', ClinicClock.today())]);
-
 /// The next three visits (home page).
 final nextVisitsProvider = FutureProvider.autoDispose<List<Appointment>>((ref) async {
   ref.watch(visitsVersionProvider);

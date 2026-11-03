@@ -81,6 +81,12 @@ abstract final class StatusColors {
       'no_show': StatusTone.red,
       'rescheduled': StatusTone.amber,
     },
+    'VisitTiming': {
+      'coming': StatusTone.blue,
+      'today': StatusTone.orange,
+      'past': StatusTone.grey,
+      'missed': StatusTone.red,
+    },
     'CashSessionStatus': {'open': StatusTone.blue, 'closing': StatusTone.amber, 'closed': StatusTone.green},
     'EmployeeStatus': {'active': StatusTone.green, 'suspended': StatusTone.amber, 'terminated': StatusTone.red},
     'ExpiryStatus': {'ok': StatusTone.green, 'expiring': StatusTone.amber, 'expired': StatusTone.red},

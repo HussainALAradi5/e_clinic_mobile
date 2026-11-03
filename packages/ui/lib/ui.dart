@@ -5,6 +5,7 @@ library;
 export 'src/theme/app_theme.dart';
 export 'src/theme/brand_colors.dart';
 export 'src/theme/status_colors.dart';
+export 'src/theme/status_edge.dart';
 export 'src/widgets/buttons/app_button.dart';
 export 'src/widgets/codes/code_sheet.dart';
 export 'src/widgets/dates/date_block.dart';

@@ -2,6 +2,7 @@ import 'package:e_clinic_core/core.dart';
 
 import '../../enums/clinic/appointment_source.dart';
 import '../../enums/clinic/appointment_type.dart';
+import '../../enums/clinic/visit_timing.dart';
 import '../../models/clinic/appointment.dart';
 import '../../models/clinic/booking_provider.dart';
 
@@ -11,7 +12,9 @@ class AppointmentRepository {
 
   final ApiClient _api;
 
-  Future<Paged<Appointment>> list(ListQuery query) => _api.list('appointments', query, Appointment.fromJson);
+  /// [timing] narrows to coming, today, past or missed visits (worked out by the server).
+  Future<Paged<Appointment>> list(ListQuery query, {VisitTiming? timing}) =>
+      _api.list('appointments', query, Appointment.fromJson, extra: {if (timing != null) 'timing': wireValue(timing)});
 
   Future<Appointment> get(String id) => _api.get('appointments/$id', objectOf(Appointment.fromJson));
 

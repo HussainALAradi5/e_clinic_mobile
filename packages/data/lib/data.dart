@@ -7,6 +7,7 @@ export 'src/enums/clinic/appointment_source.dart';
 export 'src/enums/clinic/appointment_status.dart';
 export 'src/enums/clinic/appointment_type.dart';
 export 'src/enums/clinic/clinical_order_type.dart';
+export 'src/enums/clinic/visit_timing.dart';
 export 'src/enums/shared/generic_status.dart';
 export 'src/models/billing/invoice.dart';
 export 'src/models/billing/refund.dart';
