@@ -75,15 +75,19 @@ final treatmentSessionsProvider = FutureProvider.autoDispose.family<List<Treatme
   (ref, id) => ref.watch(treatmentRepositoryProvider).sessions(id),
 );
 
-final resultsProvider = FutureProvider.autoDispose<List<ClinicalOrder>>(
-  (ref) async =>
+/// My completed results, narrowed on the server to one kind (null = all).
+final resultsProvider = FutureProvider.autoDispose.family<List<ClinicalOrder>, ClinicalOrderType?>(
+  (ref, type) async =>
       (await ref
               .watch(clinicalOrderRepositoryProvider)
               .list(
-                const ListQuery(
+                ListQuery(
                   perPage: 50,
-                  sort: ['-completedAt'],
-                  filter: AllOf([Where.eq('status', GenericStatus.completed)]),
+                  sort: const ['-completedAt'],
+                  filter: AllOf([
+                    const Where.eq('status', GenericStatus.completed),
+                    if (type != null) Where.eq('type', type),
+                  ]),
                 ),
               ))
           .items,
@@ -98,9 +102,19 @@ final prescriptionsProvider = FutureProvider.autoDispose<List<Prescription>>(
       (await ref.watch(prescriptionRepositoryProvider).list(const ListQuery(perPage: 50, sort: ['-createdAt']))).items,
 );
 
-final invoicesProvider = FutureProvider.autoDispose<List<Invoice>>(
-  (ref) async =>
-      (await ref.watch(invoiceRepositoryProvider).list(const ListQuery(perPage: 50, sort: ['-issueDate']))).items,
+/// My invoices, narrowed on the server by payment state and by how they were paid (null = all).
+typedef InvoiceFilter = ({InvoicePaymentState? state, PaymentMethod? method});
+
+final invoicesProvider = FutureProvider.autoDispose.family<List<Invoice>, InvoiceFilter>(
+  (ref, filter) async =>
+      (await ref
+              .watch(invoiceRepositoryProvider)
+              .list(
+                const ListQuery(perPage: 50, sort: ['-issueDate']),
+                paymentState: filter.state,
+                method: filter.method,
+              ))
+          .items,
 );
 
 final invoiceDetailProvider = FutureProvider.autoDispose.family<Invoice, String>(

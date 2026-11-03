@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../enums/billing/invoice_payment_state.dart';
 import '../../enums/billing/invoice_status.dart';
+import '../../enums/billing/payment_method.dart';
 import '../shared/money.dart';
 
 part 'invoice.freezed.dart';
@@ -22,6 +24,14 @@ abstract class Invoice with _$Invoice {
     required Money paidAmount,
     required Money balanceDue,
     @JsonKey(unknownEnumValue: InvoiceStatus.unknown) required InvoiceStatus status,
+
+    /// Unpaid, overdue, partly paid, paid, refunded … (worked out by the server).
+    @JsonKey(unknownEnumValue: InvoicePaymentState.unknown)
+    @Default(InvoicePaymentState.unknown)
+    InvoicePaymentState paymentState,
+
+    /// How it was paid: methods of its completed payments.
+    @JsonKey(unknownEnumValue: PaymentMethod.unknown) @Default([]) List<PaymentMethod> paymentMethods,
     @Default([]) List<InvoiceItem> items,
     @Default([]) List<Payment> payments,
   }) = _Invoice;

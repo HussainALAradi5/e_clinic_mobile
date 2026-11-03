@@ -2,7 +2,9 @@
 /// endpoint), grouped by feature.
 library;
 
+export 'src/enums/billing/invoice_payment_state.dart';
 export 'src/enums/billing/invoice_status.dart';
+export 'src/enums/billing/payment_method.dart';
 export 'src/enums/clinic/appointment_source.dart';
 export 'src/enums/clinic/appointment_status.dart';
 export 'src/enums/clinic/appointment_type.dart';

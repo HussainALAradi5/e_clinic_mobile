@@ -25,7 +25,14 @@ class InvoiceCard extends StatelessWidget {
                 Text(invoice.number, style: theme.textTheme.titleSmall),
                 if (invoice.issueDate != null) Text(ClinicClock.date(invoice.issueDate!), style: muted),
                 const SizedBox(height: 8),
-                StatusChip(enumName: 'InvoiceStatus', value: invoice.status),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 4,
+                  children: [
+                    StatusChip(enumName: 'InvoicePaymentState', value: invoice.paymentState),
+                    for (final m in invoice.paymentMethods) StatusChip(enumName: 'PaymentMethod', value: m),
+                  ],
+                ),
               ],
             ),
           ),

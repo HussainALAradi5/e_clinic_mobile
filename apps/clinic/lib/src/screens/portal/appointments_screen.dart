@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../config/routes/portal_paths.dart';
 import '../../controllers/portal/portal_providers.dart';
-import '../../widgets/common/visit_timing_filter.dart';
+import '../../widgets/common/enum_filter_chips.dart';
 import '../../widgets/portal/visits/visit_card.dart';
 
 /// `/appointments` — my visits, coloured by timing, with a filter: All · Coming · Today · Past · Missed. Coming and
@@ -52,7 +52,12 @@ class _AppointmentsScreenState extends ConsumerState<AppointmentsScreen> {
         load: _load,
         header: Padding(
           padding: const EdgeInsets.only(top: 4, bottom: 16),
-          child: VisitTimingFilter(selected: _timing, onSelected: (t) => setState(() => _timing = t)),
+          child: EnumFilterChips(
+            enumName: 'VisitTiming',
+            values: VisitTiming.filters,
+            selected: _timing,
+            onSelected: (t) => setState(() => _timing = t),
+          ),
         ),
         empty: EmptyState(
           icon: _timing == VisitTiming.past || _timing == VisitTiming.missed
