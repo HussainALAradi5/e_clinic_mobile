@@ -8,6 +8,7 @@ class PageMeta {
     this.total,
     this.nextCursor,
     this.unreadCount,
+    this.extra = const {},
   });
 
   factory PageMeta.fromJson(Map<String, dynamic>? json, int fallbackPerPage) => PageMeta(
@@ -17,6 +18,7 @@ class PageMeta {
     total: (json?['total'] as num?)?.toInt(),
     nextCursor: json?['next_cursor'] as String?,
     unreadCount: (json?['unread_count'] as num?)?.toInt(),
+    extra: json ?? const {},
   );
 
   final int perPage;
@@ -27,4 +29,7 @@ class PageMeta {
 
   /// GET /notifications/mine only: unread in-app messages.
   final int? unreadCount;
+
+  /// The whole meta object, for endpoint-specific values (e.g. the wallet's `balance`).
+  final Map<String, dynamic> extra;
 }

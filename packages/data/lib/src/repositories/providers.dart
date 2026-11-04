@@ -6,6 +6,7 @@ import 'billing/invoice_repository.dart';
 import 'documents/document_repository.dart';
 import 'identity/signature_repository.dart';
 import 'billing/refund_repository.dart';
+import 'billing/wallet_repository.dart';
 import 'clinic/appointment_repository.dart';
 import 'clinic/clinical_order_repository.dart';
 import 'clinic/doctor_repository.dart';
@@ -38,6 +39,7 @@ final documentRepositoryProvider = Provider((ref) => DocumentRepository(ref.watc
 final attachmentRepositoryProvider = Provider((ref) => AttachmentRepository(ref.watch(apiClientProvider)));
 final prescriptionRepositoryProvider = Provider((ref) => PrescriptionRepository(ref.watch(apiClientProvider)));
 final invoiceRepositoryProvider = Provider((ref) => InvoiceRepository(ref.watch(apiClientProvider)));
+final walletRepositoryProvider = Provider((ref) => WalletRepository(ref.watch(apiClientProvider)));
 final notificationRepositoryProvider = Provider((ref) => NotificationRepository(ref.watch(apiClientProvider)));
 final metaRepositoryProvider = Provider((ref) => MetaRepository(ref.watch(apiClientProvider)));
 final codeRepositoryProvider = Provider((ref) => CodeRepository(ref.watch(apiClientProvider)));

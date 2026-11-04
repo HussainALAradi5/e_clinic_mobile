@@ -1,10 +1,12 @@
 import 'package:e_clinic_core/core.dart';
 import 'package:e_clinic_data/data.dart';
+import 'package:e_clinic_shell/shell.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../controllers/portal/portal_providers.dart';
+import '../../widgets/billing/wallet_card.dart';
 import '../../widgets/common/date_range_chip.dart';
 import '../../widgets/common/enum_filter_chips.dart';
 import '../../widgets/portal/invoices/due_card.dart';
@@ -68,6 +70,10 @@ class _InvoicesScreenState extends ConsumerState<InvoicesScreen> {
                     if (!filtered) ...[
                       DueCard(due: Money.sum(invoices.map((i) => i.balanceDue))),
                       const SizedBox(height: 16),
+                      if (ref.watch(currentUserProvider)?.id case final me?) ...[
+                        WalletCard(patientId: me, margin: EdgeInsets.zero),
+                        const SizedBox(height: 16),
+                      ],
                     ],
                     if (invoices.isEmpty)
                       EmptyState(

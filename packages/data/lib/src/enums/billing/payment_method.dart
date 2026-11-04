@@ -9,6 +9,7 @@ enum PaymentMethod {
   benefitPay,
   insurance,
   cheque,
+  patientBalance,
 
   /// A value this app version does not know yet.
   unknown;

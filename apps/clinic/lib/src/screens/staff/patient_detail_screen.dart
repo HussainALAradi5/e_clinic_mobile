@@ -6,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/staff_paths.dart';
+import '../../constants/billing/wallet_text.dart';
 import '../../controllers/staff/patient_providers.dart';
+import '../../widgets/billing/wallet_card.dart';
 import '../../widgets/staff/appointments/appointment_card.dart';
 import '../../widgets/staff/patients/medical_alert_card.dart';
 import '../../widgets/staff/patients/medical_history_sheet.dart';
@@ -93,6 +95,10 @@ class PatientDetailScreen extends ConsumerWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 child: PatientFacts(patient: patient),
               ),
+              if (access.can('wallet.read_all')) ...[
+                const SectionHeader(WalletText.title),
+                WalletCard(patientId: id, manage: true),
+              ],
               if (access.can('appointments.read_all | appointments.read_own')) ...[
                 const SectionHeader('Coming visits'),
                 ref
