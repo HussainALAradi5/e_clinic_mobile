@@ -1,9 +1,21 @@
 part of 'chats_screen.dart';
 
+/// Search colleagues on the server (name, phone, email or staff no.) as you type, one page at a time with "Show more".
 class _ContactPickerState extends ConsumerState<_ContactPicker> {
+  final _found = <ChatContact>[];
   var _search = '';
-  late Future<List<ChatContact>> _contacts = ref.read(chatRepositoryProvider).contacts();
+  var _page = 0;
+  var _hasMore = false;
+  var _total = 0;
+  var _loading = false;
+  Object? _error;
   Timer? _debounce;
+
+  @override
+  void initState() {
+    super.initState();
+    _load(reset: true);
+  }
 
   @override
   void dispose() {
@@ -12,15 +24,36 @@ class _ContactPickerState extends ConsumerState<_ContactPicker> {
   }
 
   void _changed(String value) {
-    _search = value;
     _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), () {
-      if (mounted) {
-        setState(
-          () => _contacts = ref.read(chatRepositoryProvider).contacts(search: _search.trim().isEmpty ? null : _search),
-        );
-      }
+    _debounce = Timer(ChatText.debounce, () {
+      _search = value.trim();
+      _load(reset: true);
     });
+  }
+
+  Future<void> _load({required bool reset}) async {
+    final search = _search;
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      final page = await ref
+          .read(chatRepositoryProvider)
+          .contacts(search: search.isEmpty ? null : search, page: reset ? 1 : _page + 1, perPage: ChatText.pageSize);
+      if (!mounted || search != _search) return; // a newer search started meanwhile
+      setState(() {
+        if (reset) _found.clear();
+        _found.addAll(page.items);
+        _page = page.meta.currentPage ?? 1;
+        _hasMore = page.hasMore;
+        _total = page.meta.total ?? _found.length;
+      });
+    } catch (error) {
+      if (mounted) setState(() => _error = error);
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
   }
 
   @override
@@ -33,36 +66,47 @@ class _ContactPickerState extends ConsumerState<_ContactPicker> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('New chat', style: Theme.of(context).textTheme.titleLarge),
+              Text(ChatText.newChat, style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 8),
-              SearchField(hint: 'Search a colleague', onChanged: _changed),
+              SearchField(hint: ChatText.search, onChanged: _changed),
             ],
           ),
         ),
-        Expanded(
-          child: FutureBuilder<List<ChatContact>>(
-            future: _contacts,
-            builder: (context, snap) {
-              if (snap.hasError) return ErrorState(error: snap.error!);
-              final list = snap.data;
-              if (list == null) return const Center(child: CircularProgressIndicator());
-              if (list.isEmpty) return const EmptyState(icon: Icons.person_search_outlined, title: 'Nobody found');
-              return ListView.builder(
-                itemCount: list.length,
-                itemBuilder: (context, i) {
-                  final c = list[i];
-                  return ListTile(
-                    leading: ChatAvatar(name: c.fullName, seed: c.id, url: c.avatarUrl, size: 40),
-                    title: Text(c.fullName),
-                    subtitle: c.userType == null ? null : Text(c.userType!.replaceAll('_', ' ')),
-                    onTap: () => Navigator.pop(context, c),
-                  );
-                },
-              );
-            },
-          ),
-        ),
+        Expanded(child: _results(context)),
       ],
     ),
   );
+
+  Widget _results(BuildContext context) {
+    if (_error != null && _found.isEmpty) return ErrorState(error: _error!, onRetry: () => _load(reset: true));
+    if (_found.isEmpty) {
+      return _loading
+          ? const Center(child: CircularProgressIndicator())
+          : const EmptyState(icon: Icons.person_search_outlined, title: ChatText.nobody);
+    }
+    return ListView.builder(
+      itemCount: _found.length + (_hasMore ? 1 : 0),
+      itemBuilder: (context, i) {
+        if (i == _found.length) {
+          return Padding(
+            padding: const EdgeInsets.all(12),
+            child: AppButton(
+              label: '${ChatText.more} · ${ChatText.count(_found.length, _total)}',
+              icon: Icons.expand_more_rounded,
+              variant: ButtonVariant.text,
+              expand: true,
+              onPressed: _loading ? null : () => _load(reset: false),
+            ),
+          );
+        }
+        final c = _found[i];
+        return ListTile(
+          leading: ChatAvatar(name: c.fullName, seed: c.id, url: c.avatarUrl, size: 40),
+          title: Text(c.fullName),
+          subtitle: c.userType == null ? null : Text(c.userType!.replaceAll('_', ' ')),
+          onTap: () => Navigator.pop(context, c),
+        );
+      },
+    );
+  }
 }

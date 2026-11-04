@@ -68,8 +68,9 @@ class ChatRepository {
       _api.get('$_path/unread', (data) => ((data as Map<String, dynamic>?)?['count'] as num?)?.toInt() ?? 0);
 
   /// Colleagues to chat with.
-  Future<List<ChatContact>> contacts({String? search}) =>
-      _api.get('$_path/contacts', listOf(ChatContact.fromJson), query: {'search': search});
+  /// Colleagues matching the search (name, phone, email or staff no.), one page at a time; only people in the system.
+  Future<Paged<ChatContact>> contacts({String? search, int page = 1, int perPage = 20}) =>
+      _api.list('$_path/contacts', ListQuery(search: search, page: page, perPage: perPage), ChatContact.fromJson);
 
   /// The one-to-one chat with a colleague (created on first use, brought back if it was deleted).
   Future<Conversation> startDirect(String userId) =>

@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/staff_paths.dart';
+import '../../constants/staff/chat_text.dart';
 import '../../controllers/staff/chat_actions.dart';
 import '../../controllers/staff/chat_providers.dart';
 import '../../widgets/staff/chat/chat_avatar.dart';
