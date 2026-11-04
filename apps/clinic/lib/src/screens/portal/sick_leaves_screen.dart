@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../controllers/portal/portal_actions.dart';
 import '../../controllers/portal/portal_providers.dart';
+import '../../widgets/common/document_buttons.dart';
 
 part 'sick_leaves_screen_sick_leave_card.dart';
 

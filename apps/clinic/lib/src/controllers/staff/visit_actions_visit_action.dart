@@ -24,7 +24,10 @@ enum VisitAction {
   /// What this user can do with the booking now, the main step first.
   static List<VisitAction> available(Appointment visit, Access access) => [
     for (final action in values)
-      if (visit.canMoveTo(action.target) && access.can(action.access)) action,
+      if (visit.canMoveTo(action.target) &&
+          access.can(action.access) &&
+          (action != checkIn || visit.checkInOpen(DateTime.now())))
+        action,
   ];
 
   /// The big button of a card: the next step of the visit (never no-show, which stays in the menu).

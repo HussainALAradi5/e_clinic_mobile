@@ -4,6 +4,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 
 import '../../../controllers/portal/portal_actions.dart';
+import '../../common/document_buttons.dart';
 
 class PrescriptionCard extends StatelessWidget {
   const PrescriptionCard({super.key, required this.rx});
@@ -86,6 +87,8 @@ class PrescriptionCard extends StatelessWidget {
                 rx.status == GenericStatus.completed ? 'Collected' : 'Valid until ${ClinicClock.date(rx.validUntil)}',
                 style: muted,
               ),
+            const SizedBox(height: 12),
+            DocumentButtons(type: DocumentType.prescription, recordId: rx.id),
           ],
         ),
       ),

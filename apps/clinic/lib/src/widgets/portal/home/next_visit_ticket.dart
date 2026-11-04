@@ -103,7 +103,7 @@ class NextVisitTicket extends ConsumerWidget {
                     label: const Text('Check-in code'),
                   ),
                 ),
-                if (visit.status.cancellable) ...[
+                if (visit.status.cancellable && visit.patientCanChange) ...[
                   const SizedBox(width: 8),
                   TextButton(
                     style: TextButton.styleFrom(foregroundColor: soft),

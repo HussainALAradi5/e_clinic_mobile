@@ -47,7 +47,7 @@ abstract final class PortalActions {
         title: 'Cancel this visit?',
         message:
             '${ClinicClock.day(visit.scheduledDate)} at ${visit.startTime} with ${visit.doctorName}. '
-            'Online cancellation closes 2 hours before the start.',
+            'Online cancellation closes 3 days before the start; after that, call reception.',
         confirmLabel: 'Cancel visit',
         cancelLabel: 'Keep it',
         danger: true,

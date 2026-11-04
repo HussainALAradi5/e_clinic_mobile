@@ -16,13 +16,7 @@ class _SickLeaveCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Text(leave.code, style: muted?.copyWith(fontFamily: 'monospace')),
-                const Spacer(),
-                Text('Issued ${ClinicClock.dateTime(leave.issuedAt)}', style: muted),
-              ],
-            ),
+            Text('Issued ${ClinicClock.dateTime(leave.issuedAt)}', style: muted),
             const SizedBox(height: 6),
             Text(
               '${leave.days} ${leave.days == 1 ? 'day' : 'days'} off',
@@ -59,6 +53,8 @@ class _SickLeaveCard extends StatelessWidget {
                 expand: true,
                 onPressed: () => PortalActions.showSickLeaveCode(context, leave),
               ),
+              const SizedBox(height: 8),
+              DocumentButtons(type: DocumentType.sickLeave, recordId: leave.id),
             ],
           ],
         ),

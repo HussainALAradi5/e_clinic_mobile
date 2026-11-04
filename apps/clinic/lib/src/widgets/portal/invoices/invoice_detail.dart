@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../controllers/portal/portal_providers.dart';
+import '../../common/document_buttons.dart';
 import 'total_row.dart';
 
 class InvoiceDetail extends ConsumerWidget {
@@ -72,6 +73,8 @@ class InvoiceDetail extends ConsumerWidget {
                   trailing: StatusChip(enumName: 'PaymentStatus', value: payment.status),
                 ),
             ],
+            const SizedBox(height: 16),
+            DocumentButtons(type: DocumentType.invoice, recordId: invoice.id),
           ],
         ),
       ),

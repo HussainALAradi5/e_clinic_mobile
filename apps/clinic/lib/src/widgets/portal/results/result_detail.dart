@@ -1,9 +1,11 @@
+import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../controllers/portal/portal_providers.dart';
 import '../../common/attachment_list.dart';
+import '../../common/document_buttons.dart';
 
 class ResultDetail extends ConsumerWidget {
   const ResultDetail({super.key, required this.orderId});
@@ -38,6 +40,8 @@ class ResultDetail extends ConsumerWidget {
               const SizedBox(height: 4),
               AttachmentList(files: order.attachments),
             ],
+            const SizedBox(height: 16),
+            DocumentButtons(type: DocumentType.result, recordId: order.id),
           ],
         ),
       ),

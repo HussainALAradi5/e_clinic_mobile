@@ -4,6 +4,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/portal/visit_text.dart';
 import '../../../controllers/portal/portal_actions.dart';
 import '../../common/timing_edge.dart';
 
@@ -88,7 +89,9 @@ class VisitCard extends ConsumerWidget {
                       label: const Text('Check-in code'),
                     ),
                     const Spacer(),
-                    if (visit.status.cancellable)
+                    if (visit.status.cancellable && !visit.patientCanChange)
+                      Text(VisitText.callReception, style: Theme.of(context).textTheme.bodySmall)
+                    else if (visit.status.cancellable)
                       TextButton(
                         style: TextButton.styleFrom(foregroundColor: scheme.error),
                         onPressed: () async {

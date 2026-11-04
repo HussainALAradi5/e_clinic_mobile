@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/shared/enum_catalog.dart';
 import 'billing/invoice_repository.dart';
+import 'documents/document_repository.dart';
 import 'billing/refund_repository.dart';
 import 'clinic/appointment_repository.dart';
 import 'clinic/clinical_order_repository.dart';
@@ -31,6 +32,7 @@ final appointmentRepositoryProvider = Provider((ref) => AppointmentRepository(re
 final doctorRepositoryProvider = Provider((ref) => DoctorRepository(ref.watch(apiClientProvider)));
 final treatmentRepositoryProvider = Provider((ref) => TreatmentRepository(ref.watch(apiClientProvider)));
 final clinicalOrderRepositoryProvider = Provider((ref) => ClinicalOrderRepository(ref.watch(apiClientProvider)));
+final documentRepositoryProvider = Provider((ref) => DocumentRepository(ref.watch(apiClientProvider)));
 final attachmentRepositoryProvider = Provider((ref) => AttachmentRepository(ref.watch(apiClientProvider)));
 final prescriptionRepositoryProvider = Provider((ref) => PrescriptionRepository(ref.watch(apiClientProvider)));
 final invoiceRepositoryProvider = Provider((ref) => InvoiceRepository(ref.watch(apiClientProvider)));

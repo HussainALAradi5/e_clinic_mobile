@@ -41,6 +41,12 @@ abstract class Appointment with _$Appointment {
     String? cancellationReason,
     DateTime? checkedInAt,
     DateTime? startedAt,
+
+    /// Check-in opens at this moment: an hour before the start, on the visit's day (null: no limit known).
+    DateTime? checkInOpensAt,
+
+    /// The patient may still cancel / reschedule in the app (3 days or more before); closer, reception does it.
+    @Default(true) bool patientCanChange,
     required int version,
   }) = _Appointment;
 
@@ -53,4 +59,7 @@ abstract class Appointment with _$Appointment {
   String get patientName => patient?.fullName ?? 'Patient';
 
   bool canMoveTo(AppointmentStatus next) => allowedTransitions.contains(next);
+
+  /// Whether the desk may check the patient in now (the server refuses earlier check-ins).
+  bool checkInOpen(DateTime now) => checkInOpensAt == null || !now.isBefore(checkInOpensAt!);
 }
