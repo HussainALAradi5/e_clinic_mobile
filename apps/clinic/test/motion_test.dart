@@ -47,6 +47,22 @@ void main() {
     expect(c.insurerShare.minor + c.patientShare.minor, 15000);
   });
 
+  test('a package reads how much of it is used', () {
+    final p = PatientPackage.fromJson({
+      'id': 'pp-1',
+      'code': 'PPK-1',
+      'name': 'Physio x10',
+      'status': 'active',
+      'sessions_total': 10,
+      'sessions_used': 4,
+      'sessions_left': 6,
+      'price': {'amount': '90.000'},
+      'expires_on': '2027-02-01',
+    });
+    expect(p.active, isTrue);
+    expect(p.usedShare, closeTo(0.4, 0.001));
+  });
+
   test('mute choices send the server values', () {
     expect(MuteDuration.values.map((d) => d.wire), ['8h', '1w', 'always']);
   });
