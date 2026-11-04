@@ -56,11 +56,24 @@ class _ChatRow extends StatelessWidget {
               style: theme.textTheme.labelSmall?.copyWith(color: unread ? const Color(0xFF15803D) : null),
             ),
           const SizedBox(height: 4),
-          if (unread)
-            Badge(
-              label: Text(chat.unreadCount > 99 ? '99+' : '${chat.unreadCount}'),
-              backgroundColor: const Color(0xFF15803D),
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (chat.muted)
+                Icon(Icons.notifications_off_outlined, size: 16, color: theme.colorScheme.onSurfaceVariant),
+              if (unread) ...[
+                const SizedBox(width: 4),
+                // A muted chat keeps its count, in a quiet grey; a new count pops in.
+                PopIn(
+                  key: ValueKey(chat.unreadCount),
+                  child: Badge(
+                    label: Text(chat.unreadCount > 99 ? '99+' : '${chat.unreadCount}'),
+                    backgroundColor: chat.muted ? theme.colorScheme.outline : const Color(0xFF15803D),
+                  ),
+                ),
+              ],
+            ],
+          ),
         ],
       ),
     );

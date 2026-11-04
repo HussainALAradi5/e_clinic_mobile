@@ -1,7 +1,12 @@
-/// e-Clinic widget kit and theme: one widget per file, grouped by job (buttons, feedback, layout, lists, inputs,
-/// navigation, dates, status, codes).
+/// e-Clinic widget kit and theme: one widget per file, grouped by job (motion, buttons, feedback, layout, lists,
+/// inputs, navigation, dates, status, codes).
 library;
 
+export 'src/motion/app_progress_bar.dart';
+export 'src/motion/motion.dart';
+export 'src/motion/nudge.dart';
+export 'src/motion/pop_in.dart';
+export 'src/motion/tap_scale.dart';
 export 'src/theme/app_theme.dart';
 export 'src/theme/brand_colors.dart';
 export 'src/theme/status_colors.dart';

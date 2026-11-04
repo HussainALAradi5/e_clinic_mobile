@@ -43,4 +43,7 @@ abstract class Invoice with _$Invoice {
   String get number => invoiceNumber ?? code;
 
   bool get owing => balanceDue.isPositive;
+
+  /// Share already paid, 0–1 (exact, in fils); a zero invoice counts as paid.
+  double get paidShare => total.minor <= 0 ? 1 : ((total.minor - balanceDue.minor.clamp(0, total.minor)) / total.minor);
 }

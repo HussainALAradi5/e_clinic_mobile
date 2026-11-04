@@ -97,6 +97,12 @@ class ChatThreadController extends ChangeNotifier {
     }
   }
 
+  /// Mutes my copy of the chat for [duration]; null unmutes.
+  Future<void> mute(MuteDuration? duration) async {
+    chat = await repo.mute(chatId, duration);
+    _changed();
+  }
+
   /// Sets my reaction, or clears it when it is the same emoji.
   Future<void> react(ChatMessage message, String emoji, String meId) async {
     final updated = await repo.react(chatId, message.id, message.reactionOf(meId) == emoji ? null : emoji);

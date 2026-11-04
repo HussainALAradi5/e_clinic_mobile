@@ -1,3 +1,4 @@
+import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,7 +25,11 @@ class PatientShell extends StatelessWidget {
       onDestinationSelected: (index) => shell.goBranch(index, initialLocation: index == shell.currentIndex),
       destinations: [
         for (final tab in _tabs)
-          NavigationDestination(icon: Icon(tab.icon), selectedIcon: Icon(tab.selected), label: tab.label),
+          NavigationDestination(
+            icon: Icon(tab.icon),
+            selectedIcon: PopIn(child: Icon(tab.selected)),
+            label: tab.label,
+          ),
       ],
     ),
   );

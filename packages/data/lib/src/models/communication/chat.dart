@@ -30,6 +30,12 @@ abstract class Conversation with _$Conversation {
     DateTime? createdAt,
     DateTime? deletedAt,
     String? deletedBy,
+
+    /// I muted this chat: no badge or alerts from it (mentions still notify).
+    @Default(false) bool muted,
+
+    /// When my mute ends by itself; null = until I unmute.
+    DateTime? mutedUntil,
   }) = _Conversation;
 
   factory Conversation.fromJson(Map<String, dynamic> json) => _$ConversationFromJson(json);

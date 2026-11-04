@@ -6,6 +6,7 @@ export 'src/enums/billing/invoice_payment_state.dart';
 export 'src/enums/billing/invoice_status.dart';
 export 'src/enums/billing/payment_method.dart';
 export 'src/enums/billing/wallet_movement.dart';
+export 'src/enums/communication/mute_duration.dart';
 export 'src/enums/clinic/appointment_source.dart';
 export 'src/enums/clinic/appointment_status.dart';
 export 'src/enums/clinic/appointment_type.dart';

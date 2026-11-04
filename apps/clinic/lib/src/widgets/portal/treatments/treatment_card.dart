@@ -37,14 +37,7 @@ class TreatmentCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(99),
-            child: LinearProgressIndicator(
-              value: plan.completion,
-              minHeight: 8,
-              color: _healthColor(plan.health, scheme),
-            ),
-          ),
+          AppProgressBar(value: plan.completion, height: 8, color: _healthColor(plan.health, scheme)),
           const SizedBox(height: 6),
           Text(
             '${plan.health.label} · ${plan.attended} of ${plan.plannedSessions} attended'

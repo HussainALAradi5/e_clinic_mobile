@@ -7,10 +7,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../constants/staff/chat_text.dart';
 import '../../controllers/staff/chat_providers.dart';
 import '../../controllers/staff/chat_thread_controller.dart';
 import '../../widgets/common/attach_photo_button.dart';
 import '../../widgets/staff/chat/chat_avatar.dart';
+import '../../widgets/staff/chat/chat_info_sheet.dart';
+import '../../widgets/staff/chat/chat_menu.dart';
 import '../../widgets/staff/chat/message_bubble.dart';
 import '../../widgets/staff/chat/reaction_sheet.dart';
 
@@ -41,6 +44,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   );
 
   ChatMessage? _replyTo;
+
+  /// Bumped on every reply pick, so the picked message swings again.
+  int _pick = 0;
 
   String get _me => ref.read(currentUserProvider)?.id ?? '';
 
@@ -87,7 +93,26 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     }
   }
 
-  void _reply(ChatMessage message) => setState(() => _replyTo = message);
+  void _reply(ChatMessage message) => setState(() {
+    _replyTo = message;
+    _pick++;
+  });
+
+  Future<void> _mute(MuteDuration? duration) async {
+    try {
+      await _thread.mute(duration);
+      if (mounted) AppSnack.success(context, duration == null ? ChatText.unmutedDone : ChatText.mutedDone);
+    } catch (e) {
+      if (mounted) AppSnack.error(context, e);
+    }
+  }
+
+  void _info(Conversation chat) => showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    builder: (_) => ChatInfoSheet(chat: chat),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +130,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           );
         }
         return Scaffold(
-          appBar: AppBar(titleSpacing: 0, title: _ChatTitle(chat: chat)),
+          appBar: AppBar(
+            titleSpacing: 0,
+            title: _ChatTitle(chat: chat),
+            actions: [
+              TapScale(
+                child: IconButton(
+                  tooltip: chat.isGroup ? ChatText.groupInfo : ChatText.info,
+                  icon: const Icon(Icons.info_outline_rounded),
+                  onPressed: () => _info(chat),
+                ),
+              ),
+              ChatMenu(chat: chat, onInfo: () => _info(chat), onMute: _mute),
+            ],
+          ),
           body: Column(
             children: [
               Expanded(
@@ -117,6 +155,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   meId: _me,
                   reactions: reactions,
                   onReply: _reply,
+                  pickedId: _replyTo?.id,
+                  pick: _pick,
                   onReact: _react,
                 ),
               ),

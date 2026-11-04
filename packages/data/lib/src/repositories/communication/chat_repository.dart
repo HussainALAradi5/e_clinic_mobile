@@ -1,5 +1,6 @@
 import 'package:e_clinic_core/core.dart';
 
+import '../../enums/communication/mute_duration.dart';
 import '../../models/communication/chat.dart';
 
 part 'chat_repository_chat_filter.dart';
@@ -60,6 +61,10 @@ class ChatRepository {
     objectOf(ChatMessage.fromJson),
     body: {'emoji': emoji},
   );
+
+  /// Mutes my copy of the chat for [duration] (`8h`, `1w`, `always`); null unmutes.
+  Future<Conversation> mute(String id, MuteDuration? duration) =>
+      _api.patch('$_path/conversations/$id/mute', objectOf(Conversation.fromJson), body: {'duration': duration?.wire});
 
   Future<void> markRead(String id) => _api.post('$_path/conversations/$id/read', ApiClient.ignore);
 

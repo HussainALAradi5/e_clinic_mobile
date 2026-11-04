@@ -2,7 +2,7 @@ part of 'chat_screen.dart';
 
 /// "Replying to …" above the box: who and what is being answered, with a button to cancel the reply.
 class _ReplyPreview extends StatelessWidget {
-  const _ReplyPreview({required this.replyTo, required this.meId, required this.onCancel});
+  const _ReplyPreview({super.key, required this.replyTo, required this.meId, required this.onCancel});
 
   final ChatMessage replyTo;
   final String meId;

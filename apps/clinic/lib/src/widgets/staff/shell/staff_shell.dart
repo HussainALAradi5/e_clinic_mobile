@@ -1,4 +1,5 @@
 import 'package:e_clinic_shell/shell.dart';
+import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -32,7 +33,7 @@ class StaffShell extends ConsumerWidget {
               icon: tab == StaffTab.approvals && waiting > 0
                   ? Badge(label: Text('$waiting'), child: Icon(tab.icon))
                   : Icon(tab.icon),
-              selectedIcon: Icon(tab.selectedIcon),
+              selectedIcon: PopIn(child: Icon(tab.selectedIcon)),
               label: tab.label,
             ),
         ],

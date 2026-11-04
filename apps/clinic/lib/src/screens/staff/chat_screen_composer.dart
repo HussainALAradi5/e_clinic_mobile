@@ -65,8 +65,27 @@ class _ComposerState extends State<_Composer> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (widget.replyTo case final r?)
-                _ReplyPreview(replyTo: r, meId: widget.meId, onCancel: widget.onCancelReply),
+              AnimatedSwitcher(
+                duration: Motion.of(context, Motion.base),
+                switchInCurve: Motion.pop,
+                transitionBuilder: (child, animation) => SizeTransition(
+                  sizeFactor: animation,
+                  alignment: Alignment.bottomCenter,
+                  child: SlideTransition(
+                    position: Tween(begin: const Offset(0, 0.6), end: Offset.zero).animate(animation),
+                    child: FadeTransition(opacity: animation, child: child),
+                  ),
+                ),
+                child: switch (widget.replyTo) {
+                  final r? => _ReplyPreview(
+                    key: ValueKey(r.id),
+                    replyTo: r,
+                    meId: widget.meId,
+                    onCancel: widget.onCancelReply,
+                  ),
+                  null => const SizedBox.shrink(),
+                },
+              ),
               if (_photo case final p?)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 6),

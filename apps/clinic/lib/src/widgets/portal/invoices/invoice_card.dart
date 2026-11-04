@@ -48,6 +48,15 @@ class InvoiceCard extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
+              const SizedBox(height: 6),
+              SizedBox(
+                width: 72,
+                child: AppProgressBar(
+                  value: invoice.paidShare,
+                  height: 4,
+                  color: invoice.owing ? theme.colorScheme.tertiary : theme.colorScheme.primary,
+                ),
+              ),
             ],
           ),
         ],

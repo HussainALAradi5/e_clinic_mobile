@@ -13,6 +13,8 @@ class _MessageList extends StatefulWidget {
     required this.reactions,
     required this.onReply,
     required this.onReact,
+    this.pickedId,
+    this.pick = 0,
   });
 
   final Conversation chat;
@@ -22,6 +24,10 @@ class _MessageList extends StatefulWidget {
   final String meId;
   final ({List<String> quick, List<String> all})? reactions;
   final ValueChanged<ChatMessage> onReply;
+
+  /// The message being replied to, and how many picks so far (it swings on each).
+  final String? pickedId;
+  final int pick;
   final Future<void> Function(ChatMessage message, String emoji) onReact;
 
   @override
@@ -93,16 +99,19 @@ class _MessageListState extends State<_MessageList> {
           key: _keys.putIfAbsent(m.id, GlobalKey.new),
           children: [
             if (newDay) _DaySeparator(label: ClinicClock.relativeDay(day)),
-            MessageBubble(
-              message: m,
-              meId: widget.meId,
-              group: widget.chat.isGroup,
-              first: newDay || older.sender.id != m.sender.id,
-              highlight: _flash == m.id,
-              onMenu: () => _menu(m),
-              onReply: () => widget.onReply(m),
-              onReact: (e) => widget.onReact(m, e),
-              onQuote: _jump,
+            Nudge(
+              trigger: widget.pickedId == m.id ? widget.pick : null,
+              child: MessageBubble(
+                message: m,
+                meId: widget.meId,
+                group: widget.chat.isGroup,
+                first: newDay || older.sender.id != m.sender.id,
+                highlight: _flash == m.id,
+                onMenu: () => _menu(m),
+                onReply: () => widget.onReply(m),
+                onReact: (e) => widget.onReact(m, e),
+                onQuote: _jump,
+              ),
             ),
           ],
         );

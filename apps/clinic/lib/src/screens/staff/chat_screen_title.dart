@@ -23,7 +23,22 @@ class _ChatTitle extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(chat.title, overflow: TextOverflow.ellipsis),
+              Row(
+                children: [
+                  Flexible(child: Text(chat.title, overflow: TextOverflow.ellipsis)),
+                  if (chat.muted) ...[
+                    const SizedBox(width: 6),
+                    PopIn(
+                      child: Icon(
+                        Icons.notifications_off_outlined,
+                        size: 16,
+                        semanticLabel: ChatText.muted,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
               if (chat.isGroup)
                 Text(
                   '${chat.members.length} members · ${others.join(', ')}',
