@@ -4,6 +4,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/billing/fee_text.dart';
 import 'portal_providers.dart';
 
 /// Portal steps with their confirmations and messages.
@@ -51,7 +52,7 @@ abstract final class PortalActions {
         title: 'Cancel this visit?',
         message:
             '${ClinicClock.day(visit.scheduledDate)} at ${ClinicClock.wallTime(visit.startTime)} with ${visit.doctorName}. '
-            'Online cancellation closes 3 days before the start; after that, call reception.',
+            'Online cancellation closes 3 days before the start; after that, call reception. ${FeeText.rules}',
         confirmLabel: 'Cancel visit',
         cancelLabel: 'Keep it',
         danger: true,

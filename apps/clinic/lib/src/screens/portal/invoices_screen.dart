@@ -5,7 +5,9 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../controllers/billing/fee_providers.dart';
 import '../../controllers/portal/portal_providers.dart';
+import '../../widgets/billing/fee_card.dart';
 import '../../widgets/billing/wallet_card.dart';
 import '../../widgets/common/date_range_chip.dart';
 import '../../widgets/common/enum_filter_chips.dart';
@@ -39,7 +41,10 @@ class _InvoicesScreenState extends ConsumerState<InvoicesScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('My invoices')),
       body: RefreshIndicator(
-        onRefresh: () => ref.refresh(invoicesProvider(_filter).future),
+        onRefresh: () {
+          ref.invalidate(myFeesProvider);
+          return ref.refresh(invoicesProvider(_filter).future);
+        },
         child: ListView(
           padding: const EdgeInsets.only(top: 8, bottom: 32),
           children: [
@@ -72,6 +77,11 @@ class _InvoicesScreenState extends ConsumerState<InvoicesScreen> {
                       const SizedBox(height: 16),
                       if (ref.watch(currentUserProvider)?.id case final me?) ...[
                         WalletCard(patientId: me, margin: EdgeInsets.zero),
+                        const SizedBox(height: 16),
+                      ],
+                      // Fees show only when there are any; a failed load simply leaves them out.
+                      if (ref.watch(myFeesProvider).value case final fees? when fees.isNotEmpty) ...[
+                        FeeCard(fees: fees),
                         const SizedBox(height: 16),
                       ],
                     ],

@@ -2,6 +2,7 @@ import 'package:e_clinic_core/core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/shared/enum_catalog.dart';
+import 'billing/appointment_fee_repository.dart';
 import 'billing/invoice_repository.dart';
 import 'documents/document_repository.dart';
 import 'identity/signature_repository.dart';
@@ -39,6 +40,7 @@ final documentRepositoryProvider = Provider((ref) => DocumentRepository(ref.watc
 final attachmentRepositoryProvider = Provider((ref) => AttachmentRepository(ref.watch(apiClientProvider)));
 final prescriptionRepositoryProvider = Provider((ref) => PrescriptionRepository(ref.watch(apiClientProvider)));
 final invoiceRepositoryProvider = Provider((ref) => InvoiceRepository(ref.watch(apiClientProvider)));
+final appointmentFeeRepositoryProvider = Provider((ref) => AppointmentFeeRepository(ref.watch(apiClientProvider)));
 final walletRepositoryProvider = Provider((ref) => WalletRepository(ref.watch(apiClientProvider)));
 final notificationRepositoryProvider = Provider((ref) => NotificationRepository(ref.watch(apiClientProvider)));
 final metaRepositoryProvider = Provider((ref) => MetaRepository(ref.watch(apiClientProvider)));

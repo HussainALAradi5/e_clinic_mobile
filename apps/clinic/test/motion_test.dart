@@ -19,6 +19,21 @@ void main() {
     expect(invoice('0.000', '0.000').paidShare, 1);
   });
 
+  test('a visit fee reads its visit and whether it was waived', () {
+    final fee = AppointmentFee.fromJson({
+      'id': 'f-1',
+      'code': 'FEE-1',
+      'type': 'late_cancel',
+      'status': 'waived',
+      'amount': {'amount': '3.000'},
+      'appointment': {'id': 'a-1', 'code': 'APT-1', 'scheduled_date': '2026-11-01', 'start_time': '11:00:00'},
+      'waiver_reason': 'Hospital note seen',
+    });
+    expect(fee.waived, isTrue);
+    expect(fee.appointment.code, 'APT-1');
+    expect(fee.amount.minor, 3000);
+  });
+
   test('mute choices send the server values', () {
     expect(MuteDuration.values.map((d) => d.wire), ['8h', '1w', 'always']);
   });
