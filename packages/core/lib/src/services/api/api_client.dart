@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:uuid/uuid.dart';
 
@@ -66,6 +68,30 @@ class ApiClient {
       'files[]': [for (final file in files) await MultipartFile.fromFile(file.path, filename: file.name)],
     });
     return decode(await _data('POST', path, body: form));
+  }
+
+  /// Sends one in-memory file (e.g. a drawn signature) as `multipart/form-data` under [field].
+  Future<T> uploadBytes<T>(
+    String path,
+    Decoder<T> decode, {
+    required String field,
+    required List<int> bytes,
+    required String fileName,
+  }) async {
+    final form = FormData.fromMap({field: MultipartFile.fromBytes(bytes, filename: fileName)});
+    return decode(await _data('POST', path, body: form));
+  }
+
+  /// A file the server returns as is (an image), or null when there is none (404).
+  Future<Uint8List?> bytes(String path) async {
+    try {
+      final response = await _dio.get<List<int>>(path, options: Options(responseType: ResponseType.bytes));
+      final data = response.data;
+      return data == null ? null : Uint8List.fromList(data);
+    } on DioException catch (error) {
+      if (error.response?.statusCode == 404) return null;
+      throw ApiException.fromDio(error);
+    }
   }
 
   Future<T> put<T>(String path, Decoder<T> decode, {Object? body}) async =>

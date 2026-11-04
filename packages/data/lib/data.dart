@@ -41,6 +41,7 @@ export 'src/models/shared/money.dart';
 export 'src/models/shared/refs.dart';
 export 'src/repositories/billing/invoice_repository.dart';
 export 'src/repositories/documents/document_repository.dart';
+export 'src/repositories/identity/signature_repository.dart';
 export 'src/repositories/billing/refund_repository.dart';
 export 'src/repositories/clinic/appointment_repository.dart';
 export 'src/repositories/clinic/clinical_order_repository.dart';

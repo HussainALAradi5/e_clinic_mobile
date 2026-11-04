@@ -37,6 +37,7 @@ import 'screens/staff/patients_screen.dart';
 import 'screens/staff/pharmacy_queue_screen.dart';
 import 'screens/staff/scan_screen.dart';
 import 'screens/staff/sessions_screen.dart';
+import 'screens/staff/signature_screen.dart';
 import 'screens/staff/staff_requests_screen.dart';
 import 'screens/staff/ticket_detail_screen.dart';
 import 'screens/staff/tickets_screen.dart';
@@ -134,6 +135,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       page(StaffPaths.requests, const StaffRequestsScreen()),
       page(StaffPaths.newLeave, const NewLeaveScreen()),
       page(StaffPaths.inbox, const InboxScreen()),
+      page(StaffPaths.signature, const SignatureScreen()),
       page(StaffPaths.chats, const ChatsScreen()),
       GoRoute(
         path: StaffPaths.chatPattern,

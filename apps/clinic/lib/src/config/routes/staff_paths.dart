@@ -11,6 +11,7 @@ abstract final class StaffPaths {
   static const sessions = '/clinic/sessions';
   static const approvals = '/approvals';
   static const more = '/more';
+  static const signature = '/account/signature';
   static const clock = '/hr/attendance/clock';
   static const appointmentPattern = '/clinic/appointments/:id';
   static const patients = '/clinic/patients';
