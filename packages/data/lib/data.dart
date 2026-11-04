@@ -47,6 +47,7 @@ export 'src/models/shared/enum_catalog.dart';
 export 'src/models/shared/money.dart';
 export 'src/models/shared/refs.dart';
 export 'src/repositories/billing/appointment_fee_repository.dart';
+export 'src/repositories/accounting/month_summary_repository.dart';
 export 'src/repositories/billing/invoice_repository.dart';
 export 'src/repositories/hr/earning_repository.dart';
 export 'src/repositories/billing/package_repository.dart';

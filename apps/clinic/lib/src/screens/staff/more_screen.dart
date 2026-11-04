@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/staff_paths.dart';
+import '../../constants/staff/month_summary_text.dart';
 import '../../constants/staff/signature_text.dart';
 import '../../controllers/staff/chat_providers.dart';
 import '../../controllers/staff/support_providers.dart';
@@ -58,6 +59,13 @@ class MoreScreen extends ConsumerWidget {
                 label: 'Password & security',
                 onTap: () => context.push(AuthPaths.security),
               ),
+              if (access.can('reports.read_all'))
+                LinkTile(
+                  icon: Icons.insights_rounded,
+                  label: MonthSummaryText.title,
+                  subtitle: MonthSummaryText.link,
+                  onTap: () => context.push(StaffPaths.monthSummary),
+                ),
               LinkTile(
                 icon: Icons.draw_outlined,
                 label: SignatureText.title,
