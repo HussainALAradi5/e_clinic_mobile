@@ -23,6 +23,13 @@ class InvoiceRepository {
 
   Future<Invoice> get(String id) => _api.get('billing/invoices/$id', objectOf(Invoice.fromJson));
 
+  /// Opens an online payment for what I owe on the invoice; returns the gateway's secure page to open.
+  Future<String?> startOnlinePayment(String id, {required String idempotencyKey}) => _api.post(
+    'billing/invoices/$id/online-payments',
+    (data) => (data as Map<String, dynamic>)['checkout_url'] as String?,
+    idempotencyKey: idempotencyKey,
+  );
+
   /// The insurer / patient split of the invoice (what the patient pays at the desk).
   Future<Coverage> coverage(String id) => _api.get('billing/invoices/$id/coverage', objectOf(Coverage.fromJson));
 }

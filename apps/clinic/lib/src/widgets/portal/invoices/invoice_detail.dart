@@ -1,5 +1,6 @@
 import 'package:e_clinic_core/core.dart';
 import 'package:e_clinic_data/data.dart';
+import 'package:e_clinic_shell/shell.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../controllers/portal/portal_providers.dart';
 import '../../common/document_buttons.dart';
 import 'coverage_summary.dart';
+import 'pay_online_button.dart';
 import 'total_row.dart';
 
 class InvoiceDetail extends ConsumerWidget {
@@ -78,6 +80,10 @@ class InvoiceDetail extends ConsumerWidget {
                   ),
                   trailing: StatusChip(enumName: 'PaymentStatus', value: payment.status),
                 ),
+            ],
+            if (invoice.owing && ref.watch(accessProvider).can('online_payments.create')) ...[
+              const SizedBox(height: 16),
+              PayOnlineButton(invoiceId: invoice.id),
             ],
             const SizedBox(height: 16),
             DocumentButtons(type: DocumentType.invoice, recordId: invoice.id),
