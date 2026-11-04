@@ -62,7 +62,7 @@ abstract final class VisitActions {
     }
   }
 
-  static String _who(Appointment visit) => '${visit.patientName}, ${visit.startTime}';
+  static String _who(Appointment visit) => '${visit.patientName}, ${ClinicClock.wallTime(visit.startTime)}';
 
   static String _done(VisitAction action, Appointment visit) => switch (action) {
     VisitAction.checkIn => '${visit.patientName} is checked in.',

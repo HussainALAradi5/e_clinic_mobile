@@ -13,7 +13,11 @@ abstract final class PortalActions {
     entity: 'appointment',
     id: visit.id,
     title: 'Check-in code',
-    lines: ['${ClinicClock.day(visit.scheduledDate)}, ${visit.startTime}', visit.doctorName, visit.code],
+    lines: [
+      '${ClinicClock.day(visit.scheduledDate)}, ${ClinicClock.wallTime(visit.startTime)}',
+      visit.doctorName,
+      visit.code,
+    ],
     hint: 'Show this at the front desk when you arrive. It works only for this visit.',
   );
 
@@ -46,7 +50,7 @@ abstract final class PortalActions {
       ConfirmConfig(
         title: 'Cancel this visit?',
         message:
-            '${ClinicClock.day(visit.scheduledDate)} at ${visit.startTime} with ${visit.doctorName}. '
+            '${ClinicClock.day(visit.scheduledDate)} at ${ClinicClock.wallTime(visit.startTime)} with ${visit.doctorName}. '
             'Online cancellation closes 3 days before the start; after that, call reception.',
         confirmLabel: 'Cancel visit',
         cancelLabel: 'Keep it',

@@ -1,3 +1,4 @@
+import 'package:e_clinic_core/core.dart';
 import 'package:e_clinic_data/data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,7 +39,7 @@ class SlotPicker extends StatelessWidget {
               children: [
                 for (final slot in list)
                   ChoiceChip(
-                    label: Text(slot.startTime),
+                    label: Text(ClinicClock.wallTime(slot.startTime)),
                     selected: selected?.startTime == slot.startTime,
                     onSelected: (_) => onPick(slot),
                   ),

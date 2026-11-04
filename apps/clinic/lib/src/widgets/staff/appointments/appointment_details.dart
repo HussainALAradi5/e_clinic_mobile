@@ -27,7 +27,7 @@ class AppointmentDetails extends ConsumerWidget {
         children: [
           Text(visit.patientName, style: theme.textTheme.headlineSmall),
           Text(
-            '${ClinicClock.relativeDay(visit.scheduledDate)} · ${visit.startTime}–${visit.endTime}',
+            '${ClinicClock.relativeDay(visit.scheduledDate)} · ${ClinicClock.timeRange(visit.startTime, visit.endTime)}',
             style: theme.textTheme.titleMedium?.copyWith(color: scheme.onSurfaceVariant),
           ),
           const SizedBox(height: 12),

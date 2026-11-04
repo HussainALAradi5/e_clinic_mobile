@@ -48,7 +48,7 @@ class TreatmentCard extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             '${plan.health.label} · ${plan.attended} of ${plan.plannedSessions} attended'
-            '${next == null ? '' : ' · next ${ClinicClock.relativeDay(next.scheduledDate)}, ${next.startTime}'}',
+            '${next == null ? '' : ' · next ${ClinicClock.relativeDay(next.scheduledDate)}, ${ClinicClock.wallTime(next.startTime)}'}',
             style: theme.textTheme.bodySmall,
           ),
         ],

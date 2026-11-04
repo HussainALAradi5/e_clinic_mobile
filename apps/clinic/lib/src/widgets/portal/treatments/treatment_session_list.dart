@@ -31,7 +31,7 @@ class TreatmentSessionList extends ConsumerWidget {
                       radius: 14,
                       child: Text('${s.sessionNumber}', style: theme.textTheme.labelSmall),
                     ),
-                    title: Text('${ClinicClock.day(s.scheduledDate)}, ${s.startTime}'),
+                    title: Text('${ClinicClock.day(s.scheduledDate)}, ${ClinicClock.wallTime(s.startTime)}'),
                     subtitle: s.provider == null ? null : Text(s.provider!.fullName),
                     trailing: StatusChip(enumName: 'AppointmentStatus', value: s.status),
                   ),

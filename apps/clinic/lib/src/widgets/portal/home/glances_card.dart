@@ -28,7 +28,7 @@ class GlancesCard extends ConsumerWidget {
             detail: treatment == null
                 ? 'No treatment plan running'
                 : next != null
-                ? '${treatment.title}: next ${ClinicClock.relativeDay(next.scheduledDate)}, ${next.startTime}'
+                ? '${treatment.title}: next ${ClinicClock.relativeDay(next.scheduledDate)}, ${ClinicClock.wallTime(next.startTime)}'
                 : '${treatment.title}: ${treatment.attended} of ${treatment.plannedSessions} sessions',
             flag: false,
             path: PortalPaths.treatments,

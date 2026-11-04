@@ -41,7 +41,7 @@ class VisitCard extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${ClinicClock.relativeDay(visit.scheduledDate)} · ${visit.startTime}',
+                          '${ClinicClock.relativeDay(visit.scheduledDate)} · ${ClinicClock.wallTime(visit.startTime)}',
                           style: theme.textTheme.titleMedium,
                         ),
                         const SizedBox(height: 2),

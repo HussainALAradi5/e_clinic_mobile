@@ -134,7 +134,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
       ),
       bottomNavigationBar: BookingBar(
         summary: _doctor != null && _slot != null
-            ? '${ClinicClock.day(_date)} at ${_slot!.startTime} with ${_doctor!.displayName}'
+            ? '${ClinicClock.day(_date)} at ${ClinicClock.wallTime(_slot!.startTime)} with ${_doctor!.displayName}'
             : null,
         label: _slot == null ? 'Pick a doctor and a time' : 'Book visit',
         onBook: _doctor != null && _slot != null ? _book : null,

@@ -64,7 +64,7 @@ class NextVisitTicket extends ConsumerWidget {
                         style: theme.textTheme.titleMedium?.copyWith(color: onPine),
                       ),
                       Text(
-                        visit.startTime,
+                        ClinicClock.wallTime(visit.startTime),
                         style: theme.textTheme.titleLarge?.copyWith(color: onPine, fontWeight: FontWeight.w700),
                       ),
                     ],

@@ -43,11 +43,26 @@ abstract final class ClinicClock {
     return '${d.day} ${_months[d.month - 1]} ${d.year}';
   }
 
-  /// `25 Oct 2026, 14:05` for an instant.
+  /// `25 Oct 2026, 2:05 PM` for an instant.
   static String dateTime(DateTime instant) {
     final l = local(instant);
-    return '${date(isoDate(l))}, ${_two(l.hour)}:${_two(l.minute)}';
+    return '${date(isoDate(l))}, ${clock(l.hour, l.minute)}';
   }
+
+  /// `9:05 AM` / `2:30 PM` — times are always shown on the 12-hour clock.
+  static String clock(int hour, int minute) {
+    final h = hour % 12 == 0 ? 12 : hour % 12;
+    return '$h:${_two(minute)} ${hour < 12 ? 'AM' : 'PM'}';
+  }
+
+  /// A wall-clock time from the API (`16:00` / `16:00:00`) as `4:00 PM`; unreadable text is returned as is.
+  static String wallTime(String hhmm) {
+    final m = RegExp(r'^(\d{1,2}):(\d{2})').firstMatch(hhmm);
+    return m == null ? hhmm : clock(int.parse(m[1]!), int.parse(m[2]!));
+  }
+
+  /// `9:00 AM – 9:15 AM`.
+  static String timeRange(String start, String end) => '${wallTime(start)} – ${wallTime(end)}';
 
   /// `Sun` / `25` / `Oct` pieces for date strips.
   static ({String weekday, int day, String month}) parts(String iso) {
