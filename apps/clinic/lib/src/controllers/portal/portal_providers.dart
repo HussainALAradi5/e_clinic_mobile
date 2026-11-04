@@ -137,3 +137,8 @@ final sickLeavesProvider = FutureProvider.autoDispose<List<SickLeave>>(
   (ref) async =>
       (await ref.watch(sickLeaveRepositoryProvider).list(const ListQuery(perPage: 100, sort: ['-issuedAt']))).items,
 );
+
+/// How one invoice splits between my insurer and me.
+final invoiceCoverageProvider = FutureProvider.autoDispose.family<Coverage, String>(
+  (ref, id) => ref.watch(invoiceRepositoryProvider).coverage(id),
+);

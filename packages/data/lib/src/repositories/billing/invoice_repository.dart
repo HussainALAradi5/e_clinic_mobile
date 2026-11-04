@@ -2,6 +2,7 @@ import 'package:e_clinic_core/core.dart';
 
 import '../../enums/billing/invoice_payment_state.dart';
 import '../../enums/billing/payment_method.dart';
+import '../../models/billing/coverage.dart';
 import '../../models/billing/invoice.dart';
 
 class InvoiceRepository {
@@ -21,4 +22,7 @@ class InvoiceRepository {
   );
 
   Future<Invoice> get(String id) => _api.get('billing/invoices/$id', objectOf(Invoice.fromJson));
+
+  /// The insurer / patient split of the invoice (what the patient pays at the desk).
+  Future<Coverage> coverage(String id) => _api.get('billing/invoices/$id/coverage', objectOf(Coverage.fromJson));
 }

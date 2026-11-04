@@ -16,6 +16,7 @@ export 'src/enums/documents/document_type.dart';
 export 'src/enums/identity/notification_kind.dart';
 export 'src/enums/shared/generic_status.dart';
 export 'src/models/billing/appointment_fee.dart';
+export 'src/models/billing/coverage.dart';
 export 'src/models/billing/invoice.dart';
 export 'src/models/billing/refund.dart';
 export 'src/models/billing/wallet_entry.dart';

@@ -34,6 +34,19 @@ void main() {
     expect(fee.amount.minor, 3000);
   });
 
+  test('an invoice coverage reads the insurer part and mine', () {
+    final c = Coverage.fromJson({
+      'covered': true,
+      'insurer': 'Gulf Insurance Group',
+      'coverage_percent': '80.00',
+      'insurer_share': {'amount': '12.000'},
+      'patient_share': {'amount': '3.000'},
+      'patient_due': {'amount': '3.000'},
+    });
+    expect(c.covered, isTrue);
+    expect(c.insurerShare.minor + c.patientShare.minor, 15000);
+  });
+
   test('mute choices send the server values', () {
     expect(MuteDuration.values.map((d) => d.wire), ['8h', '1w', 'always']);
   });

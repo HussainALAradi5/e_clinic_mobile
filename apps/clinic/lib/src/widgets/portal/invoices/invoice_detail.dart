@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../controllers/portal/portal_providers.dart';
 import '../../common/document_buttons.dart';
+import 'coverage_summary.dart';
 import 'total_row.dart';
 
 class InvoiceDetail extends ConsumerWidget {
@@ -54,6 +55,11 @@ class InvoiceDetail extends ConsumerWidget {
             TotalRow(label: 'Total', value: invoice.total.label, bold: true),
             TotalRow(label: 'Paid', value: invoice.paidAmount.label),
             if (invoice.owing) TotalRow(label: 'Left to pay', value: invoice.balanceDue.label, bold: true),
+            // The insurer's part and mine, when my insurance covers this invoice.
+            if (ref.watch(invoiceCoverageProvider(invoiceId)).value case final c? when c.covered) ...[
+              const SizedBox(height: 12),
+              CoverageSummary(coverage: c),
+            ],
             if (invoice.payments.isNotEmpty) ...[
               const SizedBox(height: 16),
               Text('Payments', style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
