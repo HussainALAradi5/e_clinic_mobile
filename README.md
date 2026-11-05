@@ -278,6 +278,9 @@ flutter run --dart-define=API_URL=http://127.0.0.1:8000
 flutter run --dart-define=API_URL=http://127.0.0.1:8000      # iOS simulator
 ```
 
+Against the live demo: `--dart-define=API_URL=https://e-clinic-api.onrender.com --dart-define=REVERB_KEY=e-clinic-live
+--dart-define=REVERB_HOST=e-clinic-api.onrender.com --dart-define=REVERB_PORT=443 --dart-define=REVERB_SCHEME=https`.
+
 Live chat updates (Online / Offline at once) need Reverb (`php artisan reverb:start --port=8085` in e_clinic_server)
 and its address; without these the app polls:
 
