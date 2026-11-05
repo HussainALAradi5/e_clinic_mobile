@@ -9,15 +9,18 @@ import 'package:go_router/go_router.dart';
 
 import '../../config/routes/staff_paths.dart';
 import '../../constants/common/common_text.dart';
+import '../../constants/common/notification_link_text.dart';
 import '../../constants/staff/inbox_text.dart';
 import '../../controllers/staff/support_providers.dart';
 import '../../widgets/common/notification_kind_icon.dart';
+import '../../widgets/common/notification_message_sheet.dart';
 
+part 'inbox_screen_filters.dart';
 part 'inbox_screen_notification_card.dart';
 
 /// `/inbox` — my notifications, unread first: All / Unread / Read, what they are about and a search, filtered and
-/// paged on the server (more load as you scroll). Unread ones are on a blue background; tapping one marks it read
-/// and opens its record (a support ticket, a booking, an order …).
+/// paged on the server (more load as you scroll). Unread ones are on a blue background. Tapping one marks it read
+/// and shows the message with a button to its record; the card's own "Open …" button goes straight there.
 class InboxScreen extends ConsumerStatefulWidget {
   const InboxScreen({super.key});
 
@@ -52,7 +55,8 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
     return result;
   }
 
-  Future<void> _open(AppNotification item, void Function(AppNotification) replace) async {
+  /// Marks it read, then shows the message (with a button to its page); [direct] goes straight to the page.
+  Future<void> _open(AppNotification item, void Function(AppNotification) replace, {bool direct = false}) async {
     if (item.unread) {
       try {
         replace(await _repo.markRead(item.id));
@@ -62,7 +66,9 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
       }
     }
     final path = StaffPaths.forNotification(item.relatedType, item.relatedId);
-    if (path != null && mounted) unawaited(context.push(path));
+    if (!mounted) return;
+    final go = direct || await NotificationMessageSheet.show(context, item, hasLink: path != null);
+    if (go && path != null && mounted) unawaited(context.push(path));
   }
 
   Future<void> _markAllRead() async {
@@ -89,40 +95,14 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
       // while the list reloads.
       body: Column(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                child: SearchField(hint: InboxText.searchNotifications, onChanged: (v) => setState(() => _search = v)),
-              ),
-              ChipBar<InboxRead>(
-                options: [
-                  (value: InboxRead.all, label: CommonText.all, count: null),
-                  (value: InboxRead.unread, label: CommonText.unread, count: unread > 0 ? unread : null),
-                  (value: InboxRead.read, label: InboxText.read, count: null),
-                ],
-                selected: _read,
-                onSelected: (v) => setState(() => _read = v),
-              ),
-              const SizedBox(height: 8),
-              ChipBar<String?>(
-                options: [
-                  (value: null, label: InboxText.everything, count: null),
-                  for (final t in inboxTopics) (value: t.value, label: t.label, count: null),
-                ],
-                selected: _topic,
-                onSelected: (v) => setState(() => _topic = v),
-              ),
-              if (_total != null)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-                  child: Text(
-                    '$_total ${_total == 1 ? 'notification' : 'notifications'}',
-                    style: Theme.of(context).textTheme.labelMedium,
-                  ),
-                ),
-            ],
+          _InboxFilters(
+            read: _read,
+            topic: _topic,
+            unread: unread,
+            total: _total,
+            onSearch: (v) => setState(() => _search = v),
+            onRead: (v) => setState(() => _read = v),
+            onTopic: (v) => setState(() => _topic = v),
           ),
           Expanded(
             child: RefreshIndicator(
@@ -137,7 +117,11 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
                 ),
                 itemBuilder: (context, item, replace) => Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                  child: _NotificationCard(item: item, onTap: () => _open(item, replace)),
+                  child: _NotificationCard(
+                    item: item,
+                    onTap: () => _open(item, replace),
+                    onGo: () => _open(item, replace, direct: true),
+                  ),
                 ),
               ),
             ),

@@ -1,10 +1,15 @@
 part of 'inbox_screen.dart';
 
 class _NotificationCard extends StatelessWidget {
-  const _NotificationCard({required this.item, required this.onTap});
+  const _NotificationCard({required this.item, required this.onTap, required this.onGo});
 
   final AppNotification item;
+
+  /// Shows the message.
   final VoidCallback onTap;
+
+  /// Straight to its record.
+  final VoidCallback onGo;
 
   static const _blue = Color(0xFF2563EB);
 
@@ -51,7 +56,11 @@ class _NotificationCard extends StatelessWidget {
                         Text(ClinicClock.ago(item.createdAt), style: theme.textTheme.bodySmall),
                         const Spacer(),
                         if (link != null)
-                          Text(InboxText.openLink, style: theme.textTheme.labelMedium?.copyWith(color: scheme.primary)),
+                          TextButton(
+                            onPressed: onGo,
+                            style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
+                            child: Text(NotificationLinkText.openFor(item.relatedType)),
+                          ),
                       ],
                     ),
                   ],

@@ -60,6 +60,11 @@ abstract final class StaffPaths {
     ('leave_request', _) => leaves,
     ('staff_request', _) => requests,
     ('attendance', _) => clock,
+    // Waiting for a decision (or decided): the approvals list.
+    ('expense' || 'refund' || 'payment', _) => approvals,
+    ('prescription', final String id) => dispenseFor(id),
+    ('dispensation', _) => dispensations,
+    ('treatment', _) => sessions,
     _ => null,
   };
 

@@ -9,11 +9,14 @@ import 'package:go_router/go_router.dart';
 
 import '../../config/routes/portal_paths.dart';
 import '../../constants/common/common_text.dart';
+import '../../constants/common/notification_link_text.dart';
 import '../../constants/portal/notification_text.dart';
 import '../../controllers/portal/portal_providers.dart';
 import '../../widgets/common/notification_kind_icon.dart';
+import '../../widgets/common/notification_message_sheet.dart';
 
-/// `/notifications` — the in-app inbox: reminders, confirmations, results ready; each leads to its page.
+/// `/notifications` — the in-app inbox: reminders, confirmations, results ready. Tapping one shows the message
+/// with a button to its page; the card's "Open …" button goes straight there.
 class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
 
@@ -27,7 +30,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
   NotificationRepository get _repo => ref.read(notificationRepositoryProvider);
 
-  Future<void> _open(AppNotification item, void Function(AppNotification) replace) async {
+  /// Marks it read, then shows the message (with a button to its page); [direct] goes straight to the page.
+  Future<void> _open(AppNotification item, void Function(AppNotification) replace, {bool direct = false}) async {
     if (item.unread) {
       try {
         replace(await _repo.markRead(item.id));
@@ -37,7 +41,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       }
     }
     final path = PortalPaths.forRelated(item.relatedType);
-    if (path != null && mounted) {
+    if (!mounted) return;
+    final go = direct || await NotificationMessageSheet.show(context, item, hasLink: path != null);
+    if (go && path != null && mounted) {
       if (path == PortalPaths.treatments || path == PortalPaths.prescriptions) {
         unawaited(context.push(path));
       } else {
@@ -100,9 +106,20 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                           ),
                         Text(item.body, style: theme.textTheme.bodyMedium),
                         const SizedBox(height: 6),
-                        Text(
-                          ClinicClock.ago(item.createdAt),
-                          style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+                        Row(
+                          children: [
+                            Text(
+                              ClinicClock.ago(item.createdAt),
+                              style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+                            ),
+                            const Spacer(),
+                            if (PortalPaths.forRelated(item.relatedType) != null)
+                              TextButton(
+                                onPressed: () => _open(item, replace, direct: true),
+                                style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
+                                child: Text(NotificationLinkText.openFor(item.relatedType)),
+                              ),
+                          ],
                         ),
                       ],
                     ),

@@ -5,7 +5,7 @@ abstract final class InboxText {
   static const read = 'Read';
   static const everything = 'Everything';
   static const emptyHint = 'Ticket updates, bookings and other news land here.';
-  static const openLink = 'Open ›';
+  static String count(int n) => '$n ${n == 1 ? 'notification' : 'notifications'}';
 
   static const allRead = 'All notifications marked as read.';
   static const noNotificationsYet = 'No notifications yet';
