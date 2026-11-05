@@ -1,0 +1,34 @@
+# Generated models, analysis and the tests of the shared packages and the app on every push and pull request.
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      - name: Generate models (freezed / json)
+        working-directory: packages/data
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Tests (core)
+        working-directory: packages/core
+        run: flutter test
+
+      - name: Tests (app)
+        working-directory: apps/clinic
+        run: flutter test

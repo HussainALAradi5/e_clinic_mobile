@@ -1,5 +1,7 @@
 # e-Clinic Mobile
 
+[![tests](https://github.com/HussainALAradi5/e_clinic_mobile/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/HussainALAradi5/e_clinic_mobile/actions/workflows/tests.yml) [![licence: MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
+
 **One Flutter app** for **e-Clinic**, a clinic management system. After sign-in it shows what fits the account:
 **patients** get their visits, results and invoices; **staff** get their day at the clinic — schedule, check-in by
 QR code, treatment sessions, approvals, patient files, booking, the order work list, the pharmacy and their own leave.
@@ -479,3 +481,7 @@ Taken on a real Android phone (debug build; release builds block screenshots wit
 | HR approvals requests | <img src="docs/screenshots/light/82-hr-approvals-requests.png" width="220"> | <img src="docs/screenshots/dark/82-hr-approvals-requests.png" width="220"> |
 | HR approve overtime | <img src="docs/screenshots/light/83-hr-approve-overtime.png" width="220"> | <img src="docs/screenshots/dark/83-hr-approve-overtime.png" width="220"> |
 <!-- screenshots:end -->
+
+## Licence
+
+[MIT](LICENSE)
