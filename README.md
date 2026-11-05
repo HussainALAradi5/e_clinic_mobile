@@ -294,6 +294,34 @@ Clocking in works from the clinic network (`HR_CHECK_IN_NETWORKS` on the server;
 private address), or from the phone inside the clinic geofence once the server has `HR_CLINIC_LATITUDE` /
 `HR_CLINIC_LONGITUDE` (radius `HR_CLINIC_RADIUS_METERS`, 150 m by default).
 
+### Release build (Android)
+
+A release build is signed with your own upload key. Create it once and keep it out of Git (`key.properties`,
+`*.jks` and `*.keystore` are ignored):
+
+```bash
+cd apps/clinic/android
+keytool -genkey -v -keystore upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+```
+
+Then add `apps/clinic/android/key.properties`:
+
+```properties
+storeFile=upload-keystore.jks
+storePassword=<the keystore password>
+keyAlias=upload
+keyPassword=<the key password>
+```
+
+```bash
+cd apps/clinic
+flutter build appbundle --release --dart-define=API_URL=https://e-clinic-api.onrender.com/api/v1   # Play Store
+flutter build apk --release --dart-define=API_URL=https://e-clinic-api.onrender.com/api/v1         # direct install
+```
+
+Without `key.properties` the release build falls back to the debug key, which is fine for `flutter run --release`
+but not for publishing.
+
 ---
 
 ## Quality checks
