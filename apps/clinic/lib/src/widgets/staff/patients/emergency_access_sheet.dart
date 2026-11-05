@@ -51,7 +51,7 @@ class _EmergencyAccessSheetState extends ConsumerState<EmergencyAccessSheet> {
         throw const ApiException(status: 422, code: ErrorCodes.validationFailed, message: PatientText.reasonTooShort);
       }
       await ref.read(patientRepositoryProvider).emergencyAccess(patient.id, _reason.text.trim());
-      if (mounted) AppSnack.info(context, 'Emergency access to ${patient.fullName} for 12 hours — it is recorded.');
+      if (mounted) AppSnack.info(context, PatientText.emergencyGranted(patient.fullName));
     }
     if (mounted) Navigator.pop(context, patient.id);
   }

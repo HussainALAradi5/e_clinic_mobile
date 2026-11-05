@@ -23,4 +23,5 @@ abstract final class ProfileText {
   static const relation = 'Relation (e.g. wife, son)';
   static const phoneInvalid = 'Enter the phone number with the country code.';
   static const phone = 'Phone';
+  static String patientNumber(String code) => 'Patient number $code';
 }

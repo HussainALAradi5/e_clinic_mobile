@@ -41,7 +41,7 @@ class _SickLeaveCard extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 8),
                 child: InfoNote(
                   icon: Icons.block_rounded,
-                  text: 'Cancelled by the doctor: ${leave.cancelReason ?? ''}',
+                  text: SickLeaveText.cancelledByDoctor(leave.cancelReason ?? ''),
                 ),
               )
             else ...[

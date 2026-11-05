@@ -3,6 +3,7 @@ import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_shell/shell.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/staff/visit_action_text.dart';
 import 'schedule_cache.dart';
 
 part 'staff_providers_approvals_version.dart';

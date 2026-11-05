@@ -33,7 +33,7 @@ class _DispenseFormState extends ConsumerState<_DispenseForm> {
         );
     ref.read(pharmacyVersionProvider.notifier).bump();
     if (!mounted) return;
-    AppSnack.success(context, 'Handed over and charged to ${_p.patient!.fullName}.');
+    AppSnack.success(context, PharmacyText.handedOverTo(_p.patient!.fullName));
     context.pop();
   }
 
@@ -79,8 +79,8 @@ class _DispenseFormState extends ConsumerState<_DispenseForm> {
               lines: [
                 _p.patient?.code,
                 [
-                  if (_p.doctor != null) 'Dr ${_p.doctor!.fullName}',
-                  'valid until ${ClinicClock.date(_p.validUntil)}',
+                  if (_p.doctor != null) PharmacyText.doctorName(_p.doctor!.fullName),
+                  PharmacyText.validUntil(ClinicClock.date(_p.validUntil)),
                 ].join(' · '),
               ],
             ),

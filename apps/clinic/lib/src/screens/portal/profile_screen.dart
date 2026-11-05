@@ -30,7 +30,7 @@ class ProfileScreen extends ConsumerWidget {
           return ListView(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
             children: [
-              ProfileHeader(name: p.fullName, lines: ['Patient number ${p.code}']),
+              ProfileHeader(name: p.fullName, lines: [ProfileText.patientNumber(p.code)]),
               const SizedBox(height: 10),
               Wrap(
                 spacing: 8,

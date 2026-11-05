@@ -68,7 +68,7 @@ class DispenseItemCard extends StatelessWidget {
                   Text(
                     done
                         ? PharmacyText.allHandedOver
-                        : 'Owed ${formatQuantity(owed)} $unit of ${formatQuantity(double.tryParse(item.quantity) ?? owed)}',
+                        : PharmacyText.owed(formatQuantity(owed), unit, formatQuantity(double.tryParse(item.quantity) ?? owed)),
                     style: theme.textTheme.labelMedium?.copyWith(color: done ? muted : theme.colorScheme.primary),
                   ),
                 ],

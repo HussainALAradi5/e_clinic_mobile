@@ -24,7 +24,7 @@ class StaffRequestsScreen extends ConsumerWidget {
     final created = await showAskRequestSheet(context, day: day, type: type);
     if (created == null) return;
     ref.read(requestsVersionProvider.notifier).bump();
-    if (context.mounted) AppSnack.success(context, 'Sent to HR — ${created.code}.');
+    if (context.mounted) AppSnack.success(context, StaffRequestText.sentToHr(created.code));
   }
 
   Future<void> _withdraw(BuildContext context, WidgetRef ref, StaffRequest request) async {

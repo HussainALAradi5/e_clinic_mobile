@@ -3,6 +3,7 @@ import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_shell/shell.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/staff/appointment_text.dart';
 import 'staff_providers.dart';
 
 /// The day shown on the calendar (`YYYY-MM-DD`).
@@ -29,7 +30,7 @@ List<ProviderDay> groupByProvider(List<Appointment> bookings) {
     for (final MapEntry(key: id, value: list) in groups.entries)
       (
         providerId: id,
-        name: list.first.provider?.fullName ?? 'Provider',
+        name: list.first.provider?.fullName ?? AppointmentText.providerFallback,
         bookings: list..sort((a, b) => a.startTime.compareTo(b.startTime)),
       ),
   ];

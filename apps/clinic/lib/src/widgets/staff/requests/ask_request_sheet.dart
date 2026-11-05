@@ -54,7 +54,7 @@ class _AskRequestSheetState extends ConsumerState<_AskRequestSheet> {
     final tone = RequestTone.of(context, late: _late);
     final day = widget.day;
     final minutes = _late ? day.lateMinutes : day.overtimeMinutes;
-    final times = 'In ${clockTime(day.checkInAt)} · Out ${clockTime(day.checkOutAt)}';
+    final times = StaffRequestText.checkInOut(clockTime(day.checkInAt), clockTime(day.checkOutAt));
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.fromLTRB(24, 0, 24, 16 + MediaQuery.viewInsetsOf(context).bottom),

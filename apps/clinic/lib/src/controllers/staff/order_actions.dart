@@ -4,6 +4,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/staff/order_action_text.dart';
 import '../../widgets/staff/orders/complete_order_sheet.dart';
 import 'order_providers.dart';
 
@@ -31,10 +32,10 @@ abstract final class OrderActions {
         final reason = await showReasonSheet(
           context,
           ConfirmConfig(
-            title: 'Cancel ${order.code}?',
+            title: OrderActionText.cancelTitle(order.code),
             message: order.description,
-            confirmLabel: 'Cancel order',
-            cancelLabel: 'Keep',
+            confirmLabel: OrderActionText.cancelOrder,
+            cancelLabel: OrderActionText.keep,
             danger: true,
           ),
         );
@@ -72,9 +73,9 @@ abstract final class OrderActions {
   }
 
   static String _done(OrderAction action, ClinicalOrder order) => switch (action) {
-    OrderAction.start => '${order.code} started.',
-    OrderAction.complete => 'Result saved. ${order.patient?.fullName ?? 'The patient'} can see it now.',
-    OrderAction.cancel => '${order.code} cancelled.',
+    OrderAction.start => OrderActionText.started(order.code),
+    OrderAction.complete => OrderActionText.resultSaved(order.patient?.fullName),
+    OrderAction.cancel => OrderActionText.cancelled(order.code),
   };
 }
 

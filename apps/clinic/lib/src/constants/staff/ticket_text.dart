@@ -68,4 +68,14 @@ abstract final class TicketText {
   static const screenshotsFiles = 'Screenshots & files';
   static const firstStepHint = 'e.g. Cleaned the print head';
   static const nextStep = 'Next step';
+  static String conversationCount(int n) => 'Conversation ($n)';
+  static String byName(String name) => 'By $name';
+  static String takenByName(String name) => 'Taken by $name';
+  static String markSolvedSteps(int n) => 'Mark solved ($n ${n == 1 ? 'step' : 'steps'})';
+  static const topicSupport = 'Support';
+  static const topicAppointments = 'Appointments';
+  static const topicOrders = 'Orders';
+  static const topicChat = 'Chat';
+  static const topicLeave = 'Leave';
+  static const topicPayslips = 'Payslips';
 }

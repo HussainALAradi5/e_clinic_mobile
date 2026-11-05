@@ -22,4 +22,9 @@ abstract final class ClockText {
   static const today = 'Today';
   static const onTime = 'Checked in on time. Have a good shift.';
   static const checkedOutDone = 'Checked out. See you next time.';
+  static String checkedInAt(String time) => 'Checked in at $time';
+  static String minutesLate(String minutes) => '$minutes late';
+  static String shiftEndsAt(String time) => 'Shift ends at $time';
+  static String checkedInLate(String minutes, String? shift) => 'Checked in — $minutes late for ${shift ?? 'your shift'}.';
+  static String checkedOutOvertime(String minutes) => 'Checked out — $minutes overtime, sent for approval.';
 }

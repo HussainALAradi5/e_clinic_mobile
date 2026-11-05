@@ -28,4 +28,6 @@ abstract final class StaffRequestText {
   static const nothingToAsk =
       'Nothing to ask about: no late arrivals or unpaid overtime in the last 31 days, or HR '
       'has these requests switched off.';
+  static String sentToHr(String code) => 'Sent to HR — $code.';
+  static String checkInOut(String checkIn, String checkOut) => 'In $checkIn · Out $checkOut';
 }

@@ -119,7 +119,7 @@ class _TicketDetailScreenState extends ConsumerState<TicketDetailScreen> {
                 canAdd: t.status != GenericStatus.cancelled && (desk || t.requester?.id == me),
                 onUploaded: () => ref.invalidate(ticketProvider(widget.id)),
               ),
-              SectionHeader('Conversation (${t.comments.length})'),
+              SectionHeader(TicketText.conversationCount(t.comments.length)),
               if (t.comments.isEmpty)
                 Text(TicketText.noRepliesYet, style: theme.textTheme.bodyMedium)
               else

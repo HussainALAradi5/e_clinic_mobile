@@ -14,4 +14,9 @@ abstract final class ApprovalText {
 
   static const staffMember = 'Staff member';
   static const rejected = 'Rejected.';
+  static String refundsCount(int n) => 'Refunds · $n';
+  static String expensesCount(int n) => 'Expenses · $n';
+  static String leavesCount(int n) => 'Leave · $n';
+  static String requestsCount(int n) => 'Late & overtime · $n';
+  static String overtimeCount(int n) => 'Overtime · $n';
 }

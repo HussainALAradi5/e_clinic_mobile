@@ -84,4 +84,6 @@ abstract final class ChatText {
   static const voiceNote = 'Voice note';
   static const fewerEmojis = 'Fewer emojis';
   static const moreEmojis = 'More emojis';
+  static String removeReaction(String emoji) => 'Remove reaction $emoji';
+  static String react(String emoji) => 'React $emoji';
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../constants/billing/fee_text.dart';
+import '../../constants/portal/portal_action_text.dart';
 import 'portal_providers.dart';
 
 /// Portal steps with their confirmations and messages.
@@ -13,22 +14,22 @@ abstract final class PortalActions {
     context,
     entity: 'appointment',
     id: visit.id,
-    title: 'Check-in code',
+    title: PortalActionText.checkInCode,
     lines: [
       '${ClinicClock.day(visit.scheduledDate)}, ${ClinicClock.wallTime(visit.startTime)}',
       visit.doctorName,
       visit.code,
     ],
-    hint: 'Show this at the front desk when you arrive. It works only for this visit.',
+    hint: PortalActionText.checkInHint,
   );
 
   static Future<void> showPrescriptionCode(BuildContext context, Prescription rx) => showCodeSheet(
     context,
     entity: 'prescription',
     id: rx.id,
-    title: 'Prescription code',
-    lines: [rx.code, 'Valid until ${ClinicClock.date(rx.validUntil)}'],
-    hint: 'Show this at the clinic pharmacy to collect your medicines.',
+    title: PortalActionText.prescriptionCode,
+    lines: [rx.code, PortalActionText.validUntil(ClinicClock.date(rx.validUntil))],
+    hint: PortalActionText.prescriptionHint,
   );
 
   /// The certificate's QR: an employer scans it to check the dates with the clinic (never the reason).
@@ -36,12 +37,12 @@ abstract final class PortalActions {
     context,
     entity: 'sick_leave',
     id: leave.id,
-    title: 'Sick leave ${leave.code}',
+    title: PortalActionText.sickLeave(leave.code),
     lines: [
-      '${leave.days} ${leave.days == 1 ? 'day' : 'days'}: ${ClinicClock.date(leave.startDate)} – ${ClinicClock.date(leave.endDate)}',
+      PortalActionText.sickLeaveDays(leave.days, ClinicClock.date(leave.startDate), ClinicClock.date(leave.endDate)),
       leave.doctor.fullName,
     ],
-    hint: 'Your employer or school scans this to check the certificate with the clinic. It shows the dates only.',
+    hint: PortalActionText.sickLeaveHint,
   );
 
   /// Asks why, cancels and returns the updated visit; null when the patient kept it.
@@ -49,21 +50,24 @@ abstract final class PortalActions {
     final reason = await showReasonSheet(
       context,
       ConfirmConfig(
-        title: 'Cancel this visit?',
-        message:
-            '${ClinicClock.day(visit.scheduledDate)} at ${ClinicClock.wallTime(visit.startTime)} with ${visit.doctorName}. '
-            'Online cancellation closes 3 days before the start; after that, call reception. ${FeeText.rules}',
-        confirmLabel: 'Cancel visit',
-        cancelLabel: 'Keep it',
+        title: PortalActionText.cancelTitle,
+        message: PortalActionText.cancelMessage(
+          ClinicClock.day(visit.scheduledDate),
+          ClinicClock.wallTime(visit.startTime),
+          visit.doctorName,
+          FeeText.rules,
+        ),
+        confirmLabel: PortalActionText.cancelConfirm,
+        cancelLabel: PortalActionText.keepIt,
         danger: true,
       ),
-      label: 'Why are you cancelling?',
+      label: PortalActionText.cancelReason,
     );
     if (reason == null) return null;
     try {
       final cancelled = await ref.read(portalRepositoryProvider).cancel(visit.id, reason);
       ref.read(visitsVersionProvider.notifier).bump();
-      if (context.mounted) AppSnack.success(context, 'Your visit is cancelled.');
+      if (context.mounted) AppSnack.success(context, PortalActionText.cancelled);
       return cancelled;
     } on ApiException catch (error) {
       if (context.mounted) AppSnack.error(context, error);

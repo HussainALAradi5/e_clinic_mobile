@@ -34,4 +34,5 @@ abstract final class PatientText {
   static const emergencyNote =
       'For a patient who is not under your care. Every use is recorded in the audit trail and the '
       'administrators are told. Access ends after 12 hours.';
+  static String emergencyGranted(String name) => 'Emergency access to $name for 12 hours — it is recorded.';
 }

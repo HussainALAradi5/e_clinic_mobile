@@ -124,7 +124,7 @@ class _SolveStepsSheetState extends State<_SolveStepsSheet> {
             ),
             const SizedBox(height: 8),
             AppButton(
-              label: count == 0 ? TicketText.markSolved : 'Mark solved ($count ${count == 1 ? 'step' : 'steps'})',
+              label: count == 0 ? TicketText.markSolved : TicketText.markSolvedSteps(count),
               icon: Icons.task_alt_rounded,
               expand: true,
               onPressed: _solution.text.trim().isEmpty

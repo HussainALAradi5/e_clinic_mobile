@@ -25,4 +25,8 @@ abstract final class AppointmentText {
   static const noneBookedInClinic = 'The clinic has no bookings today.';
   static const pickAnotherStage = 'Pick another stage to see the rest of the day.';
   static const none = 'None';
+  static String lateBy(String minutes) => 'Late $minutes';
+  static String waitingFor(String minutes) => 'Waiting $minutes';
+  static String session(int n) => 'Session $n';
+  static const providerFallback = 'Provider';
 }

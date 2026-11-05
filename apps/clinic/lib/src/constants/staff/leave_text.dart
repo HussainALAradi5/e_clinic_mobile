@@ -23,4 +23,6 @@ abstract final class LeaveText {
   static const attachCertificate = 'Attach a photo of the certificate, then send it to your manager.';
   static const needsCertificate =
       'Needs a certificate: the request is saved as a draft until you attach a photo of it.';
+  static String managerNote(String note) => 'Manager: $note';
+  static String noticeDays(int days) => 'Ask at least $days days ahead.';
 }

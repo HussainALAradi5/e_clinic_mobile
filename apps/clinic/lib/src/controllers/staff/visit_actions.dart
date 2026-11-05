@@ -4,6 +4,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/staff/visit_action_text.dart';
 import '../../widgets/staff/visits/complete_sheet.dart';
 import 'staff_providers.dart';
 
@@ -13,9 +14,9 @@ abstract final class VisitActions {
   /// The confirmation a step needs before it runs (only no-show: it cannot be undone).
   static ConfirmConfig? confirmFor(VisitAction action, Appointment visit) => action == VisitAction.noShow
       ? ConfirmConfig(
-          title: 'Mark as no-show?',
-          message: '${_who(visit)}. The patient did not come; this cannot be undone.',
-          confirmLabel: 'No show',
+          title: VisitActionText.noShowTitle,
+          message: VisitActionText.noShowMessage(_who(visit)),
+          confirmLabel: VisitActionText.noShow,
           danger: true,
         )
       : null;
@@ -62,14 +63,14 @@ abstract final class VisitActions {
     }
   }
 
-  static String _who(Appointment visit) => '${visit.patientName}, ${ClinicClock.wallTime(visit.startTime)}';
+  static String _who(Appointment visit) => VisitActionText.who(visit.patientName, ClinicClock.wallTime(visit.startTime));
 
   static String _done(VisitAction action, Appointment visit) => switch (action) {
-    VisitAction.checkIn => '${visit.patientName} is checked in.',
-    VisitAction.start => 'Visit started.',
-    VisitAction.complete => 'Visit completed and charged.',
-    VisitAction.confirm => 'Booking confirmed.',
-    VisitAction.noShow => 'Marked as no-show.',
+    VisitAction.checkIn => VisitActionText.checkedIn(visit.patientName),
+    VisitAction.start => VisitActionText.started,
+    VisitAction.complete => VisitActionText.completed,
+    VisitAction.confirm => VisitActionText.confirmed,
+    VisitAction.noShow => VisitActionText.markedNoShow,
   };
 
   /// Null = cancelled, 0 = no follow-up, otherwise days until the suggested next visit.

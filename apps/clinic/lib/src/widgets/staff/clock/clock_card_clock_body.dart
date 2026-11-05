@@ -26,10 +26,10 @@ class _ClockBody extends StatelessWidget {
           ? '${shift.name}: arrive by ${shift.start}.'
           : '${shift.name ?? 'Your shift'} starts at ${shift.start}.';
     } else if (working) {
-      title = 'Checked in at ${clockTime(row.checkInAt)}';
+      title = ClockText.checkedInAt(clockTime(row.checkInAt));
       detail = [
-        if (row.lateMinutes > 0) '${formatMinutes(row.lateMinutes)} late',
-        if (shift.end != null) 'Shift ends at ${shift.end}',
+        if (row.lateMinutes > 0) ClockText.minutesLate(formatMinutes(row.lateMinutes)),
+        if (shift.end != null) ClockText.shiftEndsAt(shift.end!),
       ].join(' · ');
     } else {
       final worked = row.workedMinutes;

@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../config/routes/staff_paths.dart';
 import '../../../constants/common/common_text.dart';
+import '../../../constants/staff/appointment_text.dart';
 import '../../../controllers/staff/visit_actions.dart';
 import '../../../utilities/staff/visit_timing.dart';
 import '../../common/timing_edge.dart';
@@ -45,7 +46,7 @@ class AppointmentCard extends ConsumerWidget {
     final primary = VisitAction.primary(actions);
     final others = actions.where((a) => a != primary).toList();
     final kind = visit.type == AppointmentType.treatmentSession && visit.sessionNumber != null
-        ? 'Session ${visit.sessionNumber}'
+        ? AppointmentText.session(visit.sessionNumber!)
         : catalog.label('AppointmentType', visit.type);
     final details = [
       kind,

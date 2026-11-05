@@ -52,7 +52,7 @@ class BookingScanResult extends ConsumerWidget {
             if (visit.scheduledDate != ClinicClock.today())
               InfoNote(
                 icon: Icons.event_busy_outlined,
-                text: 'This booking is for ${ClinicClock.relativeDay(visit.scheduledDate)}, not today.',
+                text: ScanText.notToday(ClinicClock.relativeDay(visit.scheduledDate)),
               ),
             AppointmentCard(visit: visit, showDate: true),
           ],

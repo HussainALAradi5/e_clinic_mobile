@@ -6,4 +6,5 @@ abstract final class SickLeaveText {
   static const showTheCode = 'Show the code';
 
   static String issued(String when) => 'Issued $when';
+  static String cancelledByDoctor(String reason) => 'Cancelled by the doctor: $reason';
 }

@@ -4,6 +4,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/staff/approval_action_text.dart';
 import '../../utilities/staff/formatters.dart';
 import 'staff_providers.dart';
 
@@ -12,38 +13,37 @@ part 'approval_actions_decision.dart';
 abstract final class ApprovalActions {
   static Decision refund(WidgetRef ref, Refund refund) => Decision(
     approveConfirm: ConfirmConfig(
-      title: 'Approve this refund?',
-      message:
-          '${refund.amount.label} to ${refund.patient?.fullName ?? 'the patient'}. The cashier can then pay it out.',
-      confirmLabel: 'Approve',
+      title: ApprovalActionText.refundTitle,
+      message: ApprovalActionText.refundMessage(refund.amount.label, refund.patient?.fullName ?? ApprovalActionText.thePatient),
+      confirmLabel: ApprovalActionText.approve,
     ),
     approve: (_) => ref.read(refundRepositoryProvider).approve(refund.id),
-    approved: 'Refund approved.',
-    rejectTitle: 'Reject this refund?',
+    approved: ApprovalActionText.refundApproved,
+    rejectTitle: ApprovalActionText.refundReject,
     reject: (reason) => ref.read(refundRepositoryProvider).reject(refund.id, reason),
   );
 
   static Decision expense(WidgetRef ref, Expense expense) => Decision(
     approveConfirm: ConfirmConfig(
-      title: 'Approve this expense?',
-      message: '${expense.amount.label} — ${expense.payeeName ?? expense.description ?? expense.code}.',
-      confirmLabel: 'Approve',
+      title: ApprovalActionText.expenseTitle,
+      message: ApprovalActionText.expenseMessage(expense.amount.label, expense.payeeName ?? expense.description ?? expense.code),
+      confirmLabel: ApprovalActionText.approve,
     ),
     approve: (_) => ref.read(expenseRepositoryProvider).approve(expense.id),
-    approved: 'Expense approved.',
-    rejectTitle: 'Reject this expense?',
+    approved: ApprovalActionText.expenseApproved,
+    rejectTitle: ApprovalActionText.expenseReject,
     reject: (reason) => ref.read(expenseRepositoryProvider).reject(expense.id, reason),
   );
 
   /// Booked visits on those days stop the approval; the approver then chooses to cancel them (patients are told).
   static Decision leave(WidgetRef ref, LeaveRequest leave) {
-    final name = leave.employee?.fullName ?? 'this person';
+    final name = leave.employee?.fullName ?? ApprovalActionText.thisPerson;
     final repository = ref.read(leaveRepositoryProvider);
     return Decision(
       approveConfirm: ConfirmConfig(
-        title: 'Approve this leave?',
-        message: '$name, ${leaveDaysLabel(leave)}. The days leave their balance and their schedule is blocked.',
-        confirmLabel: 'Approve',
+        title: ApprovalActionText.leaveTitle,
+        message: ApprovalActionText.leaveMessage(name, leaveDaysLabel(leave)),
+        confirmLabel: ApprovalActionText.approve,
       ),
       approve: (context) async {
         try {
@@ -53,10 +53,10 @@ abstract final class ApprovalActions {
           final cancel = await showConfirmSheet(
             context,
             ConfirmConfig(
-              title: '$name has bookings on those days',
-              message: 'Approve and cancel those bookings? The patients are told and can book again.',
-              confirmLabel: 'Approve and cancel bookings',
-              cancelLabel: 'Keep as it is',
+              title: ApprovalActionText.leaveHasBookings(name),
+              message: ApprovalActionText.leaveCancelBookings,
+              confirmLabel: ApprovalActionText.leaveCancelConfirm,
+              cancelLabel: ApprovalActionText.keepAsIs,
               danger: true,
             ),
           );
@@ -64,42 +64,42 @@ abstract final class ApprovalActions {
           await repository.approve(leave.id, cancelAffected: true);
         }
       },
-      approved: 'Leave approved.',
-      rejectTitle: 'Reject this leave?',
+      approved: ApprovalActionText.leaveApproved,
+      rejectTitle: ApprovalActionText.leaveReject,
       reject: (reason) => repository.reject(leave.id, reason),
     );
   }
 
   static Decision overtime(WidgetRef ref, Attendance day) => Decision(
     approveConfirm: ConfirmConfig(
-      title: 'Approve the overtime?',
-      message:
-          '${day.employee?.fullName ?? 'Staff member'}: ${formatMinutes(day.overtimeMinutes)} on '
-          '${ClinicClock.date(day.date)}. It is paid with the month\'s payroll.',
-      confirmLabel: 'Approve',
+      title: ApprovalActionText.overtimeTitle,
+      message: ApprovalActionText.overtimeMessage(
+        day.employee?.fullName ?? ApprovalActionText.staffMember,
+        formatMinutes(day.overtimeMinutes),
+        ClinicClock.date(day.date),
+      ),
+      confirmLabel: ApprovalActionText.approve,
     ),
     approve: (_) => ref.read(attendanceRepositoryProvider).approveOvertime(day.id),
-    approved: 'Overtime approved.',
+    approved: ApprovalActionText.overtimeApproved,
   );
 
   /// A late excuse or overtime request: approving excuses the minutes or pays them; a rejection needs a reason.
   static Decision staffRequest(WidgetRef ref, StaffRequest request) {
-    final name = request.employee?.fullName ?? 'Staff member';
-    final day = request.attendance == null ? '' : ' on ${ClinicClock.date(request.attendance!.date)}';
+    final name = request.employee?.fullName ?? ApprovalActionText.staffMember;
+    final day = request.attendance == null ? '' : ApprovalActionText.onDay(ClinicClock.date(request.attendance!.date));
     final amount = request.details?.amount;
     return Decision(
       approveConfirm: ConfirmConfig(
-        title: request.isLate ? 'Excuse the late arrival?' : 'Pay the overtime?',
+        title: request.isLate ? ApprovalActionText.lateTitle : ApprovalActionText.payOvertimeTitle,
         message: request.isLate
-            ? '$name: ${formatMinutes(request.minutes)} late$day. It will not be deducted'
-                  '${amount == null ? '' : ' (${amount.label})'}.'
-            : '$name: ${formatMinutes(request.minutes)}$day'
-                  '${amount == null ? '' : ', ${amount.label}'}. It is paid with the month\'s payroll.',
-        confirmLabel: 'Approve',
+            ? ApprovalActionText.lateMessage(name, formatMinutes(request.minutes), day, amount?.label)
+            : ApprovalActionText.payOvertimeMessage(name, formatMinutes(request.minutes), day, amount?.label),
+        confirmLabel: ApprovalActionText.approve,
       ),
       approve: (_) => ref.read(staffRequestRepositoryProvider).approve(request.id),
-      approved: request.isLate ? 'Late arrival excused.' : 'Overtime approved.',
-      rejectTitle: request.isLate ? 'Reject the excuse?' : 'Reject the overtime?',
+      approved: request.isLate ? ApprovalActionText.lateExcused : ApprovalActionText.overtimeApproved,
+      rejectTitle: request.isLate ? ApprovalActionText.lateReject : ApprovalActionText.overtimeReject,
       reject: (reason) => ref.read(staffRequestRepositoryProvider).reject(request.id, reason),
     );
   }
@@ -109,8 +109,8 @@ abstract final class ApprovalActions {
     context,
     ConfirmConfig(
       title: title,
-      message: 'The person who asked sees your reason.',
-      confirmLabel: 'Reject',
+      message: ApprovalActionText.rejectReasonHint,
+      confirmLabel: ApprovalActionText.reject,
       danger: true,
     ),
   );

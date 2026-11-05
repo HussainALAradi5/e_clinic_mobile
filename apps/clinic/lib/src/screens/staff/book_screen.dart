@@ -79,7 +79,7 @@ class _BookScreenState extends ConsumerState<BookScreen> {
       onTimeGone: _pickAgain,
     );
     if (!mounted) return;
-    AppSnack.success(context, 'Booked for ${patient.fullName}.');
+    AppSnack.success(context, BookingText.bookedFor(patient.fullName));
     context.pushReplacement(StaffPaths.appointment(booking.id));
   }
 

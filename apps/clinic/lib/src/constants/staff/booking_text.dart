@@ -12,4 +12,5 @@ abstract final class BookingText {
   static const atTheDesk = 'At the desk';
   static const byPhone = 'By phone';
   static const noProvider = 'Nobody takes this kind of visit.';
+  static String bookedFor(String name) => 'Booked for $name.';
 }

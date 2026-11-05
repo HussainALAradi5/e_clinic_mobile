@@ -2,11 +2,11 @@ part of 'staff_providers.dart';
 
 /// Where a booking is in the visit: one chip each on the Today page.
 enum VisitStage {
-  all('All', []),
-  expected('Expected', [AppointmentStatus.pending, AppointmentStatus.confirmed]),
-  waiting('Waiting', [AppointmentStatus.checkedIn]),
-  withProvider('With doctor', [AppointmentStatus.inProgress]),
-  done('Done', [AppointmentStatus.completed, AppointmentStatus.noShow]);
+  all(VisitActionText.stageAll, []),
+  expected(VisitActionText.stageExpected, [AppointmentStatus.pending, AppointmentStatus.confirmed]),
+  waiting(VisitActionText.stageWaiting, [AppointmentStatus.checkedIn]),
+  withProvider(VisitActionText.stageWithDoctor, [AppointmentStatus.inProgress]),
+  done(VisitActionText.stageDone, [AppointmentStatus.completed, AppointmentStatus.noShow]);
 
   const VisitStage(this.label, this.statuses);
 

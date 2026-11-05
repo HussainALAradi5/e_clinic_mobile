@@ -56,7 +56,7 @@ class ApprovalsScreen extends ConsumerWidget {
                   padding: const EdgeInsets.only(bottom: 32),
                   children: [
                     if (a.refunds.isNotEmpty) ...[
-                      SectionHeader('Refunds · ${a.refunds.length}'),
+                      SectionHeader(ApprovalText.refundsCount(a.refunds.length)),
                       for (final r in a.refunds)
                         DecisionCard(
                           title: '${r.amount.label} · ${catalog.label('PaymentMethod', r.method)}',
@@ -70,7 +70,7 @@ class ApprovalsScreen extends ConsumerWidget {
                         ),
                     ],
                     if (a.expenses.isNotEmpty) ...[
-                      SectionHeader('Expenses · ${a.expenses.length}'),
+                      SectionHeader(ApprovalText.expensesCount(a.expenses.length)),
                       for (final e in a.expenses)
                         DecisionCard(
                           title: '${e.amount.label} · ${catalog.label('ExpenseCategory', e.category)}',
@@ -83,7 +83,7 @@ class ApprovalsScreen extends ConsumerWidget {
                         ),
                     ],
                     if (a.leaves.isNotEmpty) ...[
-                      SectionHeader('Leave · ${a.leaves.length}'),
+                      SectionHeader(ApprovalText.leavesCount(a.leaves.length)),
                       for (final l in a.leaves)
                         DecisionCard(
                           title: l.employee?.fullName ?? l.code,
@@ -100,7 +100,7 @@ class ApprovalsScreen extends ConsumerWidget {
                         ),
                     ],
                     if (a.requests.isNotEmpty) ...[
-                      SectionHeader('Late & overtime · ${a.requests.length}'),
+                      SectionHeader(ApprovalText.requestsCount(a.requests.length)),
                       for (final r in a.requests)
                         DecisionCard(
                           title: r.employee?.fullName ?? r.code,
@@ -120,7 +120,7 @@ class ApprovalsScreen extends ConsumerWidget {
                         ),
                     ],
                     if (a.overtime.isNotEmpty) ...[
-                      SectionHeader('Overtime · ${a.overtime.length}'),
+                      SectionHeader(ApprovalText.overtimeCount(a.overtime.length)),
                       for (final o in a.overtime)
                         DecisionCard(
                           title: o.employee?.fullName ?? ApprovalText.staffMember,

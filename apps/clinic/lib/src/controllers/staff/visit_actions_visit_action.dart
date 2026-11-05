@@ -4,15 +4,15 @@ part of 'visit_actions.dart';
 /// (same expressions as the server routes, which check again).
 enum VisitAction {
   checkIn(
-    'Check in',
+    VisitActionText.checkIn,
     Icons.how_to_reg_rounded,
     AppointmentStatus.checkedIn,
     'appointments.write & appointments.check_in',
   ),
-  start('Start', Icons.play_arrow_rounded, AppointmentStatus.inProgress, 'appointments.write & appointments.treat'),
-  complete('Complete', Icons.task_alt_rounded, AppointmentStatus.completed, 'appointments.write & appointments.treat'),
-  confirm('Confirm', Icons.event_available_rounded, AppointmentStatus.confirmed, 'appointments.write'),
-  noShow('No show', Icons.person_off_outlined, AppointmentStatus.noShow, 'appointments.write');
+  start(VisitActionText.start, Icons.play_arrow_rounded, AppointmentStatus.inProgress, 'appointments.write & appointments.treat'),
+  complete(VisitActionText.complete, Icons.task_alt_rounded, AppointmentStatus.completed, 'appointments.write & appointments.treat'),
+  confirm(VisitActionText.confirm, Icons.event_available_rounded, AppointmentStatus.confirmed, 'appointments.write'),
+  noShow(VisitActionText.noShow, Icons.person_off_outlined, AppointmentStatus.noShow, 'appointments.write');
 
   const VisitAction(this.label, this.icon, this.target, this.access);
 

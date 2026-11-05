@@ -33,4 +33,8 @@ abstract final class PharmacyText {
   static const nothingToHandOver = 'Nothing to hand over';
   static const chooseAWitness = 'Choose a witness';
   static const allHandedOver = 'All handed over';
+  static String handedOverTo(String name) => 'Handed over and charged to $name.';
+  static String doctorName(String name) => 'Dr $name';
+  static String validUntil(String date) => 'valid until $date';
+  static String owed(String owed, String unit, String total) => 'Owed $owed $unit of $total';
 }

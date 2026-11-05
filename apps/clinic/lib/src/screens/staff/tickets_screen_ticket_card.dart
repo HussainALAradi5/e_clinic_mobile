@@ -45,8 +45,8 @@ class _TicketCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       [
-                        if (showRequester && ticket.requester != null) 'By ${ticket.requester!.fullName}',
-                        ticket.assignee == null ? TicketText.notTakenYet : 'Taken by ${ticket.assignee!.fullName}',
+                        if (showRequester && ticket.requester != null) TicketText.byName(ticket.requester!.fullName),
+                        ticket.assignee == null ? TicketText.notTakenYet : TicketText.takenByName(ticket.assignee!.fullName),
                       ].join(' · '),
                       style: muted,
                     ),

@@ -7,7 +7,7 @@ class Decision {
     required this.approveConfirm,
     required this.approve,
     required this.approved,
-    this.rejectTitle = 'Reject this request?',
+    this.rejectTitle = ApprovalActionText.rejectRequest,
     this.reject,
   });
 

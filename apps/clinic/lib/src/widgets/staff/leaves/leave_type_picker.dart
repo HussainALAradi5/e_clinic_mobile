@@ -37,7 +37,7 @@ class LeaveTypePicker extends StatelessWidget {
         if (type != null && type.minNoticeDays > 0)
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-            child: InfoNote(icon: Icons.schedule_rounded, text: 'Ask at least ${type.minNoticeDays} days ahead.'),
+            child: InfoNote(icon: Icons.schedule_rounded, text: LeaveText.noticeDays(type.minNoticeDays)),
           ),
       ],
     );

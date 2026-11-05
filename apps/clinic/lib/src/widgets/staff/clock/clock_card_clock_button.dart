@@ -22,7 +22,7 @@ class _ClockButton extends ConsumerWidget {
           final late = row.lateMinutes;
           if (context.mounted) {
             late > 0
-                ? AppSnack.info(context, 'Checked in — ${formatMinutes(late)} late for ${shift.name ?? 'your shift'}.')
+                ? AppSnack.info(context, ClockText.checkedInLate(formatMinutes(late), shift.name))
                 : AppSnack.success(context, ClockText.onTime);
           }
         },
@@ -46,7 +46,7 @@ class _ClockButton extends ConsumerWidget {
           AppSnack.success(
             context,
             overtime > 0
-                ? 'Checked out — ${formatMinutes(overtime)} overtime, sent for approval.'
+                ? ClockText.checkedOutOvertime(formatMinutes(overtime))
                 : ClockText.checkedOutDone,
           );
         }

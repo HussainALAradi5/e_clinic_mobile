@@ -18,4 +18,5 @@ abstract final class ScanText {
   static const noBookingToday = 'No booking today for this person.';
   static const genuine = 'The code is genuine. Open the record on the website for everything else.';
   static const code = 'Code';
+  static String notToday(String day) => 'This booking is for $day, not today.';
 }

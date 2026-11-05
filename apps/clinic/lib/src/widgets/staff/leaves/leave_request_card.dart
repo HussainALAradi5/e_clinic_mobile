@@ -59,7 +59,7 @@ class _LeaveRequestCardState extends ConsumerState<LeaveRequestCard> {
             if (leave.reason != null) Text(leave.reason!, style: theme.textTheme.bodySmall?.copyWith(color: muted)),
             if (leave.reviewNotes != null) ...[
               const SizedBox(height: 6),
-              InfoNote(icon: Icons.comment_outlined, text: 'Manager: ${leave.reviewNotes}'),
+              InfoNote(icon: Icons.comment_outlined, text: LeaveText.managerNote(leave.reviewNotes!)),
             ],
             if (leave.isDraft) ...[
               const SizedBox(height: 6),

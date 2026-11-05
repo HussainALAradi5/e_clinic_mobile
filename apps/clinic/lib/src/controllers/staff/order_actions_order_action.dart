@@ -3,9 +3,9 @@ part of 'order_actions.dart';
 /// Steps of a clinical order. One shows when the order may move to its target status **and** the user holds the
 /// right (same expressions as the server routes, which check again).
 enum OrderAction {
-  start('Start', Icons.play_arrow_rounded, GenericStatus.inProgress, 'orders.write & orders.perform'),
-  complete('Write result', Icons.task_alt_rounded, GenericStatus.completed, 'orders.write & orders.perform'),
-  cancel('Cancel order', Icons.cancel_outlined, GenericStatus.cancelled, 'orders.write');
+  start(OrderActionText.start, Icons.play_arrow_rounded, GenericStatus.inProgress, 'orders.write & orders.perform'),
+  complete(OrderActionText.writeResult, Icons.task_alt_rounded, GenericStatus.completed, 'orders.write & orders.perform'),
+  cancel(OrderActionText.cancelOrder, Icons.cancel_outlined, GenericStatus.cancelled, 'orders.write');
 
   const OrderAction(this.label, this.icon, this.target, this.access);
 

@@ -12,7 +12,7 @@ class _ActionsSheetState extends State<_ActionsSheet> {
       return Semantics(
         button: true,
         selected: chosen,
-        label: chosen ? 'Remove reaction $e' : 'React $e',
+        label: chosen ? ChatText.removeReaction(e) : ChatText.react(e),
         child: InkResponse(
           onTap: () => Navigator.of(context).pop(ReactAction(e)),
           radius: 26,
