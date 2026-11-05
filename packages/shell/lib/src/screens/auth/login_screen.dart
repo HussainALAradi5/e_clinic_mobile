@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/auth_paths.dart';
+import '../../constants/auth/auth_text.dart';
 import '../../controllers/auth/session_controller.dart';
 import '../../widgets/auth/auth_scaffold.dart';
 
@@ -56,8 +57,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AuthScaffold(
-      title: 'Welcome back',
-      subtitle: 'Your visits and results — or your day at the clinic.',
+      title: AuthText.welcomeBack,
+      subtitle: AuthText.loginSubtitle,
       child: AutofillGroup(
         child: Form(
           key: _form,
@@ -70,11 +71,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 textInputAction: TextInputAction.next,
                 autofillHints: const [AutofillHints.email, AutofillHints.username],
                 autocorrect: false,
-                decoration: const InputDecoration(labelText: 'Email', prefixIcon: Icon(Icons.mail_outline_rounded)),
+                decoration: const InputDecoration(labelText: AuthText.email, prefixIcon: Icon(Icons.mail_outline_rounded)),
                 validator: (value) {
                   final text = value?.trim() ?? '';
-                  if (text.isEmpty) return 'Enter your email.';
-                  if (!text.contains('@') || !text.contains('.')) return 'Enter a valid email address.';
+                  if (text.isEmpty) return AuthText.enterEmail;
+                  if (!text.contains('@') || !text.contains('.')) return AuthText.enterValidEmail;
                   return null;
                 },
               ),
@@ -83,22 +84,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 controller: _password,
                 textInputAction: TextInputAction.done,
                 onSubmitted: (_) => _submitFromKeyboard(),
-                validator: (value) => (value ?? '').isEmpty ? 'Enter your password.' : null,
+                validator: (value) => (value ?? '').isEmpty ? AuthText.enterPassword : null,
               ),
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () => context.push(AuthPaths.forgotPassword, extra: _email.text.trim()),
-                  child: const Text('Forgot password?'),
+                  child: const Text(AuthText.forgotPassword),
                 ),
               ),
               const SizedBox(height: 8),
-              AppButton(label: 'Sign in', icon: Icons.login_rounded, expand: true, onPressed: _submit),
+              AppButton(label: AuthText.signIn, icon: Icons.login_rounded, expand: true, onPressed: _submit),
               const Spacer(),
               Padding(
                 padding: const EdgeInsets.only(top: 24),
                 child: Text(
-                  'Patients: new here? Ask the front desk for your invitation — it sets up your account.',
+                  AuthText.patientsInvite,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                 ),

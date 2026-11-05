@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/auth_paths.dart';
+import '../../constants/auth/auth_text.dart';
 import '../../widgets/auth/auth_scaffold.dart';
 import '../../widgets/auth/code_field.dart';
 
@@ -66,7 +67,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       passwordConfirmation: _confirm.text,
     );
     if (!mounted) return;
-    AppSnack.success(context, 'Your password is set. Sign in with it now.');
+    AppSnack.success(context, AuthText.passwordSet);
     context.go(AuthPaths.login);
   }
 
@@ -74,11 +75,11 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     final (title, subtitle) = switch (_step) {
       _Step.email => (
-        'Reset your password',
-        'We will email you a 6-digit code. It also works for a new portal invitation.',
+        AuthText.resetTitle,
+        AuthText.resetHint,
       ),
-      _Step.code => ('Check your email', 'Enter the 6-digit code we sent to ${_email.text.trim()}.'),
-      _Step.password => ('Choose a new password', 'Use it from now on to sign in on the app and the website.'),
+      _Step.code => (AuthText.checkEmail, AuthText.codeSentTo(_email.text.trim())),
+      _Step.password => (AuthText.choosePassword, AuthText.choosePasswordHint),
     };
     return AuthScaffold(
       title: title,
@@ -101,19 +102,19 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     autofocus: widget.email == null || widget.email!.isEmpty,
                     keyboardType: TextInputType.emailAddress,
                     autofillHints: const [AutofillHints.email],
-                    decoration: const InputDecoration(labelText: 'Email', prefixIcon: Icon(Icons.mail_outline_rounded)),
-                    validator: (v) => (v ?? '').trim().contains('@') ? null : 'Enter the email you sign in with.',
+                    decoration: const InputDecoration(labelText: AuthText.email, prefixIcon: Icon(Icons.mail_outline_rounded)),
+                    validator: (v) => (v ?? '').trim().contains('@') ? null : AuthText.enterSignInEmail,
                   ),
                   const SizedBox(height: 24),
-                  AppButton(label: 'Send code', icon: Icons.send_rounded, expand: true, onPressed: _send),
+                  AppButton(label: AuthText.sendCode, icon: Icons.send_rounded, expand: true, onPressed: _send),
                 ],
                 _Step.code => [
                   CodeField(controller: _code),
                   const SizedBox(height: 24),
-                  AppButton(label: 'Continue', expand: true, onPressed: _verify),
+                  AppButton(label: AuthText.continueLabel, expand: true, onPressed: _verify),
                   const SizedBox(height: 8),
                   AppButton(
-                    label: 'Send a new code',
+                    label: AuthText.sendNewCode,
                     variant: ButtonVariant.text,
                     onPressed: () async {
                       await _auth.forgotPassword(_email.text.trim());
@@ -125,7 +126,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   NewPasswordFields(password: _password, confirm: _confirm),
                   const SizedBox(height: 24),
                   AppButton(
-                    label: 'Save password',
+                    label: AuthText.savePassword,
                     icon: Icons.check_rounded,
                     lock: ButtonLock.once,
                     expand: true,

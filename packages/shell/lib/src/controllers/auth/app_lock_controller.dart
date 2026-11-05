@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_auth/local_auth.dart';
 
+import '../../constants/auth/auth_text.dart';
 import 'session_controller.dart';
 
 part 'app_lock_controller_app_lock_state.dart';
@@ -34,7 +35,7 @@ class AppLockController extends Notifier<AppLockState> {
 
   /// Turns the lock on (after one successful check) or off.
   Future<bool> setEnabled(bool value) async {
-    if (value && !await _authenticate('Confirm it is you to turn on the app lock')) return false;
+    if (value && !await _authenticate(AuthText.confirmLock)) return false;
     await ref.read(preferencesProvider).setBool(_prefKey, value);
     state = AppLockState(enabled: value, locked: false);
     return true;
@@ -60,7 +61,7 @@ class AppLockController extends Notifier<AppLockState> {
 
   /// Asks for the fingerprint / face; returns false when it failed (see [failures]).
   Future<bool> unlock() async {
-    final ok = await _authenticate('Unlock e-Clinic');
+    final ok = await _authenticate(AuthText.unlockReason);
     if (ok) {
       unlocked();
     } else {

@@ -23,19 +23,19 @@ class _TwoFactorDisableSheetState extends ConsumerState<TwoFactorDisableSheet> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Turn off two-step sign-in?', style: Theme.of(context).textTheme.titleLarge),
+        Text(AuthText.turnOffTitle, style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 4),
-        const Text('Signing in will need only your password again.'),
+        const Text(AuthText.turnOffMessage),
         const SizedBox(height: 16),
         TextField(
           controller: _password,
           obscureText: true,
           autofocus: true,
           autofillHints: const [AutofillHints.password],
-          decoration: const InputDecoration(labelText: 'Your password'),
+          decoration: const InputDecoration(labelText: AuthText.yourPassword),
         ),
         const SizedBox(height: 16),
-        AppButton(label: 'Turn off', icon: Icons.no_encryption_outlined, expand: true, onPressed: _disable),
+        AppButton(label: AuthText.turnOff, icon: Icons.no_encryption_outlined, expand: true, onPressed: _disable),
       ],
     ),
   );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../constants/auth/auth_text.dart';
+
 part 'auth_scaffold_brand_mark.dart';
 
 /// Pine header with the brand mark and a white sheet for the form — the sign-in screens' frame.
@@ -39,7 +41,7 @@ class AuthScaffold extends StatelessWidget {
                             child: onBack == null
                                 ? const BrandMark()
                                 : IconButton(
-                                    tooltip: 'Back',
+                                    tooltip: AuthText.back,
                                     onPressed: onBack,
                                     color: Colors.white,
                                     icon: const Icon(Icons.arrow_back_rounded),

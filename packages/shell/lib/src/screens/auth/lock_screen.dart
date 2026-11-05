@@ -5,6 +5,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/auth/auth_text.dart';
 import '../../controllers/auth/app_lock_controller.dart';
 import '../../controllers/auth/session_controller.dart';
 
@@ -29,7 +30,7 @@ class _LockScreenState extends ConsumerState<LockScreen> {
     if (await lock.unlock()) return;
     if (lock.failures >= AppLockController.maxFailures) {
       await ref.read(sessionProvider.notifier).logout();
-      if (mounted) AppSnack.info(context, 'Please sign in with your password.');
+      if (mounted) AppSnack.info(context, AuthText.signInWithPassword);
     }
   }
 
@@ -54,7 +55,7 @@ class _LockScreenState extends ConsumerState<LockScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              Text('Welcome back, ${user?.firstName ?? ''}', style: theme.textTheme.titleLarge),
+              Text(AuthText.welcomeBackName(user?.firstName ?? ''), style: theme.textTheme.titleLarge),
               const SizedBox(height: 8),
               Text(
                 'e-Clinic is locked to keep your health information private.',
@@ -66,12 +67,12 @@ class _LockScreenState extends ConsumerState<LockScreen> {
                 style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
                 onPressed: _unlock,
                 icon: const Icon(Icons.fingerprint_rounded),
-                label: const Text('Unlock'),
+                label: const Text(AuthText.unlock),
               ),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => ref.read(sessionProvider.notifier).logout(),
-                child: const Text('Sign in with password instead'),
+                child: const Text(AuthText.passwordInstead),
               ),
             ],
           ),

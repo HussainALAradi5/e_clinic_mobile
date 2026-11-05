@@ -2,6 +2,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/settings/settings_text.dart';
 import '../../controllers/settings/phone_notifications_controller.dart';
 
 /// "Notifications" switch for the account pages. Off stops them on every device of the person; the
@@ -16,8 +17,8 @@ class PhoneNotificationsTile extends ConsumerWidget {
     return Card(
       child: SwitchListTile(
         secondary: const Icon(Icons.notifications_active_outlined),
-        title: const Text('Notifications'),
-        subtitle: const Text('New messages pop up on this phone, each kind with its own sound.'),
+        title: const Text(SettingsText.notifications),
+        subtitle: const Text(SettingsText.notificationsHint),
         value: on,
         onChanged: value.isLoading || value.value == null
             ? null
@@ -28,10 +29,10 @@ class PhoneNotificationsTile extends ConsumerWidget {
                   if (!allowed) {
                     AppSnack.info(
                       context,
-                      'The phone blocks notifications for e-Clinic. Allow them in Settings › Apps.',
+                      SettingsText.notificationsBlocked,
                     );
                   } else {
-                    AppSnack.success(context, next ? 'Notifications are on.' : 'Notifications are off.');
+                    AppSnack.success(context, next ? SettingsText.notificationsOn : SettingsText.notificationsOff);
                   }
                 } catch (e) {
                   if (context.mounted) AppSnack.error(context, e);

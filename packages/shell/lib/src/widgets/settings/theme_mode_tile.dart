@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/settings/settings_text.dart';
 import '../../controllers/settings/theme_mode_controller.dart';
 
 /// Appearance switch for the account pages: follow the phone, or always light / dark.
@@ -8,9 +9,9 @@ class ThemeModeTile extends ConsumerWidget {
   const ThemeModeTile({super.key});
 
   static const _modes = [
-    (ThemeMode.system, 'Phone', Icons.brightness_auto_rounded),
-    (ThemeMode.light, 'Light', Icons.light_mode_rounded),
-    (ThemeMode.dark, 'Dark', Icons.dark_mode_rounded),
+    (ThemeMode.system, SettingsText.themePhone, Icons.brightness_auto_rounded),
+    (ThemeMode.light, SettingsText.themeLight, Icons.light_mode_rounded),
+    (ThemeMode.dark, SettingsText.themeDark, Icons.dark_mode_rounded),
   ];
 
   @override
@@ -22,7 +23,7 @@ class ThemeModeTile extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Appearance', style: Theme.of(context).textTheme.titleSmall),
+            Text(SettingsText.appearance, style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 10),
             SizedBox(
               width: double.infinity,

@@ -2,6 +2,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/auth/auth_text.dart';
 import '../../controllers/auth/session_controller.dart';
 import '../../widgets/auth/auth_scaffold.dart';
 import '../../widgets/auth/code_field.dart';
@@ -43,10 +44,10 @@ class _TwoFactorScreenState extends ConsumerState<TwoFactorScreen> {
 
   @override
   Widget build(BuildContext context) => AuthScaffold(
-    title: 'Two-step check',
+    title: AuthText.twoFactorCheck,
     subtitle: _recovery
-        ? 'Enter one of the recovery codes you saved when you set up two-step sign-in.'
-        : 'Enter the 6-digit code from your authenticator app for ${widget.challenge.email}.',
+        ? AuthText.enterRecovery
+        : AuthText.enterAuthenticatorCode(widget.challenge.email),
     onBack: () => Navigator.of(context).maybePop(),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -56,7 +57,7 @@ class _TwoFactorScreenState extends ConsumerState<TwoFactorScreen> {
             controller: _code,
             autofocus: true,
             autocorrect: false,
-            decoration: const InputDecoration(labelText: 'Recovery code', prefixIcon: Icon(Icons.key_rounded)),
+            decoration: const InputDecoration(labelText: AuthText.recoveryCode, prefixIcon: Icon(Icons.key_rounded)),
           )
         else
           CodeField(
@@ -70,14 +71,14 @@ class _TwoFactorScreenState extends ConsumerState<TwoFactorScreen> {
             },
           ),
         const SizedBox(height: 24),
-        AppButton(label: 'Verify', icon: Icons.verified_user_outlined, expand: true, onPressed: _verify),
+        AppButton(label: AuthText.verify, icon: Icons.verified_user_outlined, expand: true, onPressed: _verify),
         const SizedBox(height: 8),
         TextButton(
           onPressed: () => setState(() {
             _recovery = !_recovery;
             _code.clear();
           }),
-          child: Text(_recovery ? 'Use the authenticator code' : 'Use a recovery code instead'),
+          child: Text(_recovery ? AuthText.useAuthenticator : AuthText.useRecovery),
         ),
       ],
     ),

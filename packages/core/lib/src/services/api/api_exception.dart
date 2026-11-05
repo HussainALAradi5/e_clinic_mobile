@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../constants/api_error_text.dart';
 import '../../constants/error_codes.dart';
 
 /// The server error envelope `{ success: false, message, error_code, errors, meta, request_id }`, or a network failure.
@@ -28,8 +29,8 @@ class ApiException implements Exception {
         status: 0,
         code: offline ? ErrorCodes.offline : ErrorCodes.unexpected,
         message: offline
-            ? 'You seem to be offline. Check your connection and try again.'
-            : 'Something went wrong. Please try again.',
+            ? ApiErrorText.offline
+            : ApiErrorText.unexpected,
       );
     }
 
@@ -87,13 +88,13 @@ class ApiException implements Exception {
     if (status == 429) {
       final wait = int.tryParse(headers.value('Retry-After') ?? '');
       return wait == null
-          ? 'Too many attempts. Please wait a moment and try again.'
-          : 'Too many attempts. Try again in $wait seconds.';
+          ? ApiErrorText.tooMany
+          : ApiErrorText.tooManyWait(wait);
     }
     if (message != null && message.isNotEmpty) return message;
     return status >= 500
-        ? 'The clinic server had a problem. Please try again shortly.'
-        : 'Something went wrong. Please try again.';
+        ? ApiErrorText.serverProblem
+        : ApiErrorText.unexpected;
   }
 
   @override

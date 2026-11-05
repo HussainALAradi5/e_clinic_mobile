@@ -19,18 +19,18 @@ class _TwoFactorTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListTile(
     leading: Icon(state.enabled ? Icons.verified_user_rounded : Icons.shield_outlined),
-    title: const Text('Two-step sign-in'),
+    title: const Text(AuthText.twoFactor),
     subtitle: Text(switch ((state.enabled, state.mandatory)) {
-      (true, true) => 'On — your role requires it.',
-      (true, false) => 'On — a code from your authenticator app at sign-in.',
-      (false, true) => 'Your role requires it: turn it on now.',
-      (false, false) => 'Off — add a code from an authenticator app at sign-in.',
+      (true, true) => AuthText.twoFactorOnRequired,
+      (true, false) => AuthText.twoFactorOn,
+      (false, true) => AuthText.twoFactorRequired,
+      (false, false) => AuthText.twoFactorOff,
     }),
     trailing: state.enabled && state.mandatory ? null : const Icon(Icons.chevron_right_rounded),
     onTap: switch ((state.enabled, state.mandatory)) {
       (true, true) => null,
-      (true, false) => () => _open(context, const TwoFactorDisableSheet(), 'Two-step sign-in is off.'),
-      _ => () => _open(context, const TwoFactorSetupSheet(), 'Two-step sign-in is on.'),
+      (true, false) => () => _open(context, const TwoFactorDisableSheet(), AuthText.twoFactorTurnedOff),
+      _ => () => _open(context, const TwoFactorSetupSheet(), AuthText.twoFactorTurnedOn),
     },
   );
 }

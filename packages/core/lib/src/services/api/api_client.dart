@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../constants/api_error_text.dart';
 import '../../constants/error_codes.dart';
 import '../../dtos/common/list_query.dart';
 import '../../dtos/common/page.dart';
@@ -138,7 +139,7 @@ class ApiClient {
       throw const ApiException(
         status: 0,
         code: ErrorCodes.unexpected,
-        message: 'The clinic server sent an answer the app could not read.',
+        message: ApiErrorText.unreadable,
       );
     } on DioException catch (error) {
       throw ApiException.fromDio(error);

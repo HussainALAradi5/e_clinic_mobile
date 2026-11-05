@@ -1,3 +1,5 @@
+import '../constants/time_text.dart';
+
 /// Clinic wall clock (Asia/Bahrain, UTC+3, no daylight saving) — dates and times on the server are clinic-local.
 abstract final class ClinicClock {
   static const offset = Duration(hours: 3);
@@ -81,7 +83,7 @@ abstract final class ClinicClock {
   /// `5 min ago`, `3 h ago`, `2 days ago`, then the date.
   static String ago(DateTime instant) {
     final diff = DateTime.now().toUtc().difference(instant.toUtc());
-    if (diff.inMinutes < 1) return 'Just now';
+    if (diff.inMinutes < 1) return TimeText.justNow;
     if (diff.inMinutes < 60) return '${diff.inMinutes} min ago';
     if (diff.inHours < 24) return '${diff.inHours} h ago';
     if (diff.inDays < 7) return diff.inDays == 1 ? 'Yesterday' : '${diff.inDays} days ago';

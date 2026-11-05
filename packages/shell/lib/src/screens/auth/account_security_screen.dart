@@ -5,6 +5,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/auth/auth_text.dart';
 import '../../controllers/auth/app_lock_controller.dart';
 import '../../controllers/auth/session_controller.dart';
 import '../../widgets/auth/two_factor_sheets.dart';
@@ -23,7 +24,7 @@ class AccountSecurityScreen extends ConsumerWidget {
     final lockOn = ref.watch(appLockProvider.select((lock) => lock.enabled));
     final twoFactor = ref.watch(sessionProvider).value?.user.twoFactor ?? const TwoFactorState();
     return Scaffold(
-      appBar: AppBar(title: const Text('Password & security')),
+      appBar: AppBar(title: const Text(AuthText.securityTitle)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
         children: [
@@ -32,8 +33,8 @@ class AccountSecurityScreen extends ConsumerWidget {
               children: [
                 ListTile(
                   leading: const Icon(Icons.password_rounded),
-                  title: const Text('Change password'),
-                  subtitle: const Text('You will stay signed in on this device.'),
+                  title: const Text(AuthText.changePassword),
+                  subtitle: const Text(AuthText.staySignedIn),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => _changePassword(context),
                 ),
@@ -44,11 +45,11 @@ class AccountSecurityScreen extends ConsumerWidget {
                   future: ref.read(appLockProvider.notifier).available,
                   builder: (context, snapshot) => SwitchListTile(
                     secondary: const Icon(Icons.fingerprint_rounded),
-                    title: const Text('Lock with fingerprint or face'),
+                    title: const Text(AuthText.lockTitle),
                     subtitle: Text(
                       snapshot.data == false
-                          ? 'Set up a fingerprint, face or screen lock on this phone first.'
-                          : 'Asked when you open the app and after a few minutes away.',
+                          ? AuthText.lockSetUpFirst
+                          : AuthText.lockWhen,
                     ),
                     value: lockOn,
                     onChanged: snapshot.data == true
@@ -60,22 +61,22 @@ class AccountSecurityScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 24),
-          Text('Signed-in devices', style: theme.textTheme.titleMedium),
+          Text(AuthText.devices, style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
           Text(
-            'Lost a phone or used a shared computer? Sign out everywhere, then sign in again here.',
+            AuthText.devicesHint,
             style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
           ),
           const SizedBox(height: 16),
           AppButton(
-            label: 'Sign out of all devices',
+            label: AuthText.signOutAll,
             icon: Icons.logout_rounded,
             variant: ButtonVariant.outlined,
             confirm: const ConfirmConfig(
-              title: 'Sign out everywhere?',
+              title: AuthText.signOutAllTitle,
               message:
-                  'Every phone and browser signed in to your account, including this one, will need to sign in again.',
-              confirmLabel: 'Sign out everywhere',
+                  AuthText.signOutAllMessage,
+              confirmLabel: AuthText.signOutAllConfirm,
               danger: true,
             ),
             onPressed: () => ref.read(sessionProvider.notifier).logoutAll(),
@@ -91,6 +92,6 @@ class AccountSecurityScreen extends ConsumerWidget {
       isScrollControlled: true,
       builder: (_) => const _ChangePasswordSheet(),
     );
-    if ((saved ?? false) && context.mounted) AppSnack.success(context, 'Your password is changed.');
+    if ((saved ?? false) && context.mounted) AppSnack.success(context, AuthText.passwordChanged);
   }
 }

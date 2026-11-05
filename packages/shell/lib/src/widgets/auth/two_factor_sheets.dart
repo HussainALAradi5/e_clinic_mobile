@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../constants/auth/auth_text.dart';
 import '../../controllers/auth/session_controller.dart';
 import 'code_field.dart';
 
@@ -43,7 +44,7 @@ class _TwoFactorSetupSheetState extends ConsumerState<TwoFactorSetupSheet> {
 
   Future<void> _openAuthenticator(String link) async {
     if (!await launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication) && mounted) {
-      AppSnack.info(context, 'No authenticator app found — add the key by hand.');
+      AppSnack.info(context, AuthText.noAuthenticator);
     }
   }
 
@@ -63,11 +64,11 @@ class _TwoFactorSetupSheetState extends ConsumerState<TwoFactorSetupSheet> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('Two-step sign-in is on', style: text.titleLarge),
+                Text(AuthText.twoFactorIsOn, style: text.titleLarge),
                 const SizedBox(height: 8),
                 const InfoNote(
                   icon: Icons.key_rounded,
-                  text: 'Keep these recovery codes somewhere safe. Each one signs you in once if you lose this phone.',
+                  text: AuthText.keepCodes,
                 ),
                 const SizedBox(height: 12),
                 Wrap(
@@ -82,12 +83,12 @@ class _TwoFactorSetupSheetState extends ConsumerState<TwoFactorSetupSheet> {
                 ),
                 const SizedBox(height: 16),
                 OutlinedButton.icon(
-                  onPressed: () => _copy(codes.join('\n'), 'Recovery codes'),
+                  onPressed: () => _copy(codes.join('\n'), AuthText.recoveryCodes),
                   icon: const Icon(Icons.copy_rounded),
-                  label: const Text('Copy codes'),
+                  label: const Text(AuthText.copyCodes),
                 ),
                 const SizedBox(height: 8),
-                FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Done')),
+                FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text(AuthText.done)),
               ],
             )
           : FutureBuilder<String>(
@@ -106,7 +107,7 @@ class _TwoFactorSetupSheetState extends ConsumerState<TwoFactorSetupSheet> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text('Turn on two-step sign-in', style: text.titleLarge),
+                    Text(AuthText.turnOnTitle, style: text.titleLarge),
                     const SizedBox(height: 4),
                     Text(
                       '1. Add e-Clinic to an authenticator app (Google Authenticator, Microsoft Authenticator …).',
@@ -116,20 +117,20 @@ class _TwoFactorSetupSheetState extends ConsumerState<TwoFactorSetupSheet> {
                     FilledButton.tonalIcon(
                       onPressed: () => _openAuthenticator(link),
                       icon: const Icon(Icons.open_in_new_rounded),
-                      label: const Text('Open authenticator app'),
+                      label: const Text(AuthText.openAuthenticator),
                     ),
                     if (secret != null)
                       TextButton.icon(
-                        onPressed: () => _copy(secret, 'Key'),
+                        onPressed: () => _copy(secret, AuthText.key),
                         icon: const Icon(Icons.copy_rounded),
-                        label: Text('Or copy the key: $secret', overflow: TextOverflow.ellipsis),
+                        label: Text(AuthText.copyKey(secret), overflow: TextOverflow.ellipsis),
                       ),
                     const SizedBox(height: 12),
                     Text('2. Type the 6-digit code the app shows.', style: text.bodyMedium),
                     const SizedBox(height: 8),
                     CodeField(controller: _code),
                     const SizedBox(height: 16),
-                    AppButton(label: 'Turn on', icon: Icons.verified_user_rounded, expand: true, onPressed: _confirm),
+                    AppButton(label: AuthText.turnOn, icon: Icons.verified_user_rounded, expand: true, onPressed: _confirm),
                   ],
                 );
               },
