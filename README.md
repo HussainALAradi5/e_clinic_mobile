@@ -146,6 +146,99 @@ flowchart LR
 
 ---
 
+<!-- hierarchy:start -->
+## Hierarchy
+
+### Packages
+
+```mermaid
+flowchart TD
+    app["apps/clinic<br/>router · portal & staff screens"]:::app --> shell["packages/shell<br/>sign-in · lock · security"]:::pkg
+    app --> ui["packages/ui<br/>theme · motion · widgets"]:::pkg
+    app --> data["packages/data<br/>models · repositories"]:::pkg
+    shell --> ui
+    shell --> data
+    ui --> data
+    data --> core["packages/core<br/>ApiClient (Dio) · interceptors · auth · config"]:::pkg
+    ui --> core
+    shell --> core
+    core --> api[("Laravel API /api/v1")]
+    classDef app fill:#0f3d3e,color:#fff,stroke:#0f3d3e
+    classDef pkg fill:#e6f4f1,stroke:#2f7d6d,color:#0f3d3e
+```
+
+A package only uses the ones below it: `core` knows nothing of Flutter widgets, `data` nothing of screens.
+
+### Screens
+
+```mermaid
+flowchart TD
+    router["GoRouter (apps/clinic/lib/src/router.dart)<br/>authRedirect · areaRedirect"]:::root
+    router --> auth["shell: /splash · /login · /login/2fa · /password/forgot · /lock"]:::layout
+    router --> portal["PatientShell (patients)"]:::layout
+    router --> staff["StaffShell (staff)"]:::layout
+    portal --> p1["Home · Visits · Results · Invoices · Profile (tabs)"]:::screen
+    portal --> p2["Booking · Treatments · Prescriptions · Sick leaves · Messages"]:::screen
+    staff --> s1["Today · Scan · Sessions · Approvals · More (tabs, shown by rights)"]:::screen
+    staff --> s2["Patients · Visits · Orders · Pharmacy · Chat · Support · Clock · Leaves · Requests · Month summary …"]:::screen
+    classDef root fill:#0f3d3e,color:#fff,stroke:#0f3d3e
+    classDef layout fill:#e6f4f1,stroke:#2f7d6d,color:#0f3d3e
+    classDef screen fill:#fff,stroke:#9fb8b2,color:#0f3d3e
+```
+
+Signed out → sign-in; staff without the right for a screen → Today; both with an "Unauthorized access" message.
+
+### How a screen reaches the API
+
+```mermaid
+flowchart LR
+    screen["screens/…_screen.dart"] -->|ref.watch| ctrl["controllers/… (Riverpod)"]
+    screen --> widgets["widgets/…"]
+    ctrl --> repo["data: repositories/…"]
+    repo --> client["core: ApiClient (Dio)"]
+    client --> mw["core: middlewares — auth · request id · errors"]
+    mw --> api[("API")]
+    screen -. text .-> const["constants/"]
+    repo -. models .-> models["data: models/ · enums/"]
+```
+
+### Folders (package, then layer, then area)
+
+```text
+e_clinic_mobile/
+├── apps/clinic/      243 files  ← the app: router, patient portal and staff area
+│   ├── config/          4  route paths, app config  (routes)
+│   ├── constants/      12  every screen text and limit  (billing · documents · portal · staff)
+│   ├── controllers/    40  Riverpod providers and actions  (billing · portal · staff)
+│   ├── screens/        72  one screen per route (+ part files)  (portal · staff)
+│   ├── utilities/       4  formatters, visit timing, dispense plan  (staff)
+│   └── widgets/       109  screen parts, grouped by area  (billing · common · portal · staff)
+├── packages/shell/    34 files  ← start-up, sign-in, 2FA, lock, security, appearance
+│   ├── config/          4  sign-in route paths and redirects  (routes)
+│   ├── constants/       1  access-notice wording  (auth)
+│   ├── controllers/     8  Riverpod providers and actions  (auth · settings)
+│   ├── screens/        10  one screen per route (+ part files)  (auth)
+│   ├── services/        2  access notices (Unauthorized access)  (auth)
+│   └── widgets/         8  screen parts, grouped by area  (auth · settings)
+├── packages/ui/       51 files  ← theme, motion and widget kit
+│   ├── motion/          5  PopIn, TapScale, Nudge, progress bar
+│   ├── theme/           5  light / dark theme, status colours
+│   └── widgets/        41  the widget kit: buttons, lists, states, sheets, chips  (buttons · codes · dates · feedback · inputs · layout · lists · navigation · status)
+├── packages/data/    121 files  ← models and repositories
+│   ├── enums/          13  enums mirrored from the server  (billing · clinic · communication · documents · identity · shared)
+│   ├── models/         74  freezed models (snake_case on the wire)  (billing · clinic · communication · documents · finance · hr · identity · pharmacy · shared)
+│   ├── repositories/   33  one method per endpoint  (accounting · billing · clinic · communication · documents · finance · hr · identity · pharmacy)
+│   └── utilities/       1  identity helpers  (identity)
+└── packages/core/     23 files  ← API client, auth, config, utilities
+    ├── config/          3  AppConfig and the shared providers
+    ├── constants/       1  error codes
+    ├── dtos/            8  ListQuery, Page — list request / response  (common)
+    ├── middlewares/     3  Dio interceptors (auth, errors, request id)
+    ├── services/        3  Dio ApiClient, ApiException, token storage  (api · auth)
+    └── utilities/       5  permission expressions, clinic clock, money in fils  (access)
+```
+<!-- hierarchy:end -->
+
 ## Getting started
 
 ### Requirements
