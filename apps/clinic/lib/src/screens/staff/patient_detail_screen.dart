@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../config/routes/staff_paths.dart';
 import '../../constants/billing/wallet_text.dart';
+import '../../constants/staff/patient_detail_text.dart';
 import '../../controllers/staff/patient_providers.dart';
 import '../../widgets/billing/wallet_card.dart';
 import '../../widgets/staff/appointments/appointment_card.dart';
@@ -14,6 +15,8 @@ import '../../widgets/staff/patients/medical_alert_card.dart';
 import '../../widgets/staff/patients/medical_history_sheet.dart';
 import '../../widgets/staff/patients/patient_facts.dart';
 import '../../widgets/staff/patients/patient_timeline.dart';
+
+part 'patient_detail_screen_upcoming.dart';
 
 /// `/clinic/patients/:id` — a patient file: allergies first, details, coming visits and history; *Book a visit*
 /// for those who may book.
@@ -29,11 +32,11 @@ class PatientDetailScreen extends ConsumerWidget {
     final canBook = access.can('appointments.create');
     return Scaffold(
       appBar: AppBar(
-        title: Text(file.value?.code ?? 'Patient file'),
+        title: Text(file.value?.code ?? PatientDetailText.title),
         actions: [
           if (file.value != null && access.can('records.write & patients.view_medical'))
             IconButton(
-              tooltip: 'Medical history',
+              tooltip: PatientDetailText.medicalHistory,
               icon: const Icon(Icons.medical_information_outlined),
               onPressed: () async {
                 final saved = await showModalBottomSheet<Patient>(
@@ -44,7 +47,7 @@ class PatientDetailScreen extends ConsumerWidget {
                 );
                 if (saved != null) {
                   ref.invalidate(patientProvider(id));
-                  if (context.mounted) AppSnack.success(context, 'Medical history saved.');
+                  if (context.mounted) AppSnack.success(context, PatientDetailText.historySaved);
                 }
               },
             ),
@@ -69,7 +72,7 @@ class PatientDetailScreen extends ConsumerWidget {
                 child: ProfileHeader(
                   name: patient.fullName,
                   lines: [
-                    [patient.code, if (patient.age != null) '${patient.age} years'].join(' · '),
+                    [patient.code, if (patient.age case final age?) PatientDetailText.age(age)].join(' · '),
                     patient.phone,
                   ],
                 ),
@@ -90,7 +93,7 @@ class PatientDetailScreen extends ConsumerWidget {
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
                   child: MedicalAlertCard(allergies: patient.allergies!),
                 ),
-              const SectionHeader('Details'),
+              const SectionHeader(PatientDetailText.details),
               Card(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 child: PatientFacts(patient: patient),
@@ -100,30 +103,10 @@ class PatientDetailScreen extends ConsumerWidget {
                 WalletCard(patientId: id, manage: true),
               ],
               if (access.can('appointments.read_all | appointments.read_own')) ...[
-                const SectionHeader('Coming visits'),
-                ref
-                    .watch(patientUpcomingProvider(id))
-                    .when(
-                      loading: () => const SkeletonList(count: 1, height: 120),
-                      error: (error, _) =>
-                          ErrorState(error: error, onRetry: () => ref.invalidate(patientUpcomingProvider(id))),
-                      data: (visits) => visits.isEmpty
-                          ? const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              child: InfoNote(icon: Icons.event_busy_rounded, text: 'No visits booked.'),
-                            )
-                          : Column(
-                              children: [
-                                for (final visit in visits)
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                                    child: AppointmentCard(visit: visit, showDate: true),
-                                  ),
-                              ],
-                            ),
-                    ),
+                const SectionHeader(PatientDetailText.comingVisits),
+                _UpcomingVisits(patientId: id),
               ],
-              const SectionHeader('History'),
+              const SectionHeader(PatientDetailText.history),
               ref
                   .watch(patientTimelineProvider(id))
                   .when(
@@ -145,7 +128,7 @@ class PatientDetailScreen extends ConsumerWidget {
               child: FilledButton.icon(
                 onPressed: () => context.push(StaffPaths.bookFor(id)),
                 icon: const Icon(Icons.event_available_rounded),
-                label: const Text('Book a visit'),
+                label: const Text(PatientDetailText.book),
               ),
             )
           : null,

@@ -9,6 +9,8 @@ import '../../constants/staff/signature_text.dart';
 import '../../widgets/common/attach_photo_button.dart';
 import '../../widgets/staff/settings/signature_pad.dart';
 
+part 'signature_screen_current.dart';
+
 /// `/account/signature` (staff) — sign on the screen or upload a photo of the signature; it prints on every document
 /// the staff member issues. Shows the current one, which can be removed.
 class SignatureScreen extends ConsumerStatefulWidget {
@@ -114,42 +116,6 @@ class _SignatureScreenState extends ConsumerState<SignatureScreen> {
             label: const Text(SignatureText.upload),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _CurrentSignature extends StatelessWidget {
-  const _CurrentSignature({required this.image, required this.loading, required this.onRemove});
-
-  final Uint8List? image;
-  final bool loading;
-  final VoidCallback? onRemove;
-
-  @override
-  Widget build(BuildContext context) {
-    final picture = image;
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            Container(
-              height: 72,
-              width: 200,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
-              child: loading
-                  ? const CircularProgressIndicator()
-                  : picture == null
-                  ? const Text(SignatureText.none, style: TextStyle(color: Colors.black54))
-                  : Image.memory(picture, fit: BoxFit.contain, semanticLabel: SignatureText.current),
-            ),
-            const Spacer(),
-            if (picture != null) TextButton(onPressed: onRemove, child: const Text(SignatureText.remove)),
-          ],
-        ),
       ),
     );
   }

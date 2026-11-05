@@ -13,6 +13,14 @@ class ChatInfoSheet extends StatelessWidget {
 
   final Conversation chat;
 
+  /// Opens the sheet over [context].
+  static Future<void> show(BuildContext context, Conversation chat) => showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    builder: (_) => ChatInfoSheet(chat: chat),
+  );
+
   Future<void> _open(String scheme, String to) => launchUrl(Uri(scheme: scheme, path: to));
 
   @override

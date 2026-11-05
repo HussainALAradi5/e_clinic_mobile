@@ -17,8 +17,11 @@ import '../../widgets/staff/chat/chat_menu.dart';
 import '../../widgets/staff/chat/message_bubble.dart';
 import '../../widgets/staff/chat/reaction_sheet.dart';
 
+part 'chat_screen_app_bar.dart';
 part 'chat_screen_composer.dart';
 part 'chat_screen_day_separator.dart';
+part 'chat_screen_footer.dart';
+part 'chat_screen_loading.dart';
 part 'chat_screen_message_list.dart';
 part 'chat_screen_reply_preview.dart';
 part 'chat_screen_title.dart';
@@ -69,50 +72,38 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   Future<bool> _send(String body, XFile? photo) async {
-    try {
-      final sent = await _thread.send(
-        body: body,
-        photo: photo == null ? null : (path: photo.path, name: photo.name),
-        replyTo: _replyTo?.id,
-      );
-      if (!sent || !mounted) return sent;
+    var sent = false;
+    await _guard(() async {
+      final file = photo == null ? null : (path: photo.path, name: photo.name);
+      sent = await _thread.send(body: body, photo: file, replyTo: _replyTo?.id);
+      if (!sent || !mounted) return;
       setState(() => _replyTo = null);
       await _scroll.animateTo(0, duration: const Duration(milliseconds: 220), curve: Curves.easeOut);
-      return true;
+    });
+    return sent;
+  }
+
+  /// Runs [action]; a failure shows as an error message, success as [done] when given.
+  Future<void> _guard(Future<void> Function() action, {String? done}) async {
+    try {
+      await action();
+      if (mounted && done != null) AppSnack.success(context, done);
     } catch (e) {
       if (mounted) AppSnack.error(context, e);
-      return false;
     }
   }
 
-  Future<void> _react(ChatMessage message, String emoji) async {
-    try {
-      await _thread.react(message, emoji, _me);
-    } catch (e) {
-      if (mounted) AppSnack.error(context, e);
-    }
-  }
+  Future<void> _react(ChatMessage message, String emoji) => _guard(() => _thread.react(message, emoji, _me));
 
   void _reply(ChatMessage message) => setState(() {
     _replyTo = message;
     _pick++;
   });
 
-  Future<void> _mute(MuteDuration? duration) async {
-    try {
-      await _thread.mute(duration);
-      if (mounted) AppSnack.success(context, duration == null ? ChatText.unmutedDone : ChatText.mutedDone);
-    } catch (e) {
-      if (mounted) AppSnack.error(context, e);
-    }
-  }
+  Future<void> _mute(MuteDuration? duration) =>
+      _guard(() => _thread.mute(duration), done: duration == null ? ChatText.unmutedDone : ChatText.mutedDone);
 
-  void _info(Conversation chat) => showModalBottomSheet<void>(
-    context: context,
-    isScrollControlled: true,
-    useSafeArea: true,
-    builder: (_) => ChatInfoSheet(chat: chat),
-  );
+  void _info(Conversation chat) => ChatInfoSheet.show(context, chat);
 
   @override
   Widget build(BuildContext context) {
@@ -121,29 +112,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       listenable: _thread,
       builder: (context, _) {
         final chat = _thread.chat;
-        if (chat == null) {
-          return Scaffold(
-            appBar: AppBar(),
-            body: _thread.error == null
-                ? const Center(child: CircularProgressIndicator())
-                : ErrorState(error: _thread.error!, onRetry: _thread.load),
-          );
-        }
+        if (chat == null) return _ChatLoading(error: _thread.error, onRetry: _thread.load);
         return Scaffold(
-          appBar: AppBar(
-            titleSpacing: 0,
-            title: _ChatTitle(chat: chat),
-            actions: [
-              TapScale(
-                child: IconButton(
-                  tooltip: chat.isGroup ? ChatText.groupInfo : ChatText.info,
-                  icon: const Icon(Icons.info_outline_rounded),
-                  onPressed: () => _info(chat),
-                ),
-              ),
-              ChatMenu(chat: chat, onInfo: () => _info(chat), onMute: _mute),
-            ],
-          ),
+          appBar: _ChatAppBar(chat: chat, onInfo: () => _info(chat), onMute: _mute),
           body: Column(
             children: [
               Expanded(
@@ -160,19 +131,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   onReact: _react,
                 ),
               ),
-              if (chat.deletedAt != null)
-                InfoNote(
-                  icon: Icons.delete_sweep_outlined,
-                  text: 'Deleted by ${chat.deletedBy ?? 'someone'} — read-only.',
-                )
-              else
-                _Composer(
-                  sending: _thread.sending,
-                  replyTo: _replyTo,
-                  meId: _me,
-                  onCancelReply: () => setState(() => _replyTo = null),
-                  onSend: _send,
-                ),
+              _ChatFooter(
+                chat: chat,
+                sending: _thread.sending,
+                replyTo: _replyTo,
+                meId: _me,
+                onCancelReply: () => setState(() => _replyTo = null),
+                onSend: _send,
+              ),
             ],
           ),
         );

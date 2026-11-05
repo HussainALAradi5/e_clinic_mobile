@@ -16,6 +16,7 @@ abstract final class ChatText {
   static const muted = 'Muted';
   static const mutedDone = 'Chat muted — no badge or alerts from it; mentions still reach you.';
   static const unmutedDone = 'Chat unmuted.';
+  static String deletedBy(String? name) => 'Deleted by ${name ?? 'someone'} — read-only.';
   static const members = 'Members';
   static const you = 'You';
   static const muteChoices = {
