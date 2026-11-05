@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/portal_paths.dart';
+import '../../constants/common/common_text.dart';
+import '../../constants/portal/visit_text.dart';
 import '../../controllers/portal/booking_actions.dart';
 import '../../controllers/portal/booking_providers.dart';
 import '../../widgets/common/booking_bar.dart';
@@ -58,7 +60,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
       onTimeGone: _pickAgain,
     );
     if (!mounted) return;
-    AppSnack.success(context, 'Booking sent. The clinic will confirm it shortly.');
+    AppSnack.success(context, VisitText.bookingSent);
     context.go(PortalPaths.visits);
   }
 
@@ -72,7 +74,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
   Widget build(BuildContext context) {
     final choices = ref.watch(bookingChoicesProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Book a visit')),
+      appBar: AppBar(title: const Text(CommonText.bookVisit)),
       body: AsyncBody(
         value: choices,
         onRetry: () => ref.invalidate(bookingChoicesProvider),
@@ -81,7 +83,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           return ListView(
             padding: const EdgeInsets.only(bottom: 24),
             children: [
-              const SectionHeader('What is the visit for?'),
+              const SectionHeader(VisitText.visitFor),
               VisitTypePicker(
                 selected: _type,
                 onChanged: (type) => setState(() {
@@ -90,7 +92,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                 }),
               ),
               if (data.specialties.length > 1) ...[
-                const SectionHeader('Specialty'),
+                const SectionHeader(VisitText.specialty),
                 SpecialtyChips(
                   specialties: data.specialties,
                   selectedId: _specialtyId,
@@ -103,7 +105,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                   }),
                 ),
               ],
-              const SectionHeader('Doctor'),
+              const SectionHeader(VisitText.doctor),
               DoctorList(
                 doctors: doctors,
                 type: _type,
@@ -114,7 +116,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                 }),
               ),
               if (_doctor != null) ...[
-                const SectionHeader('Day'),
+                const SectionHeader(CommonText.day),
                 DayStrip(
                   days: _days,
                   selected: _date,
@@ -123,10 +125,10 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                     _slot = null;
                   }),
                 ),
-                const SectionHeader('Time'),
+                const SectionHeader(CommonText.time),
                 SlotChoices(slotKey: _slotKey!, selected: _slot, onPick: (slot) => setState(() => _slot = slot)),
-                const SectionHeader('Anything the doctor should know? (optional)'),
-                ReasonField(controller: _reason, hint: 'e.g. knee pain for two weeks', minLines: 2, maxLines: 4),
+                const SectionHeader(VisitText.notesForDoctor),
+                ReasonField(controller: _reason, hint: VisitText.reasonHint, minLines: 2, maxLines: 4),
               ],
             ],
           );
@@ -136,7 +138,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         summary: _doctor != null && _slot != null
             ? '${ClinicClock.day(_date)} at ${ClinicClock.wallTime(_slot!.startTime)} with ${_doctor!.displayName}'
             : null,
-        label: _slot == null ? 'Pick a doctor and a time' : 'Book visit',
+        label: _slot == null ? VisitText.pickDoctorAndTime : CommonText.bookVisitShort,
         onBook: _doctor != null && _slot != null ? _book : null,
       ),
     );

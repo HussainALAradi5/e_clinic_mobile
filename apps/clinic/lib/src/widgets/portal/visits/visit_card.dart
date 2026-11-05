@@ -4,6 +4,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/common/common_text.dart';
 import '../../../constants/portal/visit_text.dart';
 import '../../../controllers/portal/portal_actions.dart';
 import '../../common/timing_edge.dart';
@@ -68,14 +69,14 @@ class VisitCard extends ConsumerWidget {
               if (visit.status == AppointmentStatus.pending && upcoming) ...[
                 const SizedBox(height: 12),
                 Text(
-                  'Waiting for the clinic to confirm.',
+                  VisitText.awaitingConfirmation,
                   style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                 ),
               ],
               if (visit.cancellationReason != null && visit.status == AppointmentStatus.cancelled) ...[
                 const SizedBox(height: 12),
                 Text(
-                  'Cancelled: ${visit.cancellationReason}',
+                  VisitText.cancelled(visit.cancellationReason),
                   style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                 ),
               ],
@@ -86,7 +87,7 @@ class VisitCard extends ConsumerWidget {
                     FilledButton.tonalIcon(
                       onPressed: () => PortalActions.showVisitCode(context, visit),
                       icon: const Icon(Icons.qr_code_2_rounded),
-                      label: const Text('Check-in code'),
+                      label: const Text(VisitText.checkInCode),
                     ),
                     const Spacer(),
                     if (visit.status.cancellable && !visit.patientCanChange)
@@ -98,7 +99,7 @@ class VisitCard extends ConsumerWidget {
                           final updated = await PortalActions.cancelVisit(context, ref, visit);
                           if (updated != null) onChanged?.call(updated);
                         },
-                        child: const Text('Cancel'),
+                        child: const Text(CommonText.cancel),
                       ),
                   ],
                 ),

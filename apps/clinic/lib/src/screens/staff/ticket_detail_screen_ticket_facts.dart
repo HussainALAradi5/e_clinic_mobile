@@ -16,15 +16,15 @@ class _TicketFacts extends StatelessWidget {
           margin: EdgeInsets.zero,
           child: FactList(
             facts: [
-              (label: 'Opened by', value: t.requester?.fullName),
-              (label: 'Opened', value: ClinicClock.dateTime(t.createdAt)),
-              (label: 'Taken by', value: t.assignee?.fullName ?? 'Not taken yet'),
-              (label: 'Solved by', value: t.resolver?.fullName),
-              (label: 'Solved', value: t.resolvedAt == null ? null : ClinicClock.dateTime(t.resolvedAt!)),
+              (label: TicketText.openedBy, value: t.requester?.fullName),
+              (label: TicketText.opened, value: ClinicClock.dateTime(t.createdAt)),
+              (label: TicketText.takenBy, value: t.assignee?.fullName ?? TicketText.notTakenYet),
+              (label: TicketText.solvedBy, value: t.resolver?.fullName),
+              (label: TicketText.solved, value: t.resolvedAt == null ? null : ClinicClock.dateTime(t.resolvedAt!)),
             ],
           ),
         ),
-        const SectionHeader('What happened'),
+        const SectionHeader(TicketText.whatHappenedHeader),
         Card(
           margin: EdgeInsets.zero,
           child: Padding(

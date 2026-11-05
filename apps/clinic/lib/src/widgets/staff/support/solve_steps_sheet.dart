@@ -1,6 +1,8 @@
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/staff/ticket_text.dart';
+
 /// What the person who solved it wrote: the solution in words, and the steps when the fix was step by step.
 typedef TicketSolution = ({String resolution, List<String> steps});
 
@@ -59,7 +61,7 @@ class _SolveStepsSheetState extends State<_SolveStepsSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Mark this ticket solved', style: theme.textTheme.titleLarge),
+            Text(TicketText.solveTitle, style: theme.textTheme.titleLarge),
             const SizedBox(height: 4),
             Text(
               '${widget.requester} sees what you write here and is asked to confirm it works.',
@@ -73,14 +75,14 @@ class _SolveStepsSheetState extends State<_SolveStepsSheet> {
               maxLength: 1000,
               onChanged: (_) => setState(() {}),
               decoration: const InputDecoration(
-                labelText: 'Solution *',
-                hintText: 'What was wrong and what you did',
+                labelText: TicketText.solution,
+                hintText: TicketText.solutionHint,
                 border: OutlineInputBorder(),
                 alignLabelWithHint: true,
               ),
             ),
             const SizedBox(height: 8),
-            Text('Steps (optional — for a step-by-step fix)', style: theme.textTheme.titleSmall),
+            Text(TicketText.stepsOptional, style: theme.textTheme.titleSmall),
             const SizedBox(height: 10),
             for (final (i, field) in _fields.indexed)
               Padding(
@@ -100,15 +102,15 @@ class _SolveStepsSheetState extends State<_SolveStepsSheet> {
                         textInputAction: TextInputAction.next,
                         onChanged: (_) => setState(() {}),
                         decoration: InputDecoration(
-                          labelText: 'Step ${i + 1}',
-                          hintText: i == 0 ? 'e.g. Cleaned the print head' : 'Next step',
+                          labelText: TicketText.step(i + 1),
+                          hintText: i == 0 ? TicketText.firstStepHint : TicketText.nextStep,
                           border: const OutlineInputBorder(),
                           counterText: '',
                         ),
                       ),
                     ),
                     IconButton(
-                      tooltip: 'Remove step',
+                      tooltip: TicketText.removeStep,
                       onPressed: _fields.length == 1 ? null : () => _remove(i),
                       icon: const Icon(Icons.close_rounded),
                     ),
@@ -118,11 +120,11 @@ class _SolveStepsSheetState extends State<_SolveStepsSheet> {
             TextButton.icon(
               onPressed: _fields.length >= _max ? null : _add,
               icon: const Icon(Icons.add_rounded),
-              label: const Text('Add a step'),
+              label: const Text(TicketText.addStep),
             ),
             const SizedBox(height: 8),
             AppButton(
-              label: count == 0 ? 'Mark solved' : 'Mark solved ($count ${count == 1 ? 'step' : 'steps'})',
+              label: count == 0 ? TicketText.markSolved : 'Mark solved ($count ${count == 1 ? 'step' : 'steps'})',
               icon: Icons.task_alt_rounded,
               expand: true,
               onPressed: _solution.text.trim().isEmpty

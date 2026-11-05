@@ -1,6 +1,7 @@
 import 'package:e_clinic_data/data.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/staff/booking_text.dart';
 import '../patients/patient_tile.dart';
 import 'patient_picker_sheet.dart';
 
@@ -24,7 +25,7 @@ class PatientField extends StatelessWidget {
         null => OutlinedButton.icon(
           onPressed: () => _choose(context),
           icon: const Icon(Icons.person_search_rounded),
-          label: const Text('Find the patient'),
+          label: const Text(BookingText.findThePatient),
         ),
         final p => PatientTile(
           patient: p,

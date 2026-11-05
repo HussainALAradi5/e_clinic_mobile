@@ -4,6 +4,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/portal/result_text.dart';
 import '../../controllers/portal/portal_providers.dart';
 import '../../widgets/common/date_range_chip.dart';
 import '../../widgets/common/enum_filter_chips.dart';
@@ -33,7 +34,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('My results')),
+      appBar: AppBar(title: const Text(ResultText.myResults)),
       body: Column(
         children: [
           Padding(
@@ -57,8 +58,8 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen> {
                         children: const [
                           EmptyState(
                             icon: Icons.science_outlined,
-                            title: 'No results yet',
-                            message: 'Test and scan results appear here once your doctor has completed them.',
+                            title: ResultText.noResultsYet,
+                            message: ResultText.noResultsHint,
                           ),
                         ],
                       )

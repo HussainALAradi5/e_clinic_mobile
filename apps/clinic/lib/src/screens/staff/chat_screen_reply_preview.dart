@@ -29,18 +29,18 @@ class _ReplyPreview extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Replying to ${r.sender.id == meId ? 'yourself' : r.sender.fullName}',
+                  ChatText.replyingTo(r.sender.id == meId ? null : r.sender.fullName),
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w700),
                 ),
                 Text(
-                  r.body?.isNotEmpty == true ? r.body! : (r.attachments.firstOrNull?.name ?? 'File'),
+                  r.body?.isNotEmpty == true ? r.body! : (r.attachments.firstOrNull?.name ?? ChatText.file),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-          IconButton(tooltip: 'Cancel reply', onPressed: onCancel, icon: const Icon(Icons.close_rounded)),
+          IconButton(tooltip: ChatText.cancelReply, onPressed: onCancel, icon: const Icon(Icons.close_rounded)),
         ],
       ),
     );

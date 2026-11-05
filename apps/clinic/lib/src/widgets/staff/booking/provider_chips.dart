@@ -4,6 +4,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/staff/booking_text.dart';
 import '../../../controllers/staff/calendar_providers.dart';
 
 /// Who takes this kind of visit, as chips (job title and department in the tooltip).
@@ -24,7 +25,7 @@ class ProviderChips extends ConsumerWidget {
           data: (providers) => Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: providers.isEmpty
-                ? const InfoNote(icon: Icons.person_off_outlined, text: 'Nobody takes this kind of visit.')
+                ? const InfoNote(icon: Icons.person_off_outlined, text: BookingText.noProvider)
                 : Wrap(
                     spacing: 8,
                     runSpacing: 8,

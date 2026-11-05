@@ -7,6 +7,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/common/common_text.dart';
+import '../../constants/staff/appointment_text.dart';
 import '../../controllers/staff/staff_providers.dart';
 import '../../widgets/staff/clock/clock_card.dart';
 import '../../widgets/staff/today/no_schedule_notice.dart';
@@ -89,13 +91,13 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
 
     return [
       SectionHeader(
-        mine ? 'My schedule' : 'Clinic schedule',
+        mine ? AppointmentText.mySchedule : AppointmentText.clinicSchedule,
         trailing: canSwitch
             ? SegmentedButton<bool>(
                 showSelectedIcon: false,
                 segments: const [
-                  ButtonSegment(value: true, label: Text('Mine')),
-                  ButtonSegment(value: false, label: Text('All')),
+                  ButtonSegment(value: true, label: Text(AppointmentText.mine)),
+                  ButtonSegment(value: false, label: Text(CommonText.all)),
                 ],
                 selected: {mine},
                 onSelectionChanged: (value) => ref.read(onlyMineProvider.notifier).set(value.first),

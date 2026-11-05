@@ -16,7 +16,7 @@ class _SickLeaveCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Issued ${ClinicClock.dateTime(leave.issuedAt)}', style: muted),
+            Text(SickLeaveText.issued(ClinicClock.dateTime(leave.issuedAt)), style: muted),
             const SizedBox(height: 6),
             Text(
               '${leave.days} ${leave.days == 1 ? 'day' : 'days'} off',
@@ -31,9 +31,9 @@ class _SickLeaveCard extends StatelessWidget {
             const SizedBox(height: 8),
             FactList(
               facts: [
-                (label: 'Doctor', value: leave.doctor.fullName),
-                (label: 'Reason', value: leave.reason),
-                (label: 'Notes', value: leave.notes),
+                (label: SickLeaveText.doctor, value: leave.doctor.fullName),
+                (label: CommonText.reason, value: leave.reason),
+                (label: CommonText.notes, value: leave.notes),
               ],
             ),
             if (leave.isCancelled)
@@ -47,7 +47,7 @@ class _SickLeaveCard extends StatelessWidget {
             else ...[
               const SizedBox(height: 12),
               AppButton(
-                label: 'Show the code',
+                label: SickLeaveText.showTheCode,
                 icon: Icons.qr_code_2_rounded,
                 variant: ButtonVariant.tonal,
                 expand: true,

@@ -54,7 +54,7 @@ class _MessageListState extends State<_MessageList> {
         widget.onReply(message);
       case CopyAction():
         await Clipboard.setData(ClipboardData(text: message.body ?? ''));
-        if (mounted) AppSnack.success(context, 'Copied.');
+        if (mounted) AppSnack.success(context, ChatText.copied);
       case null:
         break;
     }
@@ -64,7 +64,7 @@ class _MessageListState extends State<_MessageList> {
   Future<void> _jump(String id) async {
     final target = _keys[id]?.currentContext;
     if (target == null) {
-      AppSnack.info(context, 'That message is further back — scroll up to load it.');
+      AppSnack.info(context, ChatText.quoteNotLoaded);
       return;
     }
     await Scrollable.ensureVisible(target, alignment: 0.4, duration: const Duration(milliseconds: 300));
@@ -77,7 +77,11 @@ class _MessageListState extends State<_MessageList> {
   Widget build(BuildContext context) {
     final messages = widget.messages;
     if (messages.isEmpty) {
-      return const EmptyState(icon: Icons.waving_hand_outlined, title: 'No messages yet', message: 'Say hello.');
+      return const EmptyState(
+        icon: Icons.waving_hand_outlined,
+        title: ChatText.noMessagesYet,
+        message: ChatText.sayHello,
+      );
     }
     return ListView.builder(
       controller: widget.scroll,

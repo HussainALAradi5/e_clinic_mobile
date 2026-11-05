@@ -4,6 +4,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/staff/appointment_text.dart';
 import '../../../controllers/staff/staff_providers.dart';
 
 class AppointmentDetails extends ConsumerWidget {
@@ -35,41 +37,47 @@ class AppointmentDetails extends ConsumerWidget {
             alignment: Alignment.centerLeft,
             child: StatusChip(enumName: 'AppointmentStatus', value: visit.status),
           ),
-          const SectionHeader('Booking'),
+          const SectionHeader(AppointmentText.booking),
           Card(
             child: FactList(
               facts: [
                 (
-                  label: 'Type',
+                  label: AppointmentText.type,
                   value: visit.sessionNumber == null
                       ? catalog.label('AppointmentType', visit.type)
                       : '${catalog.label('AppointmentType', visit.type)} · session ${visit.sessionNumber}',
                 ),
-                (label: 'With', value: visit.provider?.fullName),
-                (label: 'Room', value: visit.room?.name),
-                (label: 'Service', value: visit.billableService?.name),
-                (label: 'Reason', value: visit.reason),
+                (label: AppointmentText.provider, value: visit.provider?.fullName),
+                (label: CommonText.room, value: visit.room?.name),
+                (label: AppointmentText.service, value: visit.billableService?.name),
+                (label: CommonText.reason, value: visit.reason),
                 (
-                  label: 'Checked in',
+                  label: CommonText.checkedIn,
                   value: visit.checkedInAt == null ? null : ClinicClock.dateTime(visit.checkedInAt!),
                 ),
-                (label: 'Started', value: visit.startedAt == null ? null : ClinicClock.dateTime(visit.startedAt!)),
-                (label: 'Cancelled because', value: visit.cancellationReason),
+                (
+                  label: CommonText.started,
+                  value: visit.startedAt == null ? null : ClinicClock.dateTime(visit.startedAt!),
+                ),
+                (label: CommonText.cancelledBecause, value: visit.cancellationReason),
               ],
             ),
           ),
           if (patient != null) ...[
-            const SectionHeader('Patient'),
+            const SectionHeader(CommonText.patient),
             Card(
               child: FactList(
-                facts: [(label: 'File number', value: patient.code), (label: 'Mobile', value: patient.phone)],
+                facts: [
+                  (label: CommonText.fileNumber, value: patient.code),
+                  (label: CommonText.mobile, value: patient.phone),
+                ],
               ),
             ),
           ],
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 16, 4, 0),
             child: Text(
-              'Notes, orders and prescriptions are in the visit workspace on the clinic website.',
+              AppointmentText.workspaceHint,
               style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
             ),
           ),

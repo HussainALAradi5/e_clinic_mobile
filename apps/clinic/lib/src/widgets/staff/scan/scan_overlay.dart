@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../constants/staff/scan_text.dart';
+
 /// Over the camera: the title with Torch and "Type the code" at the top, what can be scanned at the bottom.
 class ScanOverlay extends StatelessWidget {
   const ScanOverlay({super.key, required this.onTorch, required this.onTypeCode});
@@ -20,16 +22,16 @@ class ScanOverlay extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: Text('Scan a code', style: theme.textTheme.titleLarge?.copyWith(color: Colors.white)),
+                  child: Text(ScanText.scanACode, style: theme.textTheme.titleLarge?.copyWith(color: Colors.white)),
                 ),
                 IconButton(
-                  tooltip: 'Torch',
+                  tooltip: ScanText.torch,
                   color: Colors.white,
                   onPressed: onTorch,
                   icon: const Icon(Icons.flashlight_on_outlined),
                 ),
                 IconButton(
-                  tooltip: 'Type the code',
+                  tooltip: ScanText.typeCode,
                   color: Colors.white,
                   onPressed: onTypeCode,
                   icon: const Icon(Icons.keyboard_outlined),
@@ -41,7 +43,7 @@ class ScanOverlay extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(32, 0, 32, 32),
             child: Text(
-              'Patient card, check-in code from the patient app, order label, prescription or invoice.',
+              ScanText.scanHint,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white70),
             ),

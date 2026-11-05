@@ -26,7 +26,7 @@ class _AskButton extends StatelessWidget {
               Expanded(
                 child: Text.rich(
                   TextSpan(
-                    text: late ? 'Late ' : 'Overtime ',
+                    text: late ? StaffRequestText.lateSpan : StaffRequestText.overtimeSpan,
                     children: [
                       TextSpan(
                         text: formatMinutes(minutes),

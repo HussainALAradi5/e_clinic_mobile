@@ -14,7 +14,7 @@ class _TicketFiles extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SectionHeader('Screenshots & files'),
+        const SectionHeader(TicketText.screenshotsFiles),
         if (ticket.attachments.isNotEmpty) AttachmentList(files: ticket.attachments),
         if (canAdd)
           Align(
@@ -23,7 +23,7 @@ class _TicketFiles extends StatelessWidget {
               ownerType: 'support_ticket',
               ownerId: ticket.id,
               category: AttachmentCategory.ticketAttachment,
-              label: 'Add a photo',
+              label: CommonText.addPhoto,
               onUploaded: (_) => onUploaded(),
             ),
           ),

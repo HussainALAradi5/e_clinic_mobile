@@ -4,6 +4,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/portal/profile_text.dart';
 import 'emergency_contacts_editor.dart';
 
 /// Phone, email and up to three emergency contacts (PUT /portal/profile).
@@ -70,16 +72,15 @@ class _ContactSheetState extends ConsumerState<ContactSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('Contact details', style: Theme.of(context).textTheme.titleLarge),
+              Text(ProfileText.contactDetails, style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 20),
               TextFormField(
                 controller: _phone,
                 keyboardType: TextInputType.phone,
                 textInputAction: TextInputAction.next,
                 autofillHints: const [AutofillHints.telephoneNumber],
-                decoration: field('Mobile', 'phone', Icons.phone_iphone_rounded),
-                validator: (v) =>
-                    (v ?? '').trim().length < 8 ? 'Enter your mobile number with the country code.' : null,
+                decoration: field(CommonText.mobile, 'phone', Icons.phone_iphone_rounded),
+                validator: (v) => (v ?? '').trim().length < 8 ? ProfileText.mobileInvalid : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
@@ -87,7 +88,7 @@ class _ContactSheetState extends ConsumerState<ContactSheet> {
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 autofillHints: const [AutofillHints.email],
-                decoration: field('Email', 'email', Icons.mail_outline_rounded),
+                decoration: field(CommonText.email, 'email', Icons.mail_outline_rounded),
               ),
               const SizedBox(height: 20),
               EmergencyContactsEditor(
@@ -96,7 +97,7 @@ class _ContactSheetState extends ConsumerState<ContactSheet> {
                 errorFor: (key) => _error?.fieldError(key),
               ),
               const SizedBox(height: 24),
-              AppButton(label: 'Save', icon: Icons.check_rounded, expand: true, onPressed: _save),
+              AppButton(label: CommonText.save, icon: Icons.check_rounded, expand: true, onPressed: _save),
             ],
           ),
         ),

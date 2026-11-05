@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/portal_paths.dart';
+import '../../constants/common/common_text.dart';
+import '../../constants/portal/visit_text.dart';
 import '../../controllers/portal/portal_providers.dart';
 import '../../widgets/portal/home/glances_card.dart';
 import '../../widgets/portal/home/next_visit_ticket.dart';
@@ -39,7 +41,7 @@ class HomeScreen extends ConsumerWidget {
               GreetingHeader(
                 firstName: user?.firstName ?? '',
                 trailing: IconButton(
-                  tooltip: unread > 0 ? '$unread unread messages' : 'Messages',
+                  tooltip: unread > 0 ? '$unread unread messages' : CommonText.messages,
                   onPressed: () => context.push(PortalPaths.messages),
                   icon: Badge(
                     isLabelVisible: unread > 0,
@@ -70,10 +72,10 @@ class HomeScreen extends ConsumerWidget {
                   child: OutlinedButton.icon(
                     onPressed: () => context.push(PortalPaths.book),
                     icon: const Icon(Icons.add_rounded),
-                    label: const Text('Book another visit'),
+                    label: const Text(VisitText.bookAnotherVisit),
                   ),
                 ),
-              const SectionHeader('At a glance'),
+              const SectionHeader(VisitText.atAGlance),
               const GlancesCard(),
             ],
           ),

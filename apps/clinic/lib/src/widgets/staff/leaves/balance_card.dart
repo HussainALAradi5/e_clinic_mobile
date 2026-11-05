@@ -1,6 +1,7 @@
 import 'package:e_clinic_data/data.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/staff/leave_text.dart';
 import '../../../utilities/staff/formatters.dart';
 
 /// Days left of one leave type this year, with used and waiting days under it.
@@ -33,7 +34,7 @@ class BalanceCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              remaining == null ? 'No limit' : _days(remaining),
+              remaining == null ? LeaveText.noLimit : _days(remaining),
               style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
             ),
             Text(remaining == null ? '' : 'days left', style: theme.textTheme.bodySmall?.copyWith(color: muted)),

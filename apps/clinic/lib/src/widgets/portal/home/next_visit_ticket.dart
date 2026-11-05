@@ -4,6 +4,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/portal/visit_text.dart';
 import '../../../controllers/portal/portal_actions.dart';
 import 'ticket_pill.dart';
 
@@ -33,12 +35,12 @@ class NextVisitTicket extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Text('Your next visit', style: theme.textTheme.labelLarge?.copyWith(color: soft)),
+                Text(VisitText.yourNextVisit, style: theme.textTheme.labelLarge?.copyWith(color: soft)),
                 const Spacer(),
                 if (visit.status == AppointmentStatus.pending)
-                  const TicketPill(text: 'Awaiting confirmation', color: BrandColors.sun, textColor: Color(0xFF3D2A00))
+                  const TicketPill(text: VisitText.awaiting, color: BrandColors.sun, textColor: Color(0xFF3D2A00))
                 else
-                  const TicketPill(text: 'Confirmed', color: Color(0x33FFFFFF), textColor: onPine),
+                  const TicketPill(text: VisitText.confirmed, color: Color(0x33FFFFFF), textColor: onPine),
               ],
             ),
             const SizedBox(height: 16),
@@ -100,7 +102,7 @@ class NextVisitTicket extends ConsumerWidget {
                     style: FilledButton.styleFrom(backgroundColor: Colors.white, foregroundColor: BrandColors.pine),
                     onPressed: () => PortalActions.showVisitCode(context, visit),
                     icon: const Icon(Icons.qr_code_2_rounded),
-                    label: const Text('Check-in code'),
+                    label: const Text(VisitText.checkInCode),
                   ),
                 ),
                 if (visit.status.cancellable && visit.patientCanChange) ...[
@@ -108,7 +110,7 @@ class NextVisitTicket extends ConsumerWidget {
                   TextButton(
                     style: TextButton.styleFrom(foregroundColor: soft),
                     onPressed: () => PortalActions.cancelVisit(context, ref, visit),
-                    child: const Text('Cancel'),
+                    child: const Text(CommonText.cancel),
                   ),
                 ],
               ],

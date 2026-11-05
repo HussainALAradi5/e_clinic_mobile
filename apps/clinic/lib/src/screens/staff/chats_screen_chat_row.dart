@@ -11,11 +11,14 @@ class _ChatRow extends StatelessWidget {
   String get _preview {
     if (chat.left) return ChatText.leftRow;
     final m = chat.lastMessage;
-    if (m == null) return chat.isGroup ? 'Group created' : 'Say hello';
-    final who = m.sender.id == meId ? 'You: ' : (chat.isGroup ? '${m.sender.fullName.split(' ').first}: ' : '');
+    if (m == null) return chat.isGroup ? ChatText.groupCreated : ChatText.sayHelloRow;
+    final who = m.sender.id == meId
+        ? ChatText.youPrefix
+        : (chat.isGroup ? '${m.sender.fullName.split(' ').first}: ' : '');
     final what = switch (m.kind) {
       'voice' => '🎤 Voice note',
-      'media' when (m.body ?? '').isEmpty => '📎 ${m.attachments.firstOrNull?.isImage ?? false ? 'Photo' : 'File'}',
+      'media' when (m.body ?? '').isEmpty =>
+        '📎 ${m.attachments.firstOrNull?.isImage ?? false ? 'Photo' : ChatText.file}',
       _ => m.body ?? '',
     };
     return '$who$what';
@@ -48,7 +51,7 @@ class _ChatRow extends StatelessWidget {
           ),
           if (chat.isGroup && chat.iLead) ...[
             const SizedBox(width: 4),
-            Icon(Icons.star_rounded, size: 16, color: Colors.amber.shade700, semanticLabel: 'You lead this group'),
+            Icon(Icons.star_rounded, size: 16, color: Colors.amber.shade700, semanticLabel: ChatText.youLeadThisGroup),
           ],
         ],
       ),

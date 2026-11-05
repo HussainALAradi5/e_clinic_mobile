@@ -1,6 +1,8 @@
 import 'package:e_clinic_data/data.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/common/common_text.dart';
+
 /// A scrolling row of specialties, "All" first; picking one filters the doctors.
 class SpecialtyChips extends StatelessWidget {
   const SpecialtyChips({super.key, required this.specialties, required this.selectedId, required this.onSelected});
@@ -21,7 +23,7 @@ class SpecialtyChips extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: 8),
               child: ChoiceChip(
-                label: Text(s?.name ?? 'All'),
+                label: Text(s?.name ?? CommonText.all),
                 selected: selectedId == s?.id,
                 onSelected: (_) => onSelected(s),
               ),

@@ -4,6 +4,9 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/staff/patient_text.dart';
+
 /// Break the glass: find a patient outside my care by file number or national ID, confirm the person, give the
 /// reason, and their file opens for the shift. Every use is recorded and the admins are told.
 /// Returns the patient id to open (null when closed).
@@ -45,11 +48,7 @@ class _EmergencyAccessSheetState extends ConsumerState<EmergencyAccessSheet> {
     final patient = _found!;
     if (!patient.inCare) {
       if (_reason.text.trim().length < 10) {
-        throw const ApiException(
-          status: 422,
-          code: ErrorCodes.validationFailed,
-          message: 'Give the reason (10 letters or more).',
-        );
+        throw const ApiException(status: 422, code: ErrorCodes.validationFailed, message: PatientText.reasonTooShort);
       }
       await ref.read(patientRepositoryProvider).emergencyAccess(patient.id, _reason.text.trim());
       if (mounted) AppSnack.info(context, 'Emergency access to ${patient.fullName} for 12 hours — it is recorded.');
@@ -72,16 +71,11 @@ class _EmergencyAccessSheetState extends ConsumerState<EmergencyAccessSheet> {
               children: [
                 Icon(Icons.emergency_rounded, color: theme.colorScheme.error),
                 const SizedBox(width: 8),
-                Text('Emergency access', style: theme.textTheme.titleLarge),
+                Text(PatientText.emergencyAccess, style: theme.textTheme.titleLarge),
               ],
             ),
             const SizedBox(height: 8),
-            const InfoNote(
-              icon: Icons.policy_outlined,
-              text:
-                  'For a patient who is not under your care. Every use is recorded in the audit trail and the '
-                  'administrators are told. Access ends after 12 hours.',
-            ),
+            const InfoNote(icon: Icons.policy_outlined, text: PatientText.emergencyNote),
             const SizedBox(height: 12),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,11 +84,19 @@ class _EmergencyAccessSheetState extends ConsumerState<EmergencyAccessSheet> {
                   child: TextField(
                     controller: _find,
                     textCapitalization: TextCapitalization.characters,
-                    decoration: const InputDecoration(labelText: 'File number or national ID', hintText: 'PRS-000123'),
+                    decoration: const InputDecoration(
+                      labelText: PatientText.lookupLabel,
+                      hintText: PatientText.lookupHint,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
-                AppButton(label: 'Find', icon: Icons.search_rounded, variant: ButtonVariant.tonal, onPressed: _lookup),
+                AppButton(
+                  label: PatientText.find,
+                  icon: Icons.search_rounded,
+                  variant: ButtonVariant.tonal,
+                  onPressed: _lookup,
+                ),
               ],
             ),
             const SizedBox(height: 16),
@@ -110,10 +112,7 @@ class _EmergencyAccessSheetState extends ConsumerState<EmergencyAccessSheet> {
               ),
               const SizedBox(height: 12),
               if (p.inCare)
-                const InfoNote(
-                  icon: Icons.check_circle_outline,
-                  text: 'Already in your care — no emergency access needed.',
-                )
+                const InfoNote(icon: Icons.check_circle_outline, text: PatientText.alreadyInCare)
               else
                 TextField(
                   controller: _reason,
@@ -121,21 +120,18 @@ class _EmergencyAccessSheetState extends ConsumerState<EmergencyAccessSheet> {
                   maxLines: 3,
                   maxLength: 500,
                   textCapitalization: TextCapitalization.sentences,
-                  decoration: const InputDecoration(
-                    labelText: 'Reason',
-                    hintText: 'e.g. Collapsed in the waiting room; need allergies',
-                  ),
+                  decoration: const InputDecoration(labelText: CommonText.reason, hintText: PatientText.reasonHint),
                 ),
               const SizedBox(height: 8),
               AppButton(
-                label: p.inCare ? 'Open the file' : 'Open in an emergency',
+                label: p.inCare ? PatientText.openTheFile : PatientText.openInEmergency,
                 icon: p.inCare ? Icons.folder_open_rounded : Icons.lock_open_rounded,
                 lock: ButtonLock.once,
                 expand: true,
                 onPressed: _open,
               ),
             ] else if (_searched)
-              Text('No patient with that file number or ID.', style: theme.textTheme.bodyMedium),
+              Text(PatientText.noPatientFound, style: theme.textTheme.bodyMedium),
           ],
         ),
       ),

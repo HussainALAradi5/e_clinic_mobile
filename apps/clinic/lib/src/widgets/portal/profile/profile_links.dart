@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../config/routes/portal_paths.dart';
+import '../../../constants/common/common_text.dart';
 
 /// "More" on the profile: treatments, prescriptions, sick leaves, messages, password & security.
 class ProfileLinks extends StatelessWidget {
@@ -15,23 +16,27 @@ class ProfileLinks extends StatelessWidget {
       links: [
         LinkTile(
           icon: Icons.self_improvement_rounded,
-          label: 'My treatments',
+          label: CommonText.myTreatments,
           onTap: () => context.push(PortalPaths.treatments),
         ),
         LinkTile(
           icon: Icons.medication_outlined,
-          label: 'My prescriptions',
+          label: CommonText.myPrescriptions,
           onTap: () => context.push(PortalPaths.prescriptions),
         ),
-        LinkTile(icon: Icons.sick_outlined, label: 'My sick leaves', onTap: () => context.push(PortalPaths.sickLeaves)),
+        LinkTile(
+          icon: Icons.sick_outlined,
+          label: CommonText.mySickLeaves,
+          onTap: () => context.push(PortalPaths.sickLeaves),
+        ),
         LinkTile(
           icon: Icons.notifications_none_rounded,
-          label: 'Messages',
+          label: CommonText.messages,
           onTap: () => context.push(PortalPaths.messages),
         ),
         LinkTile(
           icon: Icons.shield_outlined,
-          label: 'Password & security',
+          label: CommonText.passwordSecurity,
           onTap: () => context.push(AuthPaths.security),
         ),
       ],

@@ -2,6 +2,7 @@ import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/portal/visit_text.dart';
 import 'doctor_tile.dart';
 
 /// The doctors who take online bookings, with the price of the chosen kind of visit; a note when there are none.
@@ -26,8 +27,8 @@ class DoctorList extends StatelessWidget {
     if (doctors.isEmpty) {
       return const EmptyState(
         icon: Icons.person_search_rounded,
-        title: 'No doctor takes online bookings here yet',
-        message: 'Call the clinic and the front desk will book you in.',
+        title: VisitText.noDoctors,
+        message: VisitText.noDoctorsHint,
       );
     }
     return Column(

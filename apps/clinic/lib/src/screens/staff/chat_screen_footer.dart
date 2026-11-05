@@ -32,7 +32,9 @@ class _ChatFooter extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(12, 4, 12, 8),
           child: Row(
             children: [
-              const Expanded(child: InfoNote(icon: Icons.logout_rounded, text: ChatText.youLeft)),
+              const Expanded(
+                child: InfoNote(icon: Icons.logout_rounded, text: ChatText.youLeft),
+              ),
               const SizedBox(width: 8),
               FilledButton.tonalIcon(
                 onPressed: onDelete,

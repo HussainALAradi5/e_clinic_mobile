@@ -3,6 +3,7 @@ import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/portal/prescription_text.dart';
 import '../../../controllers/portal/portal_actions.dart';
 import '../../common/document_buttons.dart';
 
@@ -74,17 +75,19 @@ class PrescriptionCard extends StatelessWidget {
             if (rx.collectable)
               Row(
                 children: [
-                  Expanded(child: Text('Valid until ${ClinicClock.date(rx.validUntil)}', style: muted)),
+                  Expanded(child: Text(PrescriptionText.validUntil(ClinicClock.date(rx.validUntil)), style: muted)),
                   FilledButton.tonalIcon(
                     onPressed: () => PortalActions.showPrescriptionCode(context, rx),
                     icon: const Icon(Icons.qr_code_2_rounded),
-                    label: const Text('Pharmacy code'),
+                    label: const Text(PrescriptionText.pharmacyCode),
                   ),
                 ],
               )
             else
               Text(
-                rx.status == GenericStatus.completed ? 'Collected' : 'Valid until ${ClinicClock.date(rx.validUntil)}',
+                rx.status == GenericStatus.completed
+                    ? PrescriptionText.collected
+                    : PrescriptionText.validUntil(ClinicClock.date(rx.validUntil)),
                 style: muted,
               ),
             const SizedBox(height: 12),

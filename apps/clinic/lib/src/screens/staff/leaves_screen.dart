@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/staff_paths.dart';
+import '../../constants/common/common_text.dart';
+import '../../constants/staff/leave_text.dart';
 import '../../controllers/staff/leave_providers.dart';
 import '../../widgets/staff/leaves/balance_card.dart';
 import '../../widgets/staff/leaves/leave_request_card.dart';
@@ -17,12 +19,12 @@ class LeavesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final canRequest = ref.watch(accessProvider).can('leaves.create & leaves.request');
     return Scaffold(
-      appBar: AppBar(title: const Text('My leave')),
+      appBar: AppBar(title: const Text(LeaveText.myLeave)),
       floatingActionButton: canRequest
           ? FloatingActionButton.extended(
               onPressed: () => context.push(StaffPaths.newLeave),
               icon: const Icon(Icons.add_rounded),
-              label: const Text('Request leave'),
+              label: const Text(LeaveText.requestLeave),
             )
           : null,
       body: RefreshIndicator(
@@ -35,7 +37,7 @@ class LeavesScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.only(bottom: 96),
           children: [
-            const SectionHeader('This year'),
+            const SectionHeader(LeaveText.thisYear),
             ref
                 .watch(myBalancesProvider)
                 .when(
@@ -44,10 +46,7 @@ class LeavesScreen extends ConsumerWidget {
                   data: (balances) => balances.isEmpty
                       ? const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: InfoNote(
-                            icon: Icons.info_outline_rounded,
-                            text: 'No leave balances set up for you yet.',
-                          ),
+                          child: InfoNote(icon: Icons.info_outline_rounded, text: LeaveText.noBalances),
                         )
                       : SizedBox(
                           height: 140,
@@ -60,14 +59,14 @@ class LeavesScreen extends ConsumerWidget {
                           ),
                         ),
                 ),
-            const SectionHeader('My requests'),
+            const SectionHeader(CommonText.myRequests),
             ref
                 .watch(myLeavesProvider)
                 .when(
                   loading: () => const SkeletonList(count: 2, height: 110),
                   error: (error, _) => ErrorState(error: error, onRetry: () => ref.invalidate(myLeavesProvider)),
                   data: (leaves) => leaves.isEmpty
-                      ? const EmptyState(icon: Icons.beach_access_outlined, title: 'No requests yet')
+                      ? const EmptyState(icon: Icons.beach_access_outlined, title: CommonText.noRequestsYet)
                       : Column(
                           children: [
                             for (final leave in leaves)

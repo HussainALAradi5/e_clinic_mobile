@@ -3,6 +3,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/common/common_text.dart';
 import '../../../controllers/staff/calendar_providers.dart';
 
 /// The chosen provider's days and free times on the chosen day.
@@ -27,9 +28,9 @@ class ProviderTimes extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SectionHeader('Day'),
+        const SectionHeader(CommonText.day),
         DayStrip(days: days, selected: slotKey.date, onSelected: onDay),
-        const SectionHeader('Time'),
+        const SectionHeader(CommonText.time),
         SlotPicker(
           slots: ref.watch(staffSlotsProvider(slotKey)),
           selected: selected,

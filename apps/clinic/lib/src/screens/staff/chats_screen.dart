@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/staff_paths.dart';
+import '../../constants/common/common_text.dart';
 import '../../constants/staff/chat_text.dart';
 import '../../controllers/staff/chat_actions.dart';
 import '../../controllers/staff/chat_providers.dart';
@@ -113,10 +114,7 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
   Widget build(BuildContext context) {
     final canStart = ref.watch(accessProvider).can('chat.create');
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(ChatText.title),
-        actions: const [PresenceSwitch(), SizedBox(width: 8)],
-      ),
+      appBar: AppBar(title: const Text(ChatText.title), actions: const [PresenceSwitch(), SizedBox(width: 8)]),
       floatingActionButton: canStart
           ? FloatingActionButton.extended(
               onPressed: _newChat,

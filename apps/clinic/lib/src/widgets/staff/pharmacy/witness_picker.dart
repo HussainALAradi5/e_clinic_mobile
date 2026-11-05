@@ -2,6 +2,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/staff/pharmacy_text.dart';
 import '../../../controllers/staff/pharmacy_providers.dart';
 
 /// The colleague who checks a controlled drug being handed over.
@@ -23,7 +24,7 @@ class WitnessPicker extends ConsumerWidget {
             data: (people) => DropdownButtonFormField<String>(
               initialValue: selectedId,
               decoration: const InputDecoration(
-                labelText: 'Colleague who checks the controlled drug',
+                labelText: PharmacyText.witnessLabel,
                 prefixIcon: Icon(Icons.verified_user_outlined),
               ),
               items: [for (final p in people) DropdownMenuItem(value: p.id, child: Text(p.fullName))],

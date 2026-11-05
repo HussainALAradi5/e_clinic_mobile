@@ -13,7 +13,7 @@ class _ClockButton extends ConsumerWidget {
     final repository = ref.read(attendanceRepositoryProvider);
     if (row == null || !row.checkedIn) {
       return AppButton(
-        label: 'Check in',
+        label: ClockText.checkIn,
         icon: Icons.login_rounded,
         expand: true,
         onPressed: () async {
@@ -23,20 +23,20 @@ class _ClockButton extends ConsumerWidget {
           if (context.mounted) {
             late > 0
                 ? AppSnack.info(context, 'Checked in — ${formatMinutes(late)} late for ${shift.name ?? 'your shift'}.')
-                : AppSnack.success(context, 'Checked in on time. Have a good shift.');
+                : AppSnack.success(context, ClockText.onTime);
           }
         },
       );
     }
     return AppButton(
-      label: 'Check out',
+      label: ClockText.checkOut,
       icon: Icons.logout_rounded,
       variant: ButtonVariant.tonal,
       expand: true,
       confirm: const ConfirmConfig(
-        title: 'Check out now?',
-        message: 'Staying 15 minutes or more past your shift is sent for overtime approval.',
-        confirmLabel: 'Check out',
+        title: ClockText.checkOutNow,
+        message: ClockText.overtimeWarning,
+        confirmLabel: ClockText.checkOut,
       ),
       onPressed: () async {
         final row = await repository.checkOut(position: await clockPosition());
@@ -47,7 +47,7 @@ class _ClockButton extends ConsumerWidget {
             context,
             overtime > 0
                 ? 'Checked out — ${formatMinutes(overtime)} overtime, sent for approval.'
-                : 'Checked out. See you next time.',
+                : ClockText.checkedOutDone,
           );
         }
       },

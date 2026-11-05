@@ -26,22 +26,19 @@ class _AskCard extends StatelessWidget {
               const Icon(Icons.help_rounded, color: Color(0xFFD97706)),
               const SizedBox(width: 8),
               Text(
-                'Did this fix it?',
+                TicketText.didThisFixIt,
                 style: TextStyle(color: fg, fontWeight: FontWeight.w700, fontSize: 16),
               ),
             ],
           ),
           const SizedBox(height: 4),
-          Text(
-            'Try it, then tell the support team. If it still happens, say what you see.',
-            style: TextStyle(color: fg),
-          ),
+          Text(TicketText.askHint, style: TextStyle(color: fg)),
           const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
                 child: AppButton(
-                  label: 'Not fixed',
+                  label: TicketText.notFixed,
                   icon: Icons.thumb_down_alt_outlined,
                   variant: ButtonVariant.outlined,
                   onPressed: onDecline,
@@ -49,7 +46,7 @@ class _AskCard extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: AppButton(label: 'It works', icon: Icons.thumb_up_alt_rounded, onPressed: onConfirm),
+                child: AppButton(label: TicketText.itWorks, icon: Icons.thumb_up_alt_rounded, onPressed: onConfirm),
               ),
             ],
           ),

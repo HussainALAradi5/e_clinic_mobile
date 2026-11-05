@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../config/routes/portal_paths.dart';
+import '../../../constants/common/common_text.dart';
+import '../../../constants/portal/visit_text.dart';
 
 class NoVisitCard extends StatelessWidget {
   const NoVisitCard({super.key});
@@ -17,17 +19,17 @@ class NoVisitCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('No visits booked', style: theme.textTheme.titleMedium),
+              Text(VisitText.noVisitsBooked, style: theme.textTheme.titleMedium),
               const SizedBox(height: 4),
               Text(
-                'Pick a doctor and a free time — the clinic confirms your booking.',
+                VisitText.bookingHint,
                 style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
               ),
               const SizedBox(height: 16),
               FilledButton.icon(
                 onPressed: () => context.push(PortalPaths.book),
                 icon: const Icon(Icons.add_rounded),
-                label: const Text('Book a visit'),
+                label: const Text(CommonText.bookVisit),
               ),
             ],
           ),

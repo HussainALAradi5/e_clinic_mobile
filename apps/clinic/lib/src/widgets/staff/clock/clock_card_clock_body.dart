@@ -19,9 +19,9 @@ class _ClockBody extends StatelessWidget {
     final String title;
     final String detail;
     if (row == null || notIn) {
-      title = 'Not checked in';
+      title = ClockText.notCheckedIn;
       detail = shift.start == null
-          ? 'Check in when you arrive.'
+          ? ClockText.checkInOnArrival
           : shift.flexible
           ? '${shift.name}: arrive by ${shift.start}.'
           : '${shift.name ?? 'Your shift'} starts at ${shift.start}.';
@@ -33,7 +33,7 @@ class _ClockBody extends StatelessWidget {
       ].join(' · ');
     } else {
       final worked = row.workedMinutes;
-      title = 'Done for today';
+      title = ClockText.doneForToday;
       detail =
           '${clockTime(row.checkInAt)} – ${clockTime(row.checkOutAt)}'
           '${worked == null ? '' : ' · ${formatMinutes(worked)} worked'}';
@@ -101,7 +101,7 @@ class _ClockBody extends StatelessWidget {
             ),
           ),
         ),
-        if (row != null) ...[const SectionHeader('Today'), _TodayFacts(row: row, shift: shift)],
+        if (row != null) ...[const SectionHeader(ClockText.today), _TodayFacts(row: row, shift: shift)],
       ],
     );
   }

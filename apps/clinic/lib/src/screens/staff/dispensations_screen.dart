@@ -3,6 +3,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/staff/pharmacy_text.dart';
 import '../../controllers/staff/pharmacy_providers.dart';
 import '../../widgets/staff/pharmacy/dispensation_card.dart';
 
@@ -12,10 +13,10 @@ class DispensationsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Scaffold(
-    appBar: AppBar(title: const Text('Dispensed medicines')),
+    appBar: AppBar(title: const Text(PharmacyText.dispensedMedicines)),
     body: InfiniteList<Dispensation>(
       load: (page) => ref.read(dispensationRepositoryProvider).list(dispensationsQuery(page)),
-      empty: const EmptyState(icon: Icons.inventory_2_outlined, title: 'Nothing dispensed yet'),
+      empty: const EmptyState(icon: Icons.inventory_2_outlined, title: PharmacyText.nothingDispensedYet),
       itemBuilder: (context, dispensation, replace) => Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
         child: DispensationCard(dispensation: dispensation, onChanged: replace),

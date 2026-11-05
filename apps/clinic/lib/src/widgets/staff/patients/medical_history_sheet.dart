@@ -3,6 +3,9 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/staff/patient_text.dart';
+
 /// The care team's medical history of a patient: allergies, chronic conditions, family and surgical history.
 /// Returns the saved file (null when closed).
 class MedicalHistorySheet extends ConsumerStatefulWidget {
@@ -64,14 +67,14 @@ class _MedicalHistorySheetState extends ConsumerState<MedicalHistorySheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Medical history', style: Theme.of(context).textTheme.titleLarge),
+          Text(PatientText.medicalHistory, style: Theme.of(context).textTheme.titleLarge),
           Text(widget.patient.fullName, style: Theme.of(context).textTheme.bodyMedium),
           const SizedBox(height: 16),
-          _field(_allergies, 'Allergies', hint: 'e.g. Penicillin'),
-          _field(_chronic, 'Chronic conditions', lines: 3),
-          _field(_family, 'Family history', hint: 'e.g. Father: type 2 diabetes', lines: 4),
-          _field(_surgical, 'Surgical history', lines: 3),
-          AppButton(label: 'Save', icon: Icons.check_rounded, expand: true, onPressed: _save),
+          _field(_allergies, PatientText.allergies, hint: PatientText.allergiesHint),
+          _field(_chronic, PatientText.chronicConditions, lines: 3),
+          _field(_family, PatientText.familyHistory, hint: PatientText.familyHistoryHint, lines: 4),
+          _field(_surgical, PatientText.surgicalHistory, lines: 3),
+          AppButton(label: CommonText.save, icon: Icons.check_rounded, expand: true, onPressed: _save),
         ],
       ),
     ),

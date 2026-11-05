@@ -1,6 +1,8 @@
 import 'package:e_clinic_data/data.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/staff/pharmacy_text.dart';
 import '../../../utilities/staff/formatters.dart';
 
 /// One prescribed medicine on the dispense screen: how to take it, what is still owed, and a − / + stepper for
@@ -43,14 +45,14 @@ class DispenseItemCard extends StatelessWidget {
                       if (checked) ...[
                         const SizedBox(width: 6),
                         Tooltip(
-                          message: 'Pack scanned and matched',
+                          message: PharmacyText.packScannedAndMatched,
                           child: Icon(Icons.verified_rounded, size: 18, color: theme.colorScheme.primary),
                         ),
                       ],
                       if (item.medication.isControlled) ...[
                         const SizedBox(width: 6),
                         Tooltip(
-                          message: 'Controlled drug — needs a witness',
+                          message: PharmacyText.needsWitness,
                           child: Icon(Icons.lock_outline_rounded, size: 18, color: theme.colorScheme.error),
                         ),
                       ],
@@ -65,7 +67,7 @@ class DispenseItemCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     done
-                        ? 'All handed over'
+                        ? PharmacyText.allHandedOver
                         : 'Owed ${formatQuantity(owed)} $unit of ${formatQuantity(double.tryParse(item.quantity) ?? owed)}',
                     style: theme.textTheme.labelMedium?.copyWith(color: done ? muted : theme.colorScheme.primary),
                   ),
@@ -74,7 +76,7 @@ class DispenseItemCard extends StatelessWidget {
             ),
             if (!done) ...[
               IconButton(
-                tooltip: 'Less',
+                tooltip: PharmacyText.less,
                 onPressed: quantity <= 0 ? null : () => onChanged((quantity - 1).clamp(0, owed).toDouble()),
                 icon: const Icon(Icons.remove_circle_outline_rounded),
               ),
@@ -87,7 +89,7 @@ class DispenseItemCard extends StatelessWidget {
                 ),
               ),
               IconButton(
-                tooltip: 'More',
+                tooltip: CommonText.more,
                 onPressed: quantity >= owed ? null : () => onChanged((quantity + 1).clamp(0, owed).toDouble()),
                 icon: const Icon(Icons.add_circle_outline_rounded),
               ),

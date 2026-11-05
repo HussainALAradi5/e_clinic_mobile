@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../constants/common/common_text.dart';
+
 /// Files of a record (images, PDFs); a tap opens one through a short-lived signed link in the phone's viewer.
 class AttachmentList extends ConsumerWidget {
   const AttachmentList({super.key, required this.files});
@@ -15,11 +17,7 @@ class AttachmentList extends ConsumerWidget {
     try {
       final link = await ref.read(attachmentRepositoryProvider).downloadLink(file.id);
       if (!await launchUrl(Uri.parse(link.url), mode: LaunchMode.externalApplication)) {
-        throw const ApiException(
-          status: 0,
-          code: ErrorCodes.unexpected,
-          message: 'No app on this phone can open the file.',
-        );
+        throw const ApiException(status: 0, code: ErrorCodes.unexpected, message: CommonText.noAppToOpen);
       }
     } catch (error) {
       if (context.mounted) AppSnack.error(context, error);

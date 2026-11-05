@@ -1,0 +1,64 @@
+/// Words used on more than one screen.
+abstract final class CommonText {
+  static const bookVisit = 'Book a visit';
+  static const messages = 'Messages';
+  static const markAllRead = 'Mark all read';
+  static const myPrescriptions = 'My prescriptions';
+  static const dateOfBirth = 'Date of birth';
+  static const idNumber = 'ID number';
+  static const mobile = 'Mobile';
+  static const email = 'Email';
+  static const address = 'Address';
+  static const emergencyContacts = 'Emergency contacts';
+  static const signOut = 'Sign out';
+  static const signOutConfirm = 'Sign out of e-Clinic?';
+  static const mySickLeaves = 'My sick leaves';
+  static const reason = 'Reason';
+  static const notes = 'Notes';
+  static const myTreatments = 'My treatments';
+  static const checkedOut = 'Checked out';
+  static const all = 'All';
+  static const unread = 'Unread';
+  static const addPhoto = 'Add a photo';
+  static const send = 'Send';
+  static const noRequestsYet = 'No requests yet';
+  static const more = 'More';
+  static const passwordSecurity = 'Password & security';
+  static const room = 'Room';
+  static const started = 'Started';
+  static const cancelledBecause = 'Cancelled because';
+  static const patientSearch = 'Name, file number or mobile';
+  static const withdraw = 'Withdraw';
+  static const cancel = 'Cancel';
+  static const noAppToOpen = 'No app on this phone can open the file.';
+  static const takePhoto = 'Take a photo';
+  static const chooseFromGallery = 'Choose from the gallery';
+  static const photoRefused = 'The clinic did not accept the photo.';
+  static const results = 'Results';
+  static const invoices = 'Invoices';
+  static const save = 'Save';
+  static const report = 'Report';
+  static const moreActions = 'More actions';
+  static const checkedIn = 'Checked in';
+  static const fileNumber = 'File number';
+  static const close = 'Close';
+  static const notNow = 'Not now';
+
+  static String reportedBy(String name) => 'Reported by $name';
+
+  static const day = 'Day';
+  static const time = 'Time';
+  static const bookVisitShort = 'Book visit';
+  static const noReasonGiven = 'No reason given';
+  static const ifNotExcused = 'If not excused';
+  static const toPay = 'To pay';
+  static const patient = 'Patient';
+  static const reasonOptional = 'Reason (optional)';
+  static const myRequests = 'My requests';
+  static const you = 'You';
+  static const addPhotoShort = 'Add photo';
+  static const photoAttached = 'Photo attached.';
+  static const anyDate = 'Any date';
+  static const fromTo = 'From – to';
+  static const keep = 'Keep';
+}

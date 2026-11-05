@@ -6,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/staff_paths.dart';
+import '../../constants/common/common_text.dart';
 import '../../constants/staff/month_summary_text.dart';
+import '../../constants/staff/more_text.dart';
 import '../../constants/staff/signature_text.dart';
 import '../../controllers/staff/chat_providers.dart';
 import '../../controllers/staff/support_providers.dart';
@@ -23,7 +25,7 @@ class MoreScreen extends ConsumerWidget {
     final unread = ref.watch(staffUnreadProvider).value ?? 0;
     final chatUnread = access.can('chat.read_own | chat.read_all') ? ref.watch(chatUnreadProvider).value ?? 0 : 0;
     return Scaffold(
-      appBar: AppBar(title: const Text('More')),
+      appBar: AppBar(title: const Text(CommonText.more)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
         children: [
@@ -56,7 +58,7 @@ class MoreScreen extends ConsumerWidget {
             links: [
               LinkTile(
                 icon: Icons.shield_outlined,
-                label: 'Password & security',
+                label: CommonText.passwordSecurity,
                 onTap: () => context.push(AuthPaths.security),
               ),
               if (access.can('reports.read_all'))
@@ -74,19 +76,14 @@ class MoreScreen extends ConsumerWidget {
               ),
             ],
           ),
-          const InfoNote(
-            icon: Icons.computer_rounded,
-            text:
-                'Billing, stock, HR and reports are on the clinic website. '
-                'This app keeps nothing medical on the phone.',
-          ),
+          const InfoNote(icon: Icons.computer_rounded, text: MoreText.nothingOnPhone),
           const SizedBox(height: 12),
           AppButton(
-            label: 'Sign out',
+            label: CommonText.signOut,
             icon: Icons.logout_rounded,
             variant: ButtonVariant.outlined,
             expand: true,
-            confirm: const ConfirmConfig(title: 'Sign out of e-Clinic?', confirmLabel: 'Sign out'),
+            confirm: const ConfirmConfig(title: CommonText.signOutConfirm, confirmLabel: CommonText.signOut),
             onPressed: () => ref.read(sessionProvider.notifier).logout(),
           ),
         ],

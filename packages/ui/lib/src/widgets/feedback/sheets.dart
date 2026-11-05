@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../constants/ui_text.dart';
+
 part 'sheets_reason_sheet.dart';
 part 'sheets_reason_sheet_state.dart';
 part 'sheets_sheet_body.dart';
@@ -9,8 +11,8 @@ class ConfirmConfig {
   const ConfirmConfig({
     required this.title,
     this.message,
-    this.confirmLabel = 'Confirm',
-    this.cancelLabel = 'Not now',
+    this.confirmLabel = UiText.confirm,
+    this.cancelLabel = UiText.notNow,
     this.danger = false,
   });
 
@@ -30,7 +32,7 @@ Future<bool> showConfirmSheet(BuildContext context, ConfirmConfig config) async 
     false;
 
 /// Bottom-sheet confirmation that needs a reason (cancel, reject); null when dismissed.
-Future<String?> showReasonSheet(BuildContext context, ConfirmConfig config, {String label = 'Reason'}) =>
+Future<String?> showReasonSheet(BuildContext context, ConfirmConfig config, {String label = UiText.reason}) =>
     showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,

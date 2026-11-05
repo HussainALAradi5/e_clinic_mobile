@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../config/routes/portal_paths.dart';
+import '../../../constants/common/common_text.dart';
+import '../../../constants/portal/visit_text.dart';
 import '../../../controllers/portal/portal_providers.dart';
 
 /// One line per area with what is waiting there; a sun dot marks what needs the patient.
@@ -24,9 +26,9 @@ class GlancesCard extends ConsumerWidget {
         final rows = [
           (
             icon: Icons.self_improvement_rounded,
-            label: 'Treatments',
+            label: VisitText.treatments,
             detail: treatment == null
-                ? 'No treatment plan running'
+                ? VisitText.noTreatmentPlanRunning
                 : next != null
                 ? '${treatment.title}: next ${ClinicClock.relativeDay(next.scheduledDate)}, ${ClinicClock.wallTime(next.startTime)}'
                 : '${treatment.title}: ${treatment.attended} of ${treatment.plannedSessions} sessions',
@@ -36,17 +38,17 @@ class GlancesCard extends ConsumerWidget {
           ),
           (
             icon: Icons.medication_outlined,
-            label: 'Prescriptions',
-            detail: g.toCollect > 0 ? '${g.toCollect} to collect at the pharmacy' : 'Nothing to collect',
+            label: VisitText.prescriptions,
+            detail: g.toCollect > 0 ? '${g.toCollect} to collect at the pharmacy' : VisitText.nothingToCollect,
             flag: g.toCollect > 0,
             path: PortalPaths.prescriptions,
             push: true,
           ),
           (
             icon: Icons.science_outlined,
-            label: 'Results',
+            label: CommonText.results,
             detail: result == null
-                ? 'No results yet'
+                ? VisitText.noResultsYet
                 : '${result.description}${result.completedAt == null ? '' : ', ${ClinicClock.ago(result.completedAt!)}'}',
             flag: false,
             path: PortalPaths.results,
@@ -54,8 +56,8 @@ class GlancesCard extends ConsumerWidget {
           ),
           (
             icon: Icons.receipt_long_outlined,
-            label: 'Invoices',
-            detail: g.due.isPositive ? '${g.due.label} to pay' : 'Nothing to pay',
+            label: CommonText.invoices,
+            detail: g.due.isPositive ? '${g.due.label} to pay' : VisitText.nothingToPay,
             flag: g.due.isPositive,
             path: PortalPaths.invoices,
             push: false,

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/staff_paths.dart';
+import '../../constants/staff/pharmacy_text.dart';
 import '../../controllers/staff/pharmacy_providers.dart';
 import '../../widgets/staff/pharmacy/queue_tile.dart';
 
@@ -16,10 +17,10 @@ class PharmacyQueueScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) => Scaffold(
     appBar: AppBar(
-      title: const Text('Pharmacy queue'),
+      title: const Text(PharmacyText.pharmacyQueue),
       actions: [
         IconButton(
-          tooltip: 'Dispensed medicines',
+          tooltip: PharmacyText.dispensedMedicines,
           icon: const Icon(Icons.history_rounded),
           onPressed: () => context.push(StaffPaths.dispensations),
         ),
@@ -30,8 +31,8 @@ class PharmacyQueueScreen extends ConsumerWidget {
       load: (page) => ref.read(prescriptionRepositoryProvider).queue(ListQuery(page: page, perPage: 25)),
       empty: const EmptyState(
         icon: Icons.medication_outlined,
-        title: 'Queue is empty',
-        message: 'Every valid prescription has been handed over.',
+        title: PharmacyText.queueIsEmpty,
+        message: PharmacyText.queueEmptyHint,
       ),
       itemBuilder: (context, prescription, _) => Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),

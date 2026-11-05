@@ -5,6 +5,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/staff/pharmacy_text.dart';
 import '../../../controllers/staff/pharmacy_providers.dart';
 import '../../../utilities/staff/formatters.dart';
 
@@ -20,10 +22,10 @@ class DispensationCard extends ConsumerWidget {
     final reason = await showReasonSheet(
       context,
       ConfirmConfig(
-        title: 'Cancel ${dispensation.code}?',
-        message: 'The medicines go back to stock and the charge is reversed.',
-        confirmLabel: 'Cancel dispensation',
-        cancelLabel: 'Keep',
+        title: PharmacyText.cancelTitle(dispensation.code),
+        message: PharmacyText.cancelWarning,
+        confirmLabel: PharmacyText.cancelDispensation,
+        cancelLabel: CommonText.keep,
         danger: true,
       ),
     );
@@ -69,7 +71,7 @@ class DispensationCard extends ConsumerWidget {
                 title: Text(item.medication.name),
                 subtitle: item.batch == null
                     ? null
-                    : Text('Batch ${item.batch!.batchNumber} · expires ${ClinicClock.date(item.batch!.expiryDate)}'),
+                    : Text(PharmacyText.batch(item.batch!.batchNumber, ClinicClock.date(item.batch!.expiryDate))),
                 trailing: Text(
                   '${formatQuantity(double.tryParse(item.quantity) ?? 0)} ${item.medication.unit ?? ''}',
                   style: theme.textTheme.titleSmall,
@@ -77,10 +79,10 @@ class DispensationCard extends ConsumerWidget {
               ),
             FactList(
               facts: [
-                (label: 'By', value: d.dispensedBy?.fullName),
-                (label: 'Witness', value: d.witness?.fullName),
-                (label: 'Notes', value: d.notes),
-                (label: 'Cancelled because', value: d.cancellationReason),
+                (label: PharmacyText.dispensedBy, value: d.dispensedBy?.fullName),
+                (label: PharmacyText.witness, value: d.witness?.fullName),
+                (label: CommonText.notes, value: d.notes),
+                (label: CommonText.cancelledBecause, value: d.cancellationReason),
               ],
             ),
             if (canCancel)
@@ -89,7 +91,7 @@ class DispensationCard extends ConsumerWidget {
                 child: TextButton.icon(
                   onPressed: () => _cancel(context, ref),
                   icon: const Icon(Icons.undo_rounded),
-                  label: const Text('Cancel'),
+                  label: const Text(CommonText.cancel),
                 ),
               ),
           ],

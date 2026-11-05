@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/staff/scan_text.dart';
+
 /// For a code that will not scan (damaged label, emulator without a camera): the text printed under it.
 class TypeCodeDialog extends StatefulWidget {
-  const TypeCodeDialog({super.key, this.label = 'Code', this.hint = 'appointment:APT-…'});
+  const TypeCodeDialog({super.key, this.label = ScanText.code, this.hint = 'appointment:APT-…'});
 
   final String label;
   final String hint;
@@ -22,7 +25,7 @@ class _TypeCodeDialogState extends State<TypeCodeDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    title: const Text('Type the code'),
+    title: const Text(ScanText.typeCode),
     content: TextField(
       controller: _code,
       autofocus: true,
@@ -31,8 +34,8 @@ class _TypeCodeDialogState extends State<TypeCodeDialog> {
       onSubmitted: (value) => Navigator.of(context).pop(value),
     ),
     actions: [
-      TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
-      FilledButton(onPressed: () => Navigator.of(context).pop(_code.text), child: const Text('Look up')),
+      TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text(CommonText.cancel)),
+      FilledButton(onPressed: () => Navigator.of(context).pop(_code.text), child: const Text(ScanText.lookUp)),
     ],
   );
 }

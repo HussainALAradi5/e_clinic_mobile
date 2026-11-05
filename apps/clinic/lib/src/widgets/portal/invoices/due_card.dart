@@ -1,6 +1,9 @@
 import 'package:e_clinic_data/data.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/portal/invoice_text.dart';
+
 class DueCard extends StatelessWidget {
   const DueCard({super.key, required this.due});
 
@@ -21,21 +24,21 @@ class DueCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            owing ? 'To pay' : 'All settled',
+            owing ? CommonText.toPay : InvoiceText.allSettled,
             style: theme.textTheme.labelLarge?.copyWith(
               color: owing ? scheme.onTertiaryContainer : scheme.onPrimaryContainer,
             ),
           ),
           const SizedBox(height: 4),
           Text(
-            owing ? due.label : 'Nothing to pay',
+            owing ? due.label : InvoiceText.nothingToPay,
             style: theme.textTheme.headlineSmall?.copyWith(
               color: owing ? scheme.onTertiaryContainer : scheme.onPrimaryContainer,
             ),
           ),
           const SizedBox(height: 6),
           Text(
-            "Pay at the clinic's cashier desk; your receipts are kept here.",
+            InvoiceText.payAtCashier,
             style: theme.textTheme.bodySmall?.copyWith(
               color: owing ? scheme.onTertiaryContainer : scheme.onPrimaryContainer,
             ),

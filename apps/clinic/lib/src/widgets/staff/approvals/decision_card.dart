@@ -2,6 +2,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/staff/approval_text.dart';
 import '../../../controllers/staff/approval_actions.dart';
 
 /// One request: what, who, the facts that matter, and the two decisions. Each button asks first (confirm or
@@ -34,7 +35,7 @@ class _DecisionCardState extends ConsumerState<DecisionCard> {
 
   Future<void> _reject() async {
     await widget.decision.reject!(_reason!);
-    if (mounted) ApprovalActions.decided(context, ref, 'Rejected.');
+    if (mounted) ApprovalActions.decided(context, ref, ApprovalText.rejected);
   }
 
   @override
@@ -68,7 +69,7 @@ class _DecisionCardState extends ConsumerState<DecisionCard> {
                   if (decision.reject != null) ...[
                     Expanded(
                       child: AppButton(
-                        label: 'Reject',
+                        label: ApprovalText.reject,
                         icon: Icons.close_rounded,
                         variant: ButtonVariant.outlined,
                         expand: true,
@@ -81,7 +82,7 @@ class _DecisionCardState extends ConsumerState<DecisionCard> {
                   ],
                   Expanded(
                     child: AppButton(
-                      label: 'Approve',
+                      label: ApprovalText.approve,
                       icon: Icons.check_rounded,
                       expand: true,
                       confirm: decision.approveConfirm,

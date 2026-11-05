@@ -4,6 +4,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/staff/scan_text.dart';
 import '../../../controllers/staff/staff_providers.dart';
 import '../appointments/appointment_card.dart';
 import 'scan_result_title.dart';
@@ -22,24 +24,24 @@ class PersonScanResult extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ScanResultTitle(title: result.text('full_name') ?? 'Person', code: result.code),
+        ScanResultTitle(title: result.text('full_name') ?? ScanText.person, code: result.code),
         Card(
           child: FactList(
             facts: [
-              (label: 'File number', value: result.code),
-              (label: 'Date of birth', value: born == null ? null : ClinicClock.date(born)),
-              (label: 'Gender', value: gender == null ? null : catalog.label('Gender', gender)),
+              (label: CommonText.fileNumber, value: result.code),
+              (label: CommonText.dateOfBirth, value: born == null ? null : ClinicClock.date(born)),
+              (label: ScanText.gender, value: gender == null ? null : catalog.label('Gender', gender)),
             ],
           ),
         ),
         if (canSchedule) ...[
-          const SectionHeader('Bookings today'),
+          const SectionHeader(ScanText.bookingsToday),
           AsyncBody(
             value: ref.watch(patientTodayProvider(result.code)),
             onRetry: () => ref.invalidate(patientTodayProvider(result.code)),
             loading: const SkeletonList(count: 1, height: 140),
             data: (visits) => visits.isEmpty
-                ? const InfoNote(icon: Icons.event_available_outlined, text: 'No booking today for this person.')
+                ? const InfoNote(icon: Icons.event_available_outlined, text: ScanText.noBookingToday)
                 : Column(
                     children: [
                       for (final visit in visits)

@@ -5,6 +5,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/common/common_text.dart';
+import '../../constants/staff/order_text.dart';
 import '../../controllers/staff/order_actions.dart';
 import '../../controllers/staff/order_providers.dart';
 import '../../widgets/common/attach_photo_button.dart';
@@ -27,7 +29,7 @@ class OrderDetailScreen extends ConsumerWidget {
     final actions = order == null ? const <OrderAction>[] : OrderAction.available(order, access);
     final primary = OrderAction.primary(actions);
     return Scaffold(
-      appBar: AppBar(title: Text(order?.code ?? 'Order')),
+      appBar: AppBar(title: Text(order?.code ?? OrderText.order)),
       body: AsyncBody(
         value: value,
         onRetry: () => ref.invalidate(orderProvider(id)),
@@ -47,7 +49,7 @@ class OrderDetailScreen extends ConsumerWidget {
                     visualDensity: VisualDensity.compact,
                     backgroundColor: theme.colorScheme.errorContainer,
                     avatar: Icon(Icons.priority_high_rounded, size: 16, color: theme.colorScheme.onErrorContainer),
-                    label: Text('Abnormal', style: TextStyle(color: theme.colorScheme.onErrorContainer)),
+                    label: Text(OrderText.abnormal, style: TextStyle(color: theme.colorScheme.onErrorContainer)),
                   ),
               ],
             ),
@@ -57,28 +59,34 @@ class OrderDetailScreen extends ConsumerWidget {
               child: FactList(
                 facts: [
                   (
-                    label: 'Patient',
+                    label: OrderText.patient,
                     value: order.patient == null
                         ? null
                         : [order.patient!.fullName, order.patient!.code].whereType<String>().join(' · '),
                   ),
-                  (label: 'Ordered by', value: order.orderingDoctor?.fullName),
-                  (label: 'Ordered', value: order.createdAt == null ? null : ClinicClock.dateTime(order.createdAt!)),
-                  (label: 'Body part', value: order.bodyPart),
-                  (label: 'Clinical notes', value: order.clinicalNotes),
-                  (label: 'Room', value: order.room?.name),
-                  (label: 'Performed by', value: order.performer?.fullName),
-                  (label: 'Started', value: order.startedAt == null ? null : ClinicClock.dateTime(order.startedAt!)),
+                  (label: OrderText.orderedBy, value: order.orderingDoctor?.fullName),
                   (
-                    label: 'Completed',
+                    label: OrderText.ordered,
+                    value: order.createdAt == null ? null : ClinicClock.dateTime(order.createdAt!),
+                  ),
+                  (label: OrderText.bodyPart, value: order.bodyPart),
+                  (label: OrderText.clinicalNotes, value: order.clinicalNotes),
+                  (label: CommonText.room, value: order.room?.name),
+                  (label: OrderText.performedBy, value: order.performer?.fullName),
+                  (
+                    label: CommonText.started,
+                    value: order.startedAt == null ? null : ClinicClock.dateTime(order.startedAt!),
+                  ),
+                  (
+                    label: OrderText.completed,
                     value: order.completedAt == null ? null : ClinicClock.dateTime(order.completedAt!),
                   ),
-                  (label: 'Cancelled because', value: order.cancellationReason),
+                  (label: CommonText.cancelledBecause, value: order.cancellationReason),
                 ],
               ),
             ),
             if (order.report != null) ...[
-              const SectionHeader('Result'),
+              const SectionHeader(OrderText.result),
               Card(
                 margin: EdgeInsets.zero,
                 child: Padding(
@@ -89,14 +97,14 @@ class OrderDetailScreen extends ConsumerWidget {
                       SelectableText(order.report!, style: theme.textTheme.bodyMedium),
                       if (order.reporter != null) ...[
                         const SizedBox(height: 8),
-                        Text('Reported by ${order.reporter!.fullName}', style: theme.textTheme.bodySmall),
+                        Text(CommonText.reportedBy(order.reporter!.fullName), style: theme.textTheme.bodySmall),
                       ],
                     ],
                   ),
                 ),
               ),
             ],
-            if (order.attachments.isNotEmpty || canAttach(order, access)) const SectionHeader('Files'),
+            if (order.attachments.isNotEmpty || canAttach(order, access)) const SectionHeader(OrderText.files),
             if (order.attachments.isNotEmpty) AttachmentList(files: order.attachments),
             if (canAttach(order, access))
               Align(
@@ -105,7 +113,7 @@ class OrderDetailScreen extends ConsumerWidget {
                   ownerType: 'clinical_order',
                   ownerId: order.id,
                   category: resultCategory(order.type),
-                  label: order.type == ClinicalOrderType.referral ? 'Add letter photo' : 'Add result photo',
+                  label: order.type == ClinicalOrderType.referral ? OrderText.addLetterPhoto : OrderText.addResultPhoto,
                   onUploaded: (_) => ref.read(ordersVersionProvider.notifier).bump(),
                 ),
               ),

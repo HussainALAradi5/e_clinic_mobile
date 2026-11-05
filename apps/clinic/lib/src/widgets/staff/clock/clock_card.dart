@@ -3,6 +3,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/staff/clock_text.dart';
 import '../../../controllers/staff/staff_providers.dart';
 import '../../../utilities/staff/clock_location.dart';
 import '../../../utilities/staff/formatters.dart';

@@ -2,6 +2,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/staff/appointment_text.dart';
 import '../../controllers/staff/staff_providers.dart';
 import '../../widgets/staff/appointments/appointment_action_bar.dart';
 import '../../widgets/staff/appointments/appointment_details.dart';
@@ -17,7 +18,7 @@ class AppointmentDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final booking = ref.watch(appointmentProvider(id));
     return Scaffold(
-      appBar: AppBar(title: Text(booking.value?.code ?? 'Booking')),
+      appBar: AppBar(title: Text(booking.value?.code ?? AppointmentText.booking)),
       body: AsyncBody(
         value: booking,
         onRetry: () => ref.invalidate(appointmentProvider(id)),

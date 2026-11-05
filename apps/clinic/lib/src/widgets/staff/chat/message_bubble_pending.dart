@@ -8,6 +8,6 @@ class _Pending extends StatelessWidget {
     height: 80,
     color: Colors.black26,
     alignment: Alignment.center,
-    child: const Text('Checking file…', style: TextStyle(color: Colors.white)),
+    child: const Text(ChatText.checkingFile, style: TextStyle(color: Colors.white)),
   );
 }

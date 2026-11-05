@@ -3,6 +3,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/portal/result_text.dart';
 import '../../../controllers/portal/portal_providers.dart';
 import '../../common/attachment_list.dart';
 import '../../common/document_buttons.dart';
@@ -27,16 +29,22 @@ class ResultDetail extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Report', style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+            Text(
+              CommonText.report,
+              style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            ),
             const SizedBox(height: 4),
-            SelectableText(order.report ?? 'The report will appear here.', style: theme.textTheme.bodyMedium),
+            SelectableText(order.report ?? ResultText.reportPending, style: theme.textTheme.bodyMedium),
             if (order.reporter != null) ...[
               const SizedBox(height: 8),
-              Text('Reported by ${order.reporter!.fullName}', style: theme.textTheme.bodySmall),
+              Text(CommonText.reportedBy(order.reporter!.fullName), style: theme.textTheme.bodySmall),
             ],
             if (order.attachments.isNotEmpty) ...[
               const SizedBox(height: 16),
-              Text('Files', style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+              Text(
+                ResultText.files,
+                style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              ),
               const SizedBox(height: 4),
               AttachmentList(files: order.attachments),
             ],

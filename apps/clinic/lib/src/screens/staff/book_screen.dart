@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/staff_paths.dart';
+import '../../constants/common/common_text.dart';
+import '../../constants/staff/booking_text.dart';
 import '../../controllers/staff/booking_actions.dart';
 import '../../controllers/staff/calendar_providers.dart';
 import '../../controllers/staff/patient_providers.dart';
@@ -95,13 +97,13 @@ class _BookScreenState extends ConsumerState<BookScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Book a visit')),
+      appBar: AppBar(title: const Text(CommonText.bookVisit)),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 24),
         children: [
-          const SectionHeader('Patient'),
+          const SectionHeader(CommonText.patient),
           PatientField(patient: _patient, onChanged: (p) => setState(() => _patient = p)),
-          const SectionHeader('Kind of visit'),
+          const SectionHeader(BookingText.kindOfVisit),
           VisitKindChips(
             selected: _type,
             onSelected: (t) => setState(() {
@@ -109,7 +111,7 @@ class _BookScreenState extends ConsumerState<BookScreen> {
               _reset(provider: true);
             }),
           ),
-          const SectionHeader('With'),
+          const SectionHeader(BookingText.provider),
           ProviderChips(
             type: _type,
             selectedId: _provider?.id,
@@ -129,17 +131,17 @@ class _BookScreenState extends ConsumerState<BookScreen> {
               }),
               onPick: (slot) => setState(() => _slot = slot),
             ),
-          const SectionHeader('How did they book?'),
+          const SectionHeader(BookingText.bookedHow),
           BookingSourcePicker(selected: _source, onChanged: (s) => setState(() => _source = s)),
-          const SectionHeader('Reason (optional)'),
-          ReasonField(controller: _reason, hint: 'e.g. follow-up of blood test'),
+          const SectionHeader(CommonText.reasonOptional),
+          ReasonField(controller: _reason, hint: BookingText.reasonHint),
         ],
       ),
       bottomNavigationBar: BookingBar(
         summary: _ready
             ? '${_patient!.fullName} · ${ClinicClock.day(_date)} at ${ClinicClock.wallTime(_slot!.startTime)} with ${_provider!.fullName}'
             : null,
-        label: _ready ? 'Book visit' : 'Choose patient, provider and time',
+        label: _ready ? CommonText.bookVisitShort : BookingText.chooseAll,
         onBook: _ready ? _book : null,
       ),
     );

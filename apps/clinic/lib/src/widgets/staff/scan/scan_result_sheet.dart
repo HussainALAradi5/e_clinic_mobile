@@ -4,6 +4,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/staff/scan_text.dart';
 import '../../../controllers/staff/staff_providers.dart';
 import '../appointments/appointment_card.dart';
 import 'person_scan_result.dart';
@@ -40,7 +41,7 @@ class BookingScanResult extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      ScanResultTitle(title: 'Booking', code: result.code),
+      ScanResultTitle(title: ScanText.booking, code: result.code),
       AsyncBody(
         value: ref.watch(appointmentProvider(result.id)),
         onRetry: () => ref.invalidate(appointmentProvider(result.id)),

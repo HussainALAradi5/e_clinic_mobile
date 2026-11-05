@@ -5,6 +5,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/common/common_text.dart';
+import '../../constants/portal/profile_text.dart';
 import '../../controllers/portal/portal_providers.dart';
 import '../../widgets/portal/profile/contact_sheet.dart';
 import '../../widgets/portal/profile/insurance_card.dart';
@@ -18,7 +20,7 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: const Text('My profile')),
+      appBar: AppBar(title: const Text(ProfileText.myProfile)),
       body: AsyncBody(
         value: ref.watch(profileProvider),
         onRetry: () => ref.invalidate(profileProvider),
@@ -38,53 +40,53 @@ class ProfileScreen extends ConsumerWidget {
                   if (p.person.nationality case final n?) FlagBadge(countryCode: n.code, label: n.nationality),
                 ],
               ),
-              const SectionHeader('Personal'),
+              const SectionHeader(ProfileText.personal),
               Card(
                 child: FactList(
                   facts: [
-                    (label: 'Date of birth', value: ClinicClock.date(p.dateOfBirth)),
-                    (label: 'ID number', value: p.person.nationalId),
+                    (label: CommonText.dateOfBirth, value: ClinicClock.date(p.dateOfBirth)),
+                    (label: CommonText.idNumber, value: p.person.nationalId),
                   ],
                 ),
               ),
               SectionHeader(
-                'Contact',
+                ProfileText.contact,
                 trailing: TextButton.icon(
                   onPressed: () => _editContact(context, ref, p),
                   icon: const Icon(Icons.edit_outlined, size: 18),
-                  label: const Text('Edit'),
+                  label: const Text(ProfileText.edit),
                 ),
               ),
               Card(
                 child: FactList(
                   facts: [
-                    (label: 'Mobile', value: p.phone),
-                    (label: 'Email', value: p.email),
-                    (label: 'Address', value: p.person.address?.formatted),
-                    (label: 'Emergency contacts', value: p.emergencyContacts.map((c) => c.line).join('\n')),
+                    (label: CommonText.mobile, value: p.phone),
+                    (label: CommonText.email, value: p.email),
+                    (label: CommonText.address, value: p.person.address?.formatted),
+                    (label: CommonText.emergencyContacts, value: p.emergencyContacts.map((c) => c.line).join('\n')),
                   ],
                 ),
               ),
-              if (p.insurer != null) ...[const SectionHeader('Insurance'), InsuranceCard(patient: p)],
+              if (p.insurer != null) ...[const SectionHeader(ProfileText.insurance), InsuranceCard(patient: p)],
               Padding(
                 padding: const EdgeInsets.fromLTRB(4, 12, 4, 0),
                 child: Text(
-                  'To change your name, ID or insurance, visit the front desk with your documents.',
+                  ProfileText.frontDeskChanges,
                   style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                 ),
               ),
               const SizedBox(height: 16),
               const ThemeModeTile(),
               const PhoneNotificationsTile(),
-              const SectionHeader('More'),
+              const SectionHeader(CommonText.more),
               const ProfileLinks(),
               const SizedBox(height: 24),
               AppButton(
-                label: 'Sign out',
+                label: CommonText.signOut,
                 icon: Icons.logout_rounded,
                 variant: ButtonVariant.outlined,
                 expand: true,
-                confirm: const ConfirmConfig(title: 'Sign out of e-Clinic?', confirmLabel: 'Sign out'),
+                confirm: const ConfirmConfig(title: CommonText.signOutConfirm, confirmLabel: CommonText.signOut),
                 onPressed: () => ref.read(sessionProvider.notifier).logout(),
               ),
             ],
@@ -102,6 +104,6 @@ class ProfileScreen extends ConsumerWidget {
     );
     if (saved == null) return;
     ref.read(profileProvider.notifier).replace(saved);
-    if (context.mounted) AppSnack.success(context, 'Your details are saved.');
+    if (context.mounted) AppSnack.success(context, ProfileText.saved);
   }
 }

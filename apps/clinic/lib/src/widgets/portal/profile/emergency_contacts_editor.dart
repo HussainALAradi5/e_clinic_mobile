@@ -1,6 +1,9 @@
 import 'package:e_clinic_data/data.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/portal/profile_text.dart';
+
 /// Up to three optional emergency contacts: each row has a name, a relation and a phone (the phone is needed once a
 /// row is added), a remove button, and "Add a contact" until there are three. [onChanged] gets the rows as
 /// contacts; [errorFor] shows the server's message for a field (`emergency_contacts.0.phone`).
@@ -51,15 +54,15 @@ class _EmergencyContactsEditorState extends State<EmergencyContactsEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Emergency contacts', style: Theme.of(context).textTheme.titleSmall),
-        Text('Optional, up to three.', style: Theme.of(context).textTheme.bodySmall),
+        Text(CommonText.emergencyContacts, style: Theme.of(context).textTheme.titleSmall),
+        Text(ProfileText.contactsOptional, style: Theme.of(context).textTheme.bodySmall),
         for (final (i, r) in _rows.indexed) ...[
           const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(child: Text('Contact ${i + 1}', style: Theme.of(context).textTheme.labelLarge)),
+              Expanded(child: Text(ProfileText.contactNumber(i + 1), style: Theme.of(context).textTheme.labelLarge)),
               IconButton(
-                tooltip: 'Remove this contact',
+                tooltip: ProfileText.removeContact,
                 icon: const Icon(Icons.delete_outline_rounded),
                 onPressed: () {
                   final removed = _rows.removeAt(i);
@@ -79,26 +82,22 @@ class _EmergencyContactsEditorState extends State<EmergencyContactsEditor> {
             controller: r.name,
             textCapitalization: TextCapitalization.words,
             onChanged: (_) => _changed(),
-            decoration: field('Name', 'emergency_contacts.$i.name', Icons.person_outline_rounded),
+            decoration: field(ProfileText.name, 'emergency_contacts.$i.name', Icons.person_outline_rounded),
           ),
           const SizedBox(height: 8),
           TextFormField(
             controller: r.relation,
             textCapitalization: TextCapitalization.sentences,
             onChanged: (_) => _changed(),
-            decoration: field(
-              'Relation (e.g. wife, son)',
-              'emergency_contacts.$i.relation',
-              Icons.diversity_1_outlined,
-            ),
+            decoration: field(ProfileText.relation, 'emergency_contacts.$i.relation', Icons.diversity_1_outlined),
           ),
           const SizedBox(height: 8),
           TextFormField(
             controller: r.phone,
             keyboardType: TextInputType.phone,
             onChanged: (_) => _changed(),
-            validator: (v) => (v ?? '').trim().length < 8 ? 'Enter the phone number with the country code.' : null,
-            decoration: field('Phone', 'emergency_contacts.$i.phone', Icons.call_outlined),
+            validator: (v) => (v ?? '').trim().length < 8 ? ProfileText.phoneInvalid : null,
+            decoration: field(ProfileText.phone, 'emergency_contacts.$i.phone', Icons.call_outlined),
           ),
         ],
         if (_rows.length < EmergencyContact.max) ...[
@@ -111,7 +110,7 @@ class _EmergencyContactsEditorState extends State<EmergencyContactsEditor> {
                 _changed();
               },
               icon: const Icon(Icons.person_add_alt_rounded),
-              label: const Text('Add a contact'),
+              label: const Text(ProfileText.addContact),
             ),
           ),
         ],

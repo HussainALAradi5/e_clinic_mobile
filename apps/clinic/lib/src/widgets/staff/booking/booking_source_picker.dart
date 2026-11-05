@@ -1,13 +1,15 @@
 import 'package:e_clinic_data/data.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/staff/booking_text.dart';
+
 /// How the patient asked for the visit: at the desk or by phone.
 class BookingSourcePicker extends StatelessWidget {
   const BookingSourcePicker({super.key, required this.selected, required this.onChanged});
 
   static const _sources = [
-    (AppointmentSource.walkIn, 'At the desk', Icons.storefront_outlined),
-    (AppointmentSource.phone, 'By phone', Icons.call_outlined),
+    (AppointmentSource.walkIn, BookingText.atTheDesk, Icons.storefront_outlined),
+    (AppointmentSource.phone, BookingText.byPhone, Icons.call_outlined),
   ];
 
   final AppointmentSource selected;

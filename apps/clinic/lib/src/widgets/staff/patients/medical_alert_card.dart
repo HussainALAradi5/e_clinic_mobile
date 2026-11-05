@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../constants/staff/patient_text.dart';
+
 /// Allergies in red at the top of a patient file, so nobody misses them.
 class MedicalAlertCard extends StatelessWidget {
   const MedicalAlertCard({super.key, required this.allergies});
@@ -23,7 +25,7 @@ class MedicalAlertCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Allergies', style: text.titleSmall?.copyWith(color: scheme.onErrorContainer)),
+                  Text(PatientText.allergies, style: text.titleSmall?.copyWith(color: scheme.onErrorContainer)),
                   const SizedBox(height: 2),
                   Text(allergies, style: text.bodyMedium?.copyWith(color: scheme.onErrorContainer)),
                 ],

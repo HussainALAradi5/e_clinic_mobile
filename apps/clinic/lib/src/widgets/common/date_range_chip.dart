@@ -1,10 +1,12 @@
 import 'package:e_clinic_core/core.dart';
 import 'package:flutter/material.dart';
 
+import '../../constants/common/common_text.dart';
+
 /// From / to dates for a list: "Any date", or the chosen days with a clear button. Opens the phone's date range
 /// picker (two years back to one year ahead); `null` is any date.
 class DateRangeChip extends StatelessWidget {
-  const DateRangeChip({super.key, required this.range, required this.onChanged, this.label = 'Any date'});
+  const DateRangeChip({super.key, required this.range, required this.onChanged, this.label = CommonText.anyDate});
 
   final DateTimeRange? range;
   final ValueChanged<DateTimeRange?> onChanged;
@@ -17,7 +19,7 @@ class DateRangeChip extends StatelessWidget {
       firstDate: today.subtract(const Duration(days: 730)),
       lastDate: today.add(const Duration(days: 365)),
       initialDateRange: range,
-      helpText: 'From – to',
+      helpText: CommonText.fromTo,
     );
     if (picked != null) onChanged(picked);
   }

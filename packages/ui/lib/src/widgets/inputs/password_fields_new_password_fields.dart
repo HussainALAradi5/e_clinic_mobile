@@ -13,19 +13,19 @@ class NewPasswordFields extends StatelessWidget {
     children: [
       PasswordField(
         controller: password,
-        label: 'New password',
+        label: UiText.newPassword,
         autofillHints: const [AutofillHints.newPassword],
-        validator: (v) => PasswordRules.valid(v ?? '') ? null : 'The password does not meet every rule yet.',
+        validator: (v) => PasswordRules.valid(v ?? '') ? null : UiText.passwordWeak,
       ),
       const SizedBox(height: 10),
       PasswordChecklist(controller: password),
       const SizedBox(height: 16),
       PasswordField(
         controller: confirm,
-        label: 'Repeat the new password',
+        label: UiText.repeatTheNewPassword,
         textInputAction: TextInputAction.done,
         autofillHints: const [AutofillHints.newPassword],
-        validator: (v) => v == password.text ? null : 'The two passwords are not the same.',
+        validator: (v) => v == password.text ? null : UiText.passwordsDiffer,
       ),
     ],
   );

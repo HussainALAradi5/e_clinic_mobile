@@ -2,6 +2,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/common/common_text.dart';
+import '../../constants/portal/prescription_text.dart';
 import '../../controllers/portal/portal_providers.dart';
 import '../../widgets/portal/prescriptions/prescription_card.dart';
 
@@ -11,7 +13,7 @@ class PrescriptionsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Scaffold(
-    appBar: AppBar(title: const Text('My prescriptions')),
+    appBar: AppBar(title: const Text(CommonText.myPrescriptions)),
     body: RefreshIndicator(
       onRefresh: () => ref.refresh(prescriptionsProvider.future),
       child: AsyncBody(
@@ -22,8 +24,8 @@ class PrescriptionsScreen extends ConsumerWidget {
                 children: const [
                   EmptyState(
                     icon: Icons.medication_outlined,
-                    title: 'No prescriptions',
-                    message: 'Medicines your doctor prescribes show here, with the code for the pharmacy.',
+                    title: PrescriptionText.noPrescriptions,
+                    message: PrescriptionText.noPrescriptionsHint,
                   ),
                 ],
               )

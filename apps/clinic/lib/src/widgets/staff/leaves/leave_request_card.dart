@@ -4,6 +4,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/staff/leave_text.dart';
 import '../../../controllers/staff/leave_providers.dart';
 import '../../../utilities/staff/formatters.dart';
 import '../../common/attach_photo_button.dart';
@@ -48,7 +50,7 @@ class _LeaveRequestCardState extends ConsumerState<LeaveRequestCard> {
           children: [
             Row(
               children: [
-                Expanded(child: Text(leave.leaveType?.name ?? 'Leave', style: theme.textTheme.titleMedium)),
+                Expanded(child: Text(leave.leaveType?.name ?? LeaveText.leave, style: theme.textTheme.titleMedium)),
                 StatusChip(enumName: 'ApprovalStatus', value: leave.status),
               ],
             ),
@@ -64,8 +66,8 @@ class _LeaveRequestCardState extends ConsumerState<LeaveRequestCard> {
               InfoNote(
                 icon: Icons.attach_file_rounded,
                 text: _attached || (leave.attachmentsCount ?? 0) > 0
-                    ? 'Certificate attached — send it to your manager.'
-                    : 'Attach a photo of the certificate, then send it to your manager.',
+                    ? LeaveText.certificateAttached
+                    : LeaveText.attachCertificate,
               ),
             ],
             if (canAct && leave.cancellable) ...[
@@ -76,13 +78,13 @@ class _LeaveRequestCardState extends ConsumerState<LeaveRequestCard> {
                 runSpacing: 8,
                 children: [
                   AppButton(
-                    label: 'Withdraw',
+                    label: CommonText.withdraw,
                     icon: Icons.undo_rounded,
                     variant: ButtonVariant.text,
                     confirm: const ConfirmConfig(
-                      title: 'Withdraw this request?',
-                      confirmLabel: 'Withdraw',
-                      cancelLabel: 'Keep',
+                      title: LeaveText.withdrawThisRequest,
+                      confirmLabel: CommonText.withdraw,
+                      cancelLabel: CommonText.keep,
                       danger: true,
                     ),
                     onPressed: _cancel,
@@ -92,12 +94,12 @@ class _LeaveRequestCardState extends ConsumerState<LeaveRequestCard> {
                       ownerType: 'leave_request',
                       ownerId: leave.id,
                       category: AttachmentCategory.medicalCertificate,
-                      label: 'Certificate',
+                      label: LeaveText.certificate,
                       variant: ButtonVariant.text,
                       onUploaded: (_) => setState(() => _attached = true),
                     ),
                     AppButton(
-                      label: 'Send',
+                      label: CommonText.send,
                       icon: Icons.send_rounded,
                       variant: ButtonVariant.tonal,
                       onPressed: _submit,

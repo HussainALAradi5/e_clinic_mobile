@@ -46,7 +46,7 @@ class _ActionsSheetState extends State<_ActionsSheet> {
               for (final e in widget.quick) emoji(e),
               if (extra.isNotEmpty)
                 IconButton.filledTonal(
-                  tooltip: _more ? 'Fewer emojis' : 'More emojis',
+                  tooltip: _more ? ChatText.fewerEmojis : ChatText.moreEmojis,
                   onPressed: () => setState(() => _more = !_more),
                   icon: Icon(_more ? Icons.expand_less_rounded : Icons.add_rounded),
                 ),
@@ -69,13 +69,13 @@ class _ActionsSheetState extends State<_ActionsSheet> {
           const Divider(height: 24),
           ListTile(
             leading: const Icon(Icons.reply_rounded),
-            title: const Text('Reply'),
+            title: const Text(ChatText.reply),
             onTap: () => Navigator.of(context).pop(const ReplyAction()),
           ),
           if (widget.canCopy)
             ListTile(
               leading: const Icon(Icons.copy_rounded),
-              title: const Text('Copy text'),
+              title: const Text(ChatText.copyText),
               onTap: () => Navigator.of(context).pop(const CopyAction()),
             ),
         ],

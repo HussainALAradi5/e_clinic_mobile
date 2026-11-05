@@ -28,14 +28,14 @@ class _CommentBubble extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(mine ? 'You' : comment.author.fullName, style: theme.textTheme.labelMedium),
+                Text(mine ? CommonText.you : comment.author.fullName, style: theme.textTheme.labelMedium),
                 if (comment.author.isSupport) ...[
                   const SizedBox(width: 6),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                     decoration: BoxDecoration(color: scheme.primaryContainer, borderRadius: BorderRadius.circular(99)),
                     child: Text(
-                      'SUPPORT',
+                      TicketText.supportBadge,
                       style: theme.textTheme.labelSmall?.copyWith(color: scheme.onPrimaryContainer, fontSize: 9),
                     ),
                   ),

@@ -51,7 +51,7 @@ class _NotificationCard extends StatelessWidget {
                         Text(ClinicClock.ago(item.createdAt), style: theme.textTheme.bodySmall),
                         const Spacer(),
                         if (link != null)
-                          Text('Open ›', style: theme.textTheme.labelMedium?.copyWith(color: scheme.primary)),
+                          Text(InboxText.openLink, style: theme.textTheme.labelMedium?.copyWith(color: scheme.primary)),
                       ],
                     ),
                   ],

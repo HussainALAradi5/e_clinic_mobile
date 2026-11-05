@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../constants/staff/chat_text.dart';
+
 part 'reaction_sheet_actions_sheet.dart';
 part 'reaction_sheet_actions_sheet_state.dart';
 part 'reaction_sheet_copy_action.dart';

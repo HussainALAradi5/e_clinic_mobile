@@ -3,6 +3,7 @@ import 'package:e_clinic_data/data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/ui_text.dart';
 import '../feedback/error_state.dart';
 
 /// Free times of a day as chips (patient and staff booking).
@@ -27,7 +28,7 @@ class SlotPicker extends StatelessWidget {
           ? Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(
-                'No free times this day — try another day.',
+                UiText.noFreeTimes,
                 style: Theme.of(
                   context,
                 ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),

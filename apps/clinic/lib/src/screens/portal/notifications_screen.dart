@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/portal_paths.dart';
+import '../../constants/common/common_text.dart';
+import '../../constants/portal/notification_text.dart';
 import '../../controllers/portal/portal_providers.dart';
 import '../../widgets/common/notification_kind_icon.dart';
 
@@ -49,16 +51,16 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     ref.invalidate(unreadCountProvider);
     if (!mounted) return;
     setState(() => _version++);
-    AppSnack.success(context, 'All messages marked as read.');
+    AppSnack.success(context, NotificationText.allRead);
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      title: const Text('Messages'),
+      title: const Text(CommonText.messages),
       actions: [
         if ((ref.watch(unreadCountProvider).value ?? 0) > 0)
-          AppButton(label: 'Mark all read', variant: ButtonVariant.text, onPressed: _markAllRead),
+          AppButton(label: CommonText.markAllRead, variant: ButtonVariant.text, onPressed: _markAllRead),
         const SizedBox(width: 8),
       ],
     ),
@@ -67,8 +69,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       load: (page) => _repo.inbox(ListQuery(page: page, perPage: _pageSize)),
       empty: const EmptyState(
         icon: Icons.notifications_none_rounded,
-        title: 'No messages',
-        message: 'Reminders and updates from the clinic will show here.',
+        title: NotificationText.noMessages,
+        message: NotificationText.noMessagesHint,
       ),
       itemBuilder: (context, item, replace) {
         final theme = Theme.of(context);

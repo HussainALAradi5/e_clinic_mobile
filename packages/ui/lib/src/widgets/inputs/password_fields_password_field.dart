@@ -5,7 +5,7 @@ class PasswordField extends StatefulWidget {
   const PasswordField({
     super.key,
     required this.controller,
-    this.label = 'Password',
+    this.label = UiText.password,
     this.validator,
     this.textInputAction = TextInputAction.next,
     this.onSubmitted,

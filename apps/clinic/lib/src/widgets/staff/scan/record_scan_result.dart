@@ -4,6 +4,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/staff/scan_text.dart';
 import 'scan_result_title.dart';
 
 class RecordScanResult extends ConsumerWidget {
@@ -23,10 +24,7 @@ class RecordScanResult extends ConsumerWidget {
       children: [
         ScanResultTitle(title: humanise(result.entity), code: result.code),
         if (facts.isNotEmpty) Card(child: FactList(facts: facts)),
-        const InfoNote(
-          icon: Icons.verified_outlined,
-          text: 'The code is genuine. Open the record on the website for everything else.',
-        ),
+        const InfoNote(icon: Icons.verified_outlined, text: ScanText.genuine),
       ],
     );
   }

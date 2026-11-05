@@ -4,6 +4,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/common/common_text.dart';
+import '../../constants/staff/staff_request_text.dart';
 import '../../controllers/staff/request_providers.dart';
 import '../../utilities/staff/formatters.dart';
 import '../../widgets/staff/requests/ask_request_sheet.dart';
@@ -29,9 +31,9 @@ class StaffRequestsScreen extends ConsumerWidget {
     final confirmed = await showConfirmSheet(
       context,
       ConfirmConfig(
-        title: 'Withdraw ${request.code}?',
-        message: 'HR will not decide it. You can ask about the same day again later.',
-        confirmLabel: 'Withdraw',
+        title: StaffRequestText.withdrawTitle(request.code),
+        message: StaffRequestText.withdrawWarning,
+        confirmLabel: CommonText.withdraw,
         danger: true,
       ),
     );
@@ -42,7 +44,7 @@ class StaffRequestsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Scaffold(
-    appBar: AppBar(title: const Text('My requests')),
+    appBar: AppBar(title: const Text(StaffRequestText.myRequests)),
     body: RefreshIndicator(
       onRefresh: () async {
         ref.read(requestsVersionProvider.notifier).bump();
@@ -51,7 +53,7 @@ class StaffRequestsScreen extends ConsumerWidget {
       child: ListView(
         padding: const EdgeInsets.only(bottom: 32),
         children: [
-          const SectionHeader('Ask HR about a day'),
+          const SectionHeader(StaffRequestText.askHr),
           ref
               .watch(askableDaysProvider)
               .when(
@@ -60,12 +62,7 @@ class StaffRequestsScreen extends ConsumerWidget {
                 data: (days) => days.isEmpty
                     ? const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: InfoNote(
-                          icon: Icons.sentiment_satisfied_rounded,
-                          text:
-                              'Nothing to ask about: no late arrivals or unpaid overtime in the last 31 days, or HR '
-                              'has these requests switched off.',
-                        ),
+                        child: InfoNote(icon: Icons.sentiment_satisfied_rounded, text: StaffRequestText.nothingToAsk),
                       )
                     : Column(
                         children: [
@@ -77,7 +74,7 @@ class StaffRequestsScreen extends ConsumerWidget {
                         ],
                       ),
               ),
-          const SectionHeader('My requests'),
+          const SectionHeader(CommonText.myRequests),
           ref
               .watch(myRequestsProvider)
               .when(
@@ -86,8 +83,8 @@ class StaffRequestsScreen extends ConsumerWidget {
                 data: (requests) => requests.isEmpty
                     ? const EmptyState(
                         icon: Icons.fact_check_outlined,
-                        title: 'No requests yet',
-                        message: 'Ask HR to excuse a late arrival or to pay your overtime from a day above.',
+                        title: CommonText.noRequestsYet,
+                        message: StaffRequestText.noRequestsHint,
                       )
                     : Column(
                         children: [

@@ -35,11 +35,11 @@ class _ReplyBoxState extends State<_ReplyBox> {
           minLines: 2,
           maxLines: 5,
           maxLength: 5000,
-          decoration: const InputDecoration(labelText: 'Write a reply', border: OutlineInputBorder()),
+          decoration: const InputDecoration(labelText: TicketText.writeAReply, border: OutlineInputBorder()),
         ),
         Align(
           alignment: Alignment.centerRight,
-          child: AppButton(label: 'Send', icon: Icons.send_rounded, onPressed: _send),
+          child: AppButton(label: CommonText.send, icon: Icons.send_rounded, onPressed: _send),
         ),
       ],
     );

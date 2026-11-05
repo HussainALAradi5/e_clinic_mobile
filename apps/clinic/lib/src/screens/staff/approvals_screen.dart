@@ -4,6 +4,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/common/common_text.dart';
+import '../../constants/staff/approval_text.dart';
 import '../../controllers/staff/approval_actions.dart';
 import '../../controllers/staff/staff_providers.dart';
 import '../../utilities/staff/formatters.dart';
@@ -19,7 +21,7 @@ class ApprovalsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final catalog = ref.watch(enumCatalogProvider).value ?? EnumCatalog.empty;
     return Scaffold(
-      appBar: AppBar(title: const Text('Approvals')),
+      appBar: AppBar(title: const Text(ApprovalText.approvals)),
       body: RefreshIndicator(
         onRefresh: () async {
           ref.invalidate(approvalsProvider);
@@ -44,8 +46,8 @@ class ApprovalsScreen extends ConsumerWidget {
                     children: const [
                       EmptyState(
                         icon: Icons.task_alt_rounded,
-                        title: 'All caught up',
-                        message: 'Nothing is waiting for your decision. Pull down to check again.',
+                        title: ApprovalText.allCaughtUp,
+                        message: ApprovalText.allCaughtUpHint,
                       ),
                     ],
                   );
@@ -60,9 +62,9 @@ class ApprovalsScreen extends ConsumerWidget {
                           title: '${r.amount.label} · ${catalog.label('PaymentMethod', r.method)}',
                           subtitle: r.patient?.fullName ?? r.code,
                           facts: [
-                            (label: 'Reason', value: r.reason),
-                            (label: 'Asked by', value: r.requestedBy?.fullName),
-                            (label: 'Asked', value: r.createdAt == null ? null : ClinicClock.ago(r.createdAt!)),
+                            (label: CommonText.reason, value: r.reason),
+                            (label: ApprovalText.askedBy, value: r.requestedBy?.fullName),
+                            (label: ApprovalText.asked, value: _ago(r.createdAt)),
                           ],
                           decision: ApprovalActions.refund(ref, r),
                         ),
@@ -74,8 +76,8 @@ class ApprovalsScreen extends ConsumerWidget {
                           title: '${e.amount.label} · ${catalog.label('ExpenseCategory', e.category)}',
                           subtitle: e.payeeName ?? e.code,
                           facts: [
-                            (label: 'What for', value: e.description),
-                            (label: 'Date', value: ClinicClock.date(e.expenseDate)),
+                            (label: ApprovalText.whatFor, value: e.description),
+                            (label: ApprovalText.date, value: ClinicClock.date(e.expenseDate)),
                           ],
                           decision: ApprovalActions.expense(ref, e),
                         ),
@@ -87,10 +89,10 @@ class ApprovalsScreen extends ConsumerWidget {
                           title: l.employee?.fullName ?? l.code,
                           subtitle: '${l.leaveType?.name ?? 'Leave'} · ${leaveDaysLabel(l)}',
                           facts: [
-                            (label: 'Role', value: l.employee?.jobTitle),
-                            (label: 'Reason', value: l.reason),
+                            (label: ApprovalText.role, value: l.employee?.jobTitle),
+                            (label: CommonText.reason, value: l.reason),
                             (
-                              label: 'Documents',
+                              label: ApprovalText.documents,
                               value: (l.attachmentsCount ?? 0) > 0 ? '${l.attachmentsCount} attached' : null,
                             ),
                           ],
@@ -106,10 +108,13 @@ class ApprovalsScreen extends ConsumerWidget {
                               '${catalog.label('StaffRequestType', r.type)} · ${formatMinutes(r.minutes)}'
                               '${r.attendance == null ? '' : ' on ${ClinicClock.date(r.attendance!.date)}'}',
                           facts: [
-                            (label: 'Role', value: r.employee?.jobTitle),
-                            (label: 'Reason', value: r.reason ?? 'No reason given'),
-                            (label: r.isLate ? 'If not excused' : 'To pay', value: r.details?.amount?.label),
-                            (label: 'Asked', value: r.createdAt == null ? null : ClinicClock.ago(r.createdAt!)),
+                            (label: ApprovalText.role, value: r.employee?.jobTitle),
+                            (label: CommonText.reason, value: r.reason ?? CommonText.noReasonGiven),
+                            (
+                              label: r.isLate ? CommonText.ifNotExcused : CommonText.toPay,
+                              value: r.details?.amount?.label,
+                            ),
+                            (label: ApprovalText.asked, value: _ago(r.createdAt)),
                           ],
                           decision: ApprovalActions.staffRequest(ref, r),
                         ),
@@ -118,12 +123,12 @@ class ApprovalsScreen extends ConsumerWidget {
                       SectionHeader('Overtime · ${a.overtime.length}'),
                       for (final o in a.overtime)
                         DecisionCard(
-                          title: o.employee?.fullName ?? 'Staff member',
+                          title: o.employee?.fullName ?? ApprovalText.staffMember,
                           subtitle: '${formatMinutes(o.overtimeMinutes)} on ${ClinicClock.date(o.date)}',
                           facts: [
-                            (label: 'Role', value: o.employee?.jobTitle),
+                            (label: ApprovalText.role, value: o.employee?.jobTitle),
                             (
-                              label: 'Checked out',
+                              label: CommonText.checkedOut,
                               value: o.checkOutAt == null ? null : ClinicClock.dateTime(o.checkOutAt!),
                             ),
                           ],
@@ -138,3 +143,5 @@ class ApprovalsScreen extends ConsumerWidget {
     );
   }
 }
+
+String? _ago(DateTime? at) => at == null ? null : ClinicClock.ago(at);

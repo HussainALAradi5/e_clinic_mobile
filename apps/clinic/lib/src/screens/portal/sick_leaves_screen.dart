@@ -4,6 +4,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/common/common_text.dart';
+import '../../constants/portal/sick_leave_text.dart';
 import '../../controllers/portal/portal_actions.dart';
 import '../../controllers/portal/portal_providers.dart';
 import '../../widgets/common/document_buttons.dart';
@@ -17,7 +19,7 @@ class SickLeavesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Scaffold(
-    appBar: AppBar(title: const Text('My sick leaves')),
+    appBar: AppBar(title: const Text(CommonText.mySickLeaves)),
     body: RefreshIndicator(
       onRefresh: () => ref.refresh(sickLeavesProvider.future),
       child: AsyncBody(
@@ -28,8 +30,8 @@ class SickLeavesScreen extends ConsumerWidget {
                 children: const [
                   EmptyState(
                     icon: Icons.sick_outlined,
-                    title: 'No sick leaves',
-                    message: 'Certificates your doctor gives you show here, with a code your employer can check.',
+                    title: SickLeaveText.noSickLeaves,
+                    message: SickLeaveText.noSickLeavesHint,
                   ),
                 ],
               )

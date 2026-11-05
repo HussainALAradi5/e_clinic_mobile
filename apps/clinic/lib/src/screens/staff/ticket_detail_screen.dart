@@ -5,6 +5,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/common/common_text.dart';
+import '../../constants/staff/ticket_text.dart';
 import '../../controllers/staff/support_providers.dart';
 import '../../widgets/common/attach_photo_button.dart';
 import '../../widgets/common/attachment_list.dart';
@@ -34,15 +36,15 @@ class _TicketDetailScreenState extends ConsumerState<TicketDetailScreen> {
   Future<void> _move(SupportTicket t, _Step step) async {
     TicketSolution? solution;
     if (step.to == GenericStatus.completed) {
-      solution = await showSolveStepsSheet(context, requester: t.requester?.fullName ?? 'The requester');
+      solution = await showSolveStepsSheet(context, requester: t.requester?.fullName ?? TicketText.theRequester);
       if (solution == null) return;
     } else if (step.to == GenericStatus.cancelled) {
       final ok = await showConfirmSheet(
         context,
         const ConfirmConfig(
-          title: 'Cancel this ticket?',
-          message: 'A cancelled ticket is final: no more replies or status changes.',
-          confirmLabel: 'Cancel ticket',
+          title: TicketText.cancelThisTicket,
+          message: TicketText.cancelWarning,
+          confirmLabel: TicketText.cancelTicket,
           danger: true,
         ),
       );
@@ -58,24 +60,24 @@ class _TicketDetailScreenState extends ConsumerState<TicketDetailScreen> {
   Future<void> _confirm() async {
     await ref.read(ticketRepositoryProvider).confirm(widget.id);
     ref.invalidate(ticketProvider(widget.id));
-    if (mounted) AppSnack.success(context, 'Thanks — the support team is told it works.');
+    if (mounted) AppSnack.success(context, TicketText.confirmedWorks);
   }
 
   Future<void> _decline() async {
     final reason = await showReasonSheet(
       context,
       const ConfirmConfig(
-        title: 'Still not fixed?',
-        message: 'Say what still happens; the ticket goes back to the support team.',
-        confirmLabel: 'Not fixed',
+        title: TicketText.stillNotFixed,
+        message: TicketText.notFixedHint,
+        confirmLabel: TicketText.notFixed,
         danger: true,
       ),
-      label: 'What still happens',
+      label: TicketText.whatStillHappens,
     );
     if (reason == null) return;
     await ref.read(ticketRepositoryProvider).decline(widget.id, reason);
     ref.invalidate(ticketProvider(widget.id));
-    if (mounted) AppSnack.success(context, 'Sent back to the support team.');
+    if (mounted) AppSnack.success(context, TicketText.sentBack);
   }
 
   Future<void> _send(String body) async {
@@ -92,7 +94,7 @@ class _TicketDetailScreenState extends ConsumerState<TicketDetailScreen> {
     final steps = ticket == null || !desk ? const <_Step>[] : _StepBar.stepsFor(ticket);
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(ticket?.code ?? 'Ticket')),
+      appBar: AppBar(title: Text(ticket?.code ?? TicketText.ticket)),
       body: AsyncBody(
         value: value,
         onRetry: () => ref.invalidate(ticketProvider(widget.id)),
@@ -119,12 +121,12 @@ class _TicketDetailScreenState extends ConsumerState<TicketDetailScreen> {
               ),
               SectionHeader('Conversation (${t.comments.length})'),
               if (t.comments.isEmpty)
-                Text('No replies yet.', style: theme.textTheme.bodyMedium)
+                Text(TicketText.noRepliesYet, style: theme.textTheme.bodyMedium)
               else
                 for (final c in t.comments) _CommentBubble(comment: c),
               const SizedBox(height: 12),
               if (t.status == GenericStatus.cancelled)
-                const InfoNote(icon: Icons.lock_outline_rounded, text: 'This ticket is cancelled — no more replies.')
+                const InfoNote(icon: Icons.lock_outline_rounded, text: TicketText.cancelledNote)
               else
                 _ReplyBox(onSend: _send),
             ],

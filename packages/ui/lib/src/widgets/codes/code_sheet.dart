@@ -2,6 +2,8 @@ import 'package:e_clinic_core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/ui_text.dart';
+
 /// Full-size signed QR code of a record, to be scanned at the front desk or the pharmacy.
 Future<void> showCodeSheet(
   BuildContext context, {
@@ -65,7 +67,7 @@ class _CodeSheet extends ConsumerWidget {
                   dimension: 240,
                   child: Center(
                     child: Text(
-                      'Could not load the code. Check your connection.',
+                      UiText.codeLoadFailed,
                       textAlign: TextAlign.center,
                       style: theme.textTheme.bodyMedium?.copyWith(color: Colors.black87),
                     ),

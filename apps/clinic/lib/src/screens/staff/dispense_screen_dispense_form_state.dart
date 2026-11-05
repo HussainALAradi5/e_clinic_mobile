@@ -45,7 +45,7 @@ class _DispenseFormState extends ConsumerState<_DispenseForm> {
       unawaited(HapticFeedback.heavyImpact());
       AppSnack.error(
         context,
-        ApiException(status: 0, code: ErrorCodes.unexpected, message: 'This pack ($code) is not on the prescription.'),
+        ApiException(status: 0, code: ErrorCodes.unexpected, message: PharmacyText.packNotPrescribed(code)),
       );
       return;
     }
@@ -62,7 +62,11 @@ class _DispenseFormState extends ConsumerState<_DispenseForm> {
       appBar: AppBar(
         title: Text(_p.code),
         actions: [
-          IconButton(tooltip: 'Scan a pack', icon: const Icon(Icons.qr_code_scanner_rounded), onPressed: _scan),
+          IconButton(
+            tooltip: PharmacyText.scanAPack,
+            icon: const Icon(Icons.qr_code_scanner_rounded),
+            onPressed: _scan,
+          ),
         ],
       ),
       body: ListView(
@@ -71,7 +75,7 @@ class _DispenseFormState extends ConsumerState<_DispenseForm> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
             child: ProfileHeader(
-              name: _p.patient?.fullName ?? 'Patient',
+              name: _p.patient?.fullName ?? CommonText.patient,
               lines: [
                 _p.patient?.code,
                 [
@@ -86,7 +90,7 @@ class _DispenseFormState extends ConsumerState<_DispenseForm> {
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
               child: InfoNote(icon: Icons.sticky_note_2_outlined, text: _p.notes!),
             ),
-          const SectionHeader('Medicines'),
+          const SectionHeader(PharmacyText.medicines),
           for (final item in _p.items)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
@@ -98,11 +102,11 @@ class _DispenseFormState extends ConsumerState<_DispenseForm> {
               ),
             ),
           if (witness) ...[
-            const SectionHeader('Witness'),
+            const SectionHeader(PharmacyText.witness),
             WitnessPicker(selectedId: _witnessId, onChanged: (id) => setState(() => _witnessId = id)),
           ],
-          const SectionHeader('Notes (optional)'),
-          ReasonField(controller: _notes, hint: 'e.g. patient will collect the rest next week', maxLines: 1),
+          const SectionHeader(PharmacyText.notesOptional),
+          ReasonField(controller: _notes, hint: PharmacyText.notesHint, maxLines: 1),
         ],
       ),
       bottomNavigationBar: BottomBar(
@@ -111,17 +115,17 @@ class _DispenseFormState extends ConsumerState<_DispenseForm> {
             : '${lines.length} medicine${lines.length == 1 ? '' : 's'} for ${_p.patient?.fullName ?? 'the patient'}',
         child: AppButton(
           label: switch ((lines.isEmpty, witness && _witnessId == null)) {
-            (true, _) => 'Nothing to hand over',
-            (_, true) => 'Choose a witness',
-            _ => 'Dispense',
+            (true, _) => PharmacyText.nothingToHandOver,
+            (_, true) => PharmacyText.chooseAWitness,
+            _ => PharmacyText.dispense,
           },
           icon: Icons.medication_rounded,
           lock: ButtonLock.once,
           expand: true,
           confirm: ConfirmConfig(
-            title: 'Hand over ${lines.length} medicine${lines.length == 1 ? '' : 's'}?',
-            message: 'Stock goes down and the medicines are added to the invoice.',
-            confirmLabel: 'Dispense',
+            title: PharmacyText.handOver(lines.length),
+            message: PharmacyText.dispenseWarning,
+            confirmLabel: PharmacyText.dispense,
           ),
           onPressed: ready ? _dispense : null,
         ),

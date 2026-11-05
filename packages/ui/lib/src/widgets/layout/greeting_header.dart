@@ -1,6 +1,8 @@
 import 'package:e_clinic_core/core.dart';
 import 'package:flutter/material.dart';
 
+import '../../constants/ui_text.dart';
+
 /// Top of a home screen: today's date and a greeting by the time of day, with optional actions (messages bell).
 class GreetingHeader extends StatelessWidget {
   const GreetingHeader({super.key, required this.firstName, this.trailing});
@@ -12,7 +14,7 @@ class GreetingHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final hour = ClinicClock.now().hour;
-    final greeting = hour < 12 ? 'Good morning' : (hour < 18 ? 'Good afternoon' : 'Good evening');
+    final greeting = hour < 12 ? UiText.goodMorning : (hour < 18 ? UiText.goodAfternoon : UiText.goodEvening);
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 12, 8, 12),
       child: Row(

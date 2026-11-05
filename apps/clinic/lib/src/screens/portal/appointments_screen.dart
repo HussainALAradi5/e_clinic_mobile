@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/portal_paths.dart';
+import '../../constants/common/common_text.dart';
+import '../../constants/portal/visit_text.dart';
 import '../../controllers/portal/portal_providers.dart';
 import '../../widgets/common/date_range_chip.dart';
 import '../../widgets/common/enum_filter_chips.dart';
@@ -46,11 +48,11 @@ class _AppointmentsScreenState extends ConsumerState<AppointmentsScreen> {
   Widget build(BuildContext context) {
     final version = ref.watch(visitsVersionProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('My visits')),
+      appBar: AppBar(title: const Text(VisitText.myVisits)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push(PortalPaths.book),
         icon: const Icon(Icons.add_rounded),
-        label: const Text('Book a visit'),
+        label: const Text(CommonText.bookVisit),
       ),
       body: InfiniteList<Appointment>(
         reloadKey: (_timing, _dates, version),
@@ -75,13 +77,13 @@ class _AppointmentsScreenState extends ConsumerState<AppointmentsScreen> {
               ? Icons.history_rounded
               : Icons.event_available_rounded,
           title: switch (_timing) {
-            VisitTiming.coming => 'No upcoming visits',
-            VisitTiming.today => 'No visits today',
-            VisitTiming.past => 'No past visits yet',
-            VisitTiming.missed => 'No missed visits',
-            _ => 'No visits yet',
+            VisitTiming.coming => VisitText.noUpcomingVisits,
+            VisitTiming.today => VisitText.noVisitsToday,
+            VisitTiming.past => VisitText.noPastVisitsYet,
+            VisitTiming.missed => VisitText.noMissedVisits,
+            _ => VisitText.noVisitsYet,
           },
-          message: _timing == null || _timing == VisitTiming.coming ? 'Book a visit and it will show here.' : null,
+          message: _timing == null || _timing == VisitTiming.coming ? VisitText.noVisitsHint : null,
         ),
         itemBuilder: (context, visit, replace) => VisitCard(visit: visit, onChanged: replace),
       ),

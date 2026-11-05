@@ -4,6 +4,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/common/common_text.dart';
+
 /// All plus each of [values] of an enum, each chip in the colour its badge wears (labels from the clinic's
 /// catalog). `null` is All. Used for visit timing, payment state, paid by and result kind.
 class EnumFilterChips<T extends Enum> extends ConsumerWidget {
@@ -25,7 +27,7 @@ class EnumFilterChips<T extends Enum> extends ConsumerWidget {
     final catalog = ref.watch(enumCatalogProvider).value ?? EnumCatalog.empty;
     return ChipBar<T?>(
       options: [
-        (value: null, label: 'All', count: null),
+        (value: null, label: CommonText.all, count: null),
         for (final v in values) (value: v, label: catalog.label(enumName, v), count: null),
       ],
       selected: selected,

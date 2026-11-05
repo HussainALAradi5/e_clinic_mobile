@@ -3,6 +3,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/staff/session_text.dart';
 import '../../controllers/staff/staff_providers.dart';
 import '../../widgets/staff/appointments/appointment_card.dart';
 
@@ -19,7 +20,7 @@ class SessionsScreen extends ConsumerWidget {
     final today = ClinicClock.today();
     final days = [for (var i = 0; i < _daysAhead; i++) ClinicClock.addDays(today, i)];
     return Scaffold(
-      appBar: AppBar(title: const Text('My sessions')),
+      appBar: AppBar(title: const Text(SessionText.mySessions)),
       body: RefreshIndicator(
         onRefresh: () async {
           ref.invalidate(sessionsProvider);
@@ -39,8 +40,8 @@ class SessionsScreen extends ConsumerWidget {
                   data: (sessions) => sessions.isEmpty
                       ? const EmptyState(
                           icon: Icons.self_improvement_outlined,
-                          title: 'No sessions',
-                          message: 'No treatment sessions are booked with you on this day.',
+                          title: SessionText.noSessions,
+                          message: SessionText.noSessionsHint,
                         )
                       : Column(
                           children: [

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../constants/common/common_text.dart';
+import '../../constants/staff/leave_text.dart';
 import '../../controllers/staff/leave_providers.dart';
 import '../../widgets/common/reason_field.dart';
 import '../../widgets/staff/leaves/leave_days_field.dart';
@@ -47,10 +49,7 @@ class _NewLeaveScreenState extends ConsumerState<NewLeaveScreen> {
         );
     ref.read(leavesVersionProvider.notifier).bump();
     if (!mounted) return;
-    AppSnack.success(
-      context,
-      leave.isDraft ? 'Saved. Attach a photo of the certificate, then send it.' : 'Sent to your manager.',
-    );
+    AppSnack.success(context, leave.isDraft ? LeaveText.draftSaved : LeaveText.sent);
     context.pop();
   }
 
@@ -58,16 +57,16 @@ class _NewLeaveScreenState extends ConsumerState<NewLeaveScreen> {
   Widget build(BuildContext context) {
     final ready = _type != null && _range != null;
     return Scaffold(
-      appBar: AppBar(title: const Text('Request leave')),
+      appBar: AppBar(title: const Text(LeaveText.requestLeave)),
       body: AsyncBody(
         value: ref.watch(leaveTypesProvider),
         onRetry: () => ref.invalidate(leaveTypesProvider),
         data: (types) => ListView(
           padding: const EdgeInsets.only(bottom: 24),
           children: [
-            const SectionHeader('Kind of leave'),
+            const SectionHeader(LeaveText.kindOfLeave),
             LeaveTypePicker(types: types, selected: _type, onSelected: (t) => setState(() => _type = t)),
-            const SectionHeader('Days'),
+            const SectionHeader(LeaveText.days),
             LeaveDaysField(
               range: _range,
               halfDay: _halfDay,
@@ -77,14 +76,16 @@ class _NewLeaveScreenState extends ConsumerState<NewLeaveScreen> {
               }),
               onHalfDay: (v) => setState(() => _halfDay = v),
             ),
-            const SectionHeader('Reason (optional)'),
+            const SectionHeader(CommonText.reasonOptional),
             ReasonField(controller: _reason, maxLength: 1000, minLines: 2, maxLines: 4),
           ],
         ),
       ),
       bottomNavigationBar: BottomBar(
         child: AppButton(
-          label: ready ? (_type!.requiresAttachment ? 'Save draft' : 'Send request') : 'Choose the kind and the days',
+          label: ready
+              ? (_type!.requiresAttachment ? LeaveText.saveDraft : LeaveText.sendRequest)
+              : LeaveText.chooseKindAndDays,
           icon: Icons.send_rounded,
           lock: ButtonLock.once,
           expand: true,

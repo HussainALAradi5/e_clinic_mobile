@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/staff_paths.dart';
+import '../../constants/common/common_text.dart';
+import '../../constants/staff/inbox_text.dart';
 import '../../controllers/staff/support_providers.dart';
 import '../../widgets/common/notification_kind_icon.dart';
 
@@ -68,7 +70,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
     ref.invalidate(staffUnreadProvider);
     if (!mounted) return;
     setState(() => _version++);
-    AppSnack.success(context, 'All notifications marked as read.');
+    AppSnack.success(context, InboxText.allRead);
   }
 
   @override
@@ -76,9 +78,10 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
     final unread = ref.watch(staffUnreadProvider).value ?? 0;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
+        title: const Text(InboxText.notifications),
         actions: [
-          if (unread > 0) AppButton(label: 'Mark all read', variant: ButtonVariant.text, onPressed: _markAllRead),
+          if (unread > 0)
+            AppButton(label: CommonText.markAllRead, variant: ButtonVariant.text, onPressed: _markAllRead),
           const SizedBox(width: 8),
         ],
       ),
@@ -91,13 +94,13 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                child: SearchField(hint: 'Search notifications', onChanged: (v) => setState(() => _search = v)),
+                child: SearchField(hint: InboxText.searchNotifications, onChanged: (v) => setState(() => _search = v)),
               ),
               ChipBar<InboxRead>(
                 options: [
-                  (value: InboxRead.all, label: 'All', count: null),
-                  (value: InboxRead.unread, label: 'Unread', count: unread > 0 ? unread : null),
-                  (value: InboxRead.read, label: 'Read', count: null),
+                  (value: InboxRead.all, label: CommonText.all, count: null),
+                  (value: InboxRead.unread, label: CommonText.unread, count: unread > 0 ? unread : null),
+                  (value: InboxRead.read, label: InboxText.read, count: null),
                 ],
                 selected: _read,
                 onSelected: (v) => setState(() => _read = v),
@@ -105,7 +108,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
               const SizedBox(height: 8),
               ChipBar<String?>(
                 options: [
-                  (value: null, label: 'Everything', count: null),
+                  (value: null, label: InboxText.everything, count: null),
                   for (final t in inboxTopics) (value: t.value, label: t.label, count: null),
                 ],
                 selected: _topic,
@@ -129,10 +132,8 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
                 load: _load,
                 empty: EmptyState(
                   icon: Icons.notifications_off_outlined,
-                  title: _read == InboxRead.all && _topic == null && _search.isEmpty
-                      ? 'No notifications yet'
-                      : 'Nothing matches these filters',
-                  message: 'Ticket updates, bookings and other news land here.',
+                  title: InboxText.emptyTitle(filtered: _read != InboxRead.all || _topic != null || _search.isNotEmpty),
+                  message: InboxText.emptyHint,
                 ),
                 itemBuilder: (context, item, replace) => Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),

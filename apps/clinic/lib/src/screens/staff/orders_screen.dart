@@ -2,6 +2,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/staff/order_text.dart';
 import '../../controllers/staff/order_providers.dart';
 import '../../widgets/staff/orders/order_card.dart';
 
@@ -15,7 +16,7 @@ class OrdersScreen extends ConsumerWidget {
     final kind = ref.watch(orderKindProvider);
     final orders = ref.watch(worklistProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Order work list')),
+      appBar: AppBar(title: const Text(OrderText.orderWorkList)),
       body: RefreshIndicator(
         onRefresh: () async {
           ref.invalidate(worklistProvider);
@@ -37,8 +38,8 @@ class OrdersScreen extends ConsumerWidget {
               data: (list) => list.isEmpty
                   ? const EmptyState(
                       icon: Icons.biotech_outlined,
-                      title: 'All done',
-                      message: 'No open orders of this kind.',
+                      title: OrderText.allDone,
+                      message: OrderText.allDoneHint,
                     )
                   : Column(
                       children: [

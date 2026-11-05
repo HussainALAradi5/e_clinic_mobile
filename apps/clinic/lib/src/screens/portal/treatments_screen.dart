@@ -2,6 +2,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/common/common_text.dart';
+import '../../constants/portal/treatment_text.dart';
 import '../../controllers/portal/portal_providers.dart';
 import '../../widgets/portal/treatments/treatment_card.dart';
 
@@ -11,7 +13,7 @@ class TreatmentsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Scaffold(
-    appBar: AppBar(title: const Text('My treatments')),
+    appBar: AppBar(title: const Text(CommonText.myTreatments)),
     body: RefreshIndicator(
       onRefresh: () => ref.refresh(treatmentsProvider.future),
       child: AsyncBody(
@@ -22,8 +24,8 @@ class TreatmentsScreen extends ConsumerWidget {
                 children: const [
                   EmptyState(
                     icon: Icons.self_improvement_rounded,
-                    title: 'No treatment plans',
-                    message: 'When your doctor plans physiotherapy, infusions or other sessions, they show here.',
+                    title: TreatmentText.noTreatmentPlans,
+                    message: TreatmentText.noTreatmentsHint,
                   ),
                 ],
               )

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../constants/ui_text.dart';
+
 part 'password_fields_new_password_fields.dart';
 part 'password_fields_password_checklist.dart';
 part 'password_fields_password_field.dart';
@@ -11,9 +13,9 @@ abstract final class PasswordRules {
 
   static List<({String label, bool ok})> check(String value) => [
     (label: '$minLength+ characters', ok: value.length >= minLength),
-    (label: 'Upper and lower case', ok: RegExp('[a-z]').hasMatch(value) && RegExp('[A-Z]').hasMatch(value)),
-    (label: 'A number', ok: RegExp(r'\d').hasMatch(value)),
-    (label: 'A symbol', ok: RegExp('[^A-Za-z0-9]').hasMatch(value)),
+    (label: UiText.upperAndLowerCase, ok: RegExp('[a-z]').hasMatch(value) && RegExp('[A-Z]').hasMatch(value)),
+    (label: UiText.aNumber, ok: RegExp(r'\d').hasMatch(value)),
+    (label: UiText.aSymbol, ok: RegExp('[^A-Za-z0-9]').hasMatch(value)),
   ];
 
   static bool valid(String value) => check(value).every((c) => c.ok);

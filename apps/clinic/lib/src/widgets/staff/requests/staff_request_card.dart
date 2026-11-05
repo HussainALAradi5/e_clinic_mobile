@@ -3,6 +3,8 @@ import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/staff/staff_request_text.dart';
 import '../../../utilities/staff/formatters.dart';
 import 'request_tone.dart';
 
@@ -17,12 +19,12 @@ class StaffRequestCard extends StatelessWidget {
 
   /// What the amount means now: a late excuse saves a deduction, overtime adds pay — once decided, what happened.
   (String, String) _amount(Money amount) => switch ((request.isLate, request.status)) {
-    (true, 'approved') => ('Excused', amount.label),
-    (true, 'rejected') => ('Deducted', '−${amount.label}'),
-    (true, _) => ('If not excused', '−${amount.label}'),
-    (false, 'approved') => ('Paid', '+${amount.label}'),
-    (false, 'rejected') => ('Not paid', amount.label),
-    (false, _) => ('To pay', '+${amount.label}'),
+    (true, 'approved') => (StaffRequestText.excused, amount.label),
+    (true, 'rejected') => (StaffRequestText.deducted, '−${amount.label}'),
+    (true, _) => (CommonText.ifNotExcused, '−${amount.label}'),
+    (false, 'approved') => (StaffRequestText.paid, '+${amount.label}'),
+    (false, 'rejected') => (StaffRequestText.notPaid, amount.label),
+    (false, _) => (CommonText.toPay, '+${amount.label}'),
   };
 
   @override
@@ -71,17 +73,20 @@ class StaffRequestCard extends StatelessWidget {
                           style: theme.textTheme.titleMedium?.copyWith(color: tone, fontWeight: FontWeight.w700),
                         ),
                         if (showEmployee && day != null)
-                          Text('on ${ClinicClock.date(day.date)}', style: theme.textTheme.bodyMedium),
+                          Text(StaffRequestText.onDay(ClinicClock.date(day.date)), style: theme.textTheme.bodyMedium),
                       ],
                     ),
                     const SizedBox(height: 8),
                     FactList(
                       facts: [
                         if (day != null)
-                          (label: 'In – out', value: '${clockTime(day.checkInAt)} – ${clockTime(day.checkOutAt)}'),
+                          (
+                            label: StaffRequestText.inOut,
+                            value: '${clockTime(day.checkInAt)} – ${clockTime(day.checkOutAt)}',
+                          ),
                         if (amount != null) (label: _amount(amount).$1, value: _amount(amount).$2),
-                        (label: 'Reason', value: request.reason ?? 'No reason given'),
-                        (label: 'Code', value: request.code),
+                        (label: CommonText.reason, value: request.reason ?? CommonText.noReasonGiven),
+                        (label: StaffRequestText.code, value: request.code),
                       ],
                     ),
                     if (request.reviewedAt != null) ...[
@@ -106,7 +111,7 @@ class StaffRequestCard extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${rejected ? 'Rejected' : 'Approved'} by ${request.reviewedBy?.fullName ?? 'HR'} · '
+                                    '${rejected ? 'Rejected' : StaffRequestText.approved} by ${request.reviewedBy?.fullName ?? 'HR'} · '
                                     '${ClinicClock.dateTime(request.reviewedAt!)}',
                                     style: theme.textTheme.bodySmall?.copyWith(color: muted),
                                   ),
@@ -124,7 +129,7 @@ class StaffRequestCard extends StatelessWidget {
                       Align(
                         alignment: Alignment.centerRight,
                         child: AppButton(
-                          label: 'Withdraw',
+                          label: CommonText.withdraw,
                           icon: Icons.undo_rounded,
                           variant: ButtonVariant.text,
                           onPressed: onWithdraw,

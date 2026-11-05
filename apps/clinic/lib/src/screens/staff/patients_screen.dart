@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/staff_paths.dart';
+import '../../constants/common/common_text.dart';
+import '../../constants/staff/patient_text.dart';
 import '../../controllers/staff/patient_providers.dart';
 import '../../widgets/staff/patients/emergency_access_sheet.dart';
 import '../../widgets/staff/patients/patient_tile.dart';
@@ -22,12 +24,12 @@ class PatientsScreen extends ConsumerWidget {
     final access = ref.watch(accessProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Patient files'),
+        title: const Text(PatientText.patientFiles),
         actions: [
           // Clinicians who see only their own patients can open another one in an emergency.
           if (access.can('patients.read_own & patients.view_medical') && !access.can('patients.read_all'))
             IconButton(
-              tooltip: 'Emergency access',
+              tooltip: PatientText.emergencyAccess,
               icon: const Icon(Icons.emergency_outlined),
               onPressed: () async {
                 final id = await showModalBottomSheet<String>(
@@ -43,15 +45,15 @@ class PatientsScreen extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          SearchField(hint: 'Name, file number or mobile', onChanged: ref.read(patientSearchProvider.notifier).set),
+          SearchField(hint: CommonText.patientSearch, onChanged: ref.read(patientSearchProvider.notifier).set),
           Expanded(
             child: InfiniteList<Patient>(
               reloadKey: search,
               load: (page) => ref.read(patientRepositoryProvider).list(patientsQuery(search, page)),
               empty: EmptyState(
                 icon: Icons.person_search_rounded,
-                title: search.isEmpty ? 'No patient files yet' : 'No match',
-                message: search.isEmpty ? null : 'Try part of the name, the file number or the mobile.',
+                title: search.isEmpty ? PatientText.noPatientFilesYet : PatientText.noMatch,
+                message: search.isEmpty ? null : PatientText.noMatchHint,
               ),
               itemBuilder: (context, patient, _) => Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),

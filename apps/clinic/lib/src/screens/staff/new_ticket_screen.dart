@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../constants/staff/ticket_text.dart';
 import '../../controllers/staff/support_actions.dart';
 import '../../widgets/common/attach_photo_button.dart';
 
@@ -64,37 +65,34 @@ class _NewTicketScreenState extends ConsumerState<NewTicketScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('New support ticket')),
+      appBar: AppBar(title: const Text(TicketText.newSupportTicket)),
       body: Form(
         key: _form,
         autovalidateMode: _tried ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
         child: ListView(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
           children: [
-            Text(
-              'You get a notification when it is picked up and when it is solved.',
-              style: theme.textTheme.bodyMedium,
-            ),
+            Text(TicketText.newTicketHint, style: theme.textTheme.bodyMedium),
             const SizedBox(height: 16),
             TextFormField(
               controller: _subject,
               maxLength: 150,
               textInputAction: TextInputAction.next,
               decoration: const InputDecoration(
-                labelText: 'Subject',
-                hintText: 'e.g. Label printer in ward 2 is offline',
+                labelText: TicketText.subject,
+                hintText: TicketText.subjectHint,
                 border: OutlineInputBorder(),
               ),
-              validator: (v) => (v?.trim().length ?? 0) < 4 ? 'At least 4 characters.' : null,
+              validator: (v) => (v?.trim().length ?? 0) < 4 ? TicketText.subjectTooShort : null,
             ),
-            const SectionHeader('Category'),
+            const SectionHeader(TicketText.category),
             _ToneChoices(
               enumName: 'TicketCategory',
               values: _categories,
               selected: _category,
               onSelected: (v) => setState(() => _category = v),
             ),
-            const SectionHeader('Priority'),
+            const SectionHeader(TicketText.priority),
             _ToneChoices(
               enumName: 'TreatmentPriority',
               values: _priorities,
@@ -108,12 +106,12 @@ class _NewTicketScreenState extends ConsumerState<NewTicketScreen> {
               maxLines: 8,
               maxLength: 5000,
               decoration: const InputDecoration(
-                labelText: 'What happened?',
-                hintText: 'Where, since when, what you already tried',
+                labelText: TicketText.whatHappened,
+                hintText: TicketText.whatHappenedHint,
                 border: OutlineInputBorder(),
                 alignLabelWithHint: true,
               ),
-              validator: (v) => (v?.trim().length ?? 0) < 10 ? 'At least 10 characters.' : null,
+              validator: (v) => (v?.trim().length ?? 0) < 10 ? TicketText.descriptionTooShort : null,
             ),
             const SizedBox(height: 4),
             _PhotoPicks(
@@ -123,7 +121,7 @@ class _NewTicketScreenState extends ConsumerState<NewTicketScreen> {
             ),
             const SizedBox(height: 8),
             AppButton(
-              label: 'Open ticket',
+              label: TicketText.openTicket,
               icon: Icons.send_rounded,
               expand: true,
               lock: ButtonLock.once,

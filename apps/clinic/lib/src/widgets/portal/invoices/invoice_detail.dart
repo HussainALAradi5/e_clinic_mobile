@@ -5,6 +5,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/portal/invoice_text.dart';
 import '../../../controllers/portal/portal_providers.dart';
 import '../../common/document_buttons.dart';
 import 'coverage_summary.dart';
@@ -54,9 +55,9 @@ class InvoiceDetail extends ConsumerWidget {
                 ),
               ),
             const Divider(height: 16),
-            TotalRow(label: 'Total', value: invoice.total.label, bold: true),
-            TotalRow(label: 'Paid', value: invoice.paidAmount.label),
-            if (invoice.owing) TotalRow(label: 'Left to pay', value: invoice.balanceDue.label, bold: true),
+            TotalRow(label: InvoiceText.total, value: invoice.total.label, bold: true),
+            TotalRow(label: InvoiceText.paid, value: invoice.paidAmount.label),
+            if (invoice.owing) TotalRow(label: InvoiceText.leftToPay, value: invoice.balanceDue.label, bold: true),
             // The insurer's part and mine, when my insurance covers this invoice.
             if (ref.watch(invoiceCoverageProvider(invoiceId)).value case final c? when c.covered) ...[
               const SizedBox(height: 12),
@@ -64,7 +65,10 @@ class InvoiceDetail extends ConsumerWidget {
             ],
             if (invoice.payments.isNotEmpty) ...[
               const SizedBox(height: 16),
-              Text('Payments', style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+              Text(
+                InvoiceText.payments,
+                style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              ),
               for (final payment in invoice.payments)
                 ListTile(
                   contentPadding: EdgeInsets.zero,

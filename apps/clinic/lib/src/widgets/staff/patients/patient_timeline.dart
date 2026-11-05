@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../config/routes/staff_paths.dart';
+import '../../../constants/staff/patient_text.dart';
 
 /// The patient's history, newest first (the latest few, then *Show all*): visits open the booking, orders the
 /// order when the user may open orders.
@@ -41,7 +42,7 @@ class _PatientTimelineState extends State<PatientTimeline> {
     if (entries.isEmpty) {
       return const Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
-        child: InfoNote(icon: Icons.history_rounded, text: 'Nothing in this file yet.'),
+        child: InfoNote(icon: Icons.history_rounded, text: PatientText.emptyFile),
       );
     }
     final muted = Theme.of(context).colorScheme.onSurfaceVariant;
@@ -67,7 +68,7 @@ class _PatientTimelineState extends State<PatientTimeline> {
               },
             ),
           if (!_all && entries.length > _shown)
-            TextButton(onPressed: () => setState(() => _all = true), child: Text('Show all ${entries.length}')),
+            TextButton(onPressed: () => setState(() => _all = true), child: Text(PatientText.showAll(entries.length))),
         ],
       ),
     );

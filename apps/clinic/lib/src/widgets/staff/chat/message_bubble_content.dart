@@ -68,7 +68,7 @@ class _BubbleContent extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 4),
             child: ActionChip(
               avatar: Icon(m.kind == 'voice' ? Icons.mic_rounded : Icons.attach_file_rounded, size: 18),
-              label: Text(m.kind == 'voice' ? 'Voice note' : f.name, overflow: TextOverflow.ellipsis),
+              label: Text(m.kind == 'voice' ? ChatText.voiceNote : f.name, overflow: TextOverflow.ellipsis),
               onPressed: f.url == null ? null : () => onOpen(f.url!),
             ),
           ),

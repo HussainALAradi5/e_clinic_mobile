@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../constants/staff/scan_text.dart';
+
 /// No camera, or no permission: say how to fix it and offer typing the code instead.
 class CameraUnavailable extends StatelessWidget {
   const CameraUnavailable({super.key, required this.denied, required this.onTypeCode});
@@ -21,15 +23,13 @@ class CameraUnavailable extends StatelessWidget {
               const Icon(Icons.no_photography_outlined, size: 48, color: Colors.white70),
               const SizedBox(height: 16),
               Text(
-                denied ? 'Camera access is off' : 'The camera is not available',
+                denied ? ScanText.cameraOff : ScanText.cameraUnavailable,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
               ),
               const SizedBox(height: 8),
               Text(
-                denied
-                    ? 'Allow e-Clinic Staff to use the camera in your phone settings, or type the code instead.'
-                    : 'You can still type the code printed under the QR code.',
+                denied ? ScanText.cameraOffHint : ScanText.cameraUnavailableHint,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white70),
               ),
@@ -37,7 +37,7 @@ class CameraUnavailable extends StatelessWidget {
               FilledButton.icon(
                 onPressed: onTypeCode,
                 icon: const Icon(Icons.keyboard_outlined),
-                label: const Text('Type the code'),
+                label: const Text(ScanText.typeCode),
               ),
             ],
           ),

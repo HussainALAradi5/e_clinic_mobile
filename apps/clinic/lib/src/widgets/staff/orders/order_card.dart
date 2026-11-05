@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../config/routes/staff_paths.dart';
+import '../../../constants/common/common_text.dart';
 import '../../../controllers/staff/order_actions.dart';
 import 'order_action_button.dart';
 
@@ -72,7 +73,7 @@ class OrderCard extends ConsumerWidget {
                   ),
                   if (others.isNotEmpty)
                     PopupMenuButton<OrderAction>(
-                      tooltip: 'More actions',
+                      tooltip: CommonText.moreActions,
                       onSelected: (action) => OrderActions.runFromMenu(context, ref, action, order),
                       itemBuilder: (_) => [
                         for (final action in others)

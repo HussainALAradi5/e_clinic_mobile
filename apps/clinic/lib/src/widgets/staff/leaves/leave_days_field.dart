@@ -1,6 +1,8 @@
 import 'package:e_clinic_core/core.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/staff/leave_text.dart';
+
 /// The days off: a button that opens the range picker (from 30 days back, for sick leave asked for afterwards, to
 /// a year ahead) and shows the chosen days, and "Half day" when it is one day.
 class LeaveDaysField extends StatelessWidget {
@@ -26,7 +28,7 @@ class LeaveDaysField extends StatelessWidget {
       firstDate: today.subtract(const Duration(days: 30)),
       lastDate: today.add(const Duration(days: 365)),
       initialDateRange: range,
-      helpText: 'Days off',
+      helpText: LeaveText.daysOff,
     );
     if (picked != null) onRange(picked);
   }
@@ -45,7 +47,7 @@ class LeaveDaysField extends StatelessWidget {
             icon: const Icon(Icons.date_range_rounded),
             label: Text(
               range == null
-                  ? 'Choose the days'
+                  ? LeaveText.chooseTheDays
                   : oneDay
                   ? ClinicClock.day(ClinicClock.isoDate(range.start))
                   : '${ClinicClock.date(ClinicClock.isoDate(range.start))} – ${ClinicClock.date(ClinicClock.isoDate(range.end))}',
@@ -57,7 +59,7 @@ class LeaveDaysField extends StatelessWidget {
             contentPadding: const EdgeInsets.symmetric(horizontal: 16),
             value: halfDay,
             onChanged: onHalfDay,
-            title: const Text('Half day'),
+            title: const Text(LeaveText.halfDay),
           ),
       ],
     );

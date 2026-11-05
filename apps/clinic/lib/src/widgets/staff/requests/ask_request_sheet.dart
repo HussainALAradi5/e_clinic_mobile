@@ -4,6 +4,8 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/staff/staff_request_text.dart';
 import '../../../utilities/staff/formatters.dart';
 import 'request_tone.dart';
 
@@ -60,7 +62,10 @@ class _AskRequestSheetState extends ConsumerState<_AskRequestSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(_late ? 'Excuse my late arrival' : 'Pay my overtime', style: theme.textTheme.titleLarge),
+            Text(
+              _late ? StaffRequestText.excuseMyLateArrival : StaffRequestText.payMyOvertime,
+              style: theme.textTheme.titleLarge,
+            ),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(14),
@@ -90,9 +95,7 @@ class _AskRequestSheetState extends ConsumerState<_AskRequestSheet> {
             ),
             const SizedBox(height: 12),
             Text(
-              _late
-                  ? 'Late minutes are deducted from your pay unless HR accepts your excuse.'
-                  : "Overtime is paid once HR approves it, at the clinic's overtime rate per hour.",
+              _late ? StaffRequestText.lateHint : StaffRequestText.overtimeHint,
               style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 16),
@@ -103,14 +106,14 @@ class _AskRequestSheetState extends ConsumerState<_AskRequestSheet> {
               maxLines: 4,
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
-                labelText: 'Reason (optional)',
-                hintText: _late ? 'e.g. traffic, a sick child' : 'e.g. an emergency patient, covering a colleague',
+                labelText: StaffRequestText.reasonOptional,
+                hintText: _late ? StaffRequestText.lateReasonHint : StaffRequestText.overtimeReasonHint,
               ),
             ),
             const SizedBox(height: 12),
-            AppButton(label: 'Send to HR', icon: Icons.send_rounded, expand: true, onPressed: _send),
+            AppButton(label: StaffRequestText.sendToHr, icon: Icons.send_rounded, expand: true, onPressed: _send),
             const SizedBox(height: 4),
-            TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Not now')),
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text(CommonText.notNow)),
           ],
         ),
       ),

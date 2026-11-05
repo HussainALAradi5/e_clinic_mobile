@@ -18,7 +18,7 @@ class _PasswordFieldState extends State<PasswordField> {
       errorText: widget.errorText,
       prefixIcon: const Icon(Icons.lock_outline_rounded),
       suffixIcon: IconButton(
-        tooltip: _hidden ? 'Show password' : 'Hide password',
+        tooltip: _hidden ? UiText.showPassword : UiText.hidePassword,
         icon: Icon(_hidden ? Icons.visibility_outlined : Icons.visibility_off_outlined),
         onPressed: () => setState(() => _hidden = !_hidden),
       ),

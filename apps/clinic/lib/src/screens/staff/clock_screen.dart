@@ -2,6 +2,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/staff/clock_text.dart';
 import '../../controllers/staff/earning_providers.dart';
 import '../../controllers/staff/staff_providers.dart';
 import '../../widgets/staff/clock/clock_card.dart';
@@ -16,7 +17,7 @@ class ClockScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Clock in / out')),
+      appBar: AppBar(title: const Text(ClockText.clockInOut)),
       body: RefreshIndicator(
         onRefresh: () async {
           ref
@@ -32,18 +33,13 @@ class ClockScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(4, 16, 4, 0),
               child: Text(
-                'Check in at the clinic: on its Wi-Fi, or with your location on. Arriving more than 10 minutes late is marked late; '
-                'staying 15 minutes or more past your shift goes to your manager as overtime. '
-                'Forgot to check in? Ask HR to correct the day.',
+                ClockText.rules,
                 style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
               ),
             ),
             const SizedBox(height: 8),
-            const SectionHeader('Leave and payslips'),
-            Text(
-              'Leave requests and payslips are under HR → My HR on the clinic website.',
-              style: theme.textTheme.bodyMedium,
-            ),
+            const SectionHeader(ClockText.leaveAndPayslips),
+            Text(ClockText.hrOnWebsite, style: theme.textTheme.bodyMedium),
           ],
         ),
       ),

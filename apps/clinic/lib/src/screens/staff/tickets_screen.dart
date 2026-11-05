@@ -9,6 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/routes/staff_paths.dart';
+import '../../constants/common/common_text.dart';
+import '../../constants/staff/ticket_text.dart';
 
 part 'tickets_screen_status_filter.dart';
 part 'tickets_screen_ticket_card.dart';
@@ -66,12 +68,12 @@ class _TicketsScreenState extends ConsumerState<TicketsScreen> {
     final desk = access.can('tickets.resolve');
     final catalog = ref.watch(enumCatalogProvider).value ?? EnumCatalog.empty;
     return Scaffold(
-      appBar: AppBar(title: Text(desk ? 'Support desk' : 'My support tickets')),
+      appBar: AppBar(title: Text(desk ? TicketText.supportDesk : TicketText.mySupportTickets)),
       floatingActionButton: access.can('tickets.create')
           ? FloatingActionButton.extended(
               onPressed: _new,
               icon: const Icon(Icons.add_rounded),
-              label: const Text('New ticket'),
+              label: const Text(TicketText.newTicket),
             )
           : null,
       // The filters live above the list (not in its header), so the search field keeps its text and focus
@@ -83,7 +85,10 @@ class _TicketsScreenState extends ConsumerState<TicketsScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                child: SearchField(hint: 'Search subject or ticket', onChanged: (v) => setState(() => _search = v)),
+                child: SearchField(
+                  hint: TicketText.searchSubjectOrTicket,
+                  onChanged: (v) => setState(() => _search = v),
+                ),
               ),
               ChipBar<_StatusFilter>(
                 options: [for (final s in _StatusFilter.values) (value: s, label: s.label, count: null)],
@@ -101,7 +106,7 @@ class _TicketsScreenState extends ConsumerState<TicketsScreen> {
               const SizedBox(height: 8),
               ChipBar<String?>(
                 options: [
-                  (value: null, label: 'Any priority', count: null),
+                  (value: null, label: TicketText.anyPriority, count: null),
                   for (final p in _priorities) (value: p, label: catalog.label('TreatmentPriority', p), count: null),
                 ],
                 selected: _priority,
@@ -126,8 +131,8 @@ class _TicketsScreenState extends ConsumerState<TicketsScreen> {
                 load: _load,
                 empty: EmptyState(
                   icon: Icons.support_agent_rounded,
-                  title: 'No tickets here',
-                  message: desk ? 'Nothing matches these filters.' : 'Report a problem with “New ticket”.',
+                  title: TicketText.noTicketsHere,
+                  message: desk ? TicketText.noMatch : TicketText.noTicketsHint,
                 ),
                 itemBuilder: (context, ticket, _) => Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),

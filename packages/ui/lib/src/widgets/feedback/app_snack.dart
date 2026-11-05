@@ -2,6 +2,8 @@ import 'package:e_clinic_core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../constants/ui_text.dart';
+
 /// Floating messages: success with a light haptic, errors with the request reference for support.
 abstract final class AppSnack {
   /// The app's messenger (`MaterialApp.scaffoldMessengerKey`), for messages raised outside a screen.
@@ -25,7 +27,10 @@ abstract final class AppSnack {
                 child: Text.rich(
                   TextSpan(
                     children: [
-                      TextSpan(text: '$title\n', style: const TextStyle(fontWeight: FontWeight.w600)),
+                      TextSpan(
+                        text: '$title\n',
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
                       TextSpan(text: message),
                     ],
                   ),
@@ -47,7 +52,7 @@ abstract final class AppSnack {
 
   static void error(BuildContext context, Object error) {
     HapticFeedback.mediumImpact();
-    final message = error is ApiException ? error.message : 'Something went wrong. Please try again.';
+    final message = error is ApiException ? error.message : UiText.somethingWentWrong;
     final requestId = error is ApiException ? error.requestId : null;
     final reference = requestId == null ? '' : '\nRef. ${requestId.length > 8 ? requestId.substring(0, 8) : requestId}';
     _show(context, '$message$reference', icon: Icons.error_rounded, isError: true);

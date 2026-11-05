@@ -5,6 +5,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/portal/invoice_text.dart';
 import '../../controllers/billing/fee_providers.dart';
 import '../../controllers/billing/package_providers.dart';
 import '../../controllers/portal/portal_providers.dart';
@@ -41,7 +42,7 @@ class _InvoicesScreenState extends ConsumerState<InvoicesScreen> {
   Widget build(BuildContext context) {
     final filtered = _state != null || _method != null || _dates != null;
     return Scaffold(
-      appBar: AppBar(title: const Text('My invoices')),
+      appBar: AppBar(title: const Text(InvoiceText.myInvoices)),
       body: RefreshIndicator(
         onRefresh: () {
           ref
@@ -96,10 +97,8 @@ class _InvoicesScreenState extends ConsumerState<InvoicesScreen> {
                     if (invoices.isEmpty)
                       EmptyState(
                         icon: Icons.receipt_long_outlined,
-                        title: filtered ? 'No invoices here' : 'No invoices yet',
-                        message: filtered
-                            ? 'Try another filter.'
-                            : 'Invoices appear here once the clinic issues them after a visit.',
+                        title: filtered ? InvoiceText.noInvoicesHere : InvoiceText.noInvoicesYet,
+                        message: filtered ? InvoiceText.tryAnotherFilter : InvoiceText.noInvoicesHint,
                       )
                     else
                       for (final invoice in invoices) ...[InvoiceCard(invoice: invoice), const SizedBox(height: 12)],

@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../config/routes/staff_paths.dart';
+import '../../../constants/common/common_text.dart';
 import '../../../controllers/staff/visit_actions.dart';
 import '../../../utilities/staff/visit_timing.dart';
 import '../../common/timing_edge.dart';
@@ -100,7 +101,7 @@ class AppointmentCard extends ConsumerWidget {
                     ),
                     if (others.isNotEmpty)
                       PopupMenuButton<VisitAction>(
-                        tooltip: 'More actions',
+                        tooltip: CommonText.moreActions,
                         onSelected: (action) => VisitActions.runFromMenu(context, ref, action, visit),
                         itemBuilder: (_) => [
                           for (final action in others)

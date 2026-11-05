@@ -1,6 +1,9 @@
 import 'package:e_clinic_data/data.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/staff/order_text.dart';
+
 /// What the performer writes when an order is done.
 typedef OrderResult = ({String report, bool abnormal});
 
@@ -34,7 +37,7 @@ class _CompleteOrderSheetState extends State<CompleteOrderSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Result of ${order.code}', style: text.titleLarge),
+          Text(OrderText.resultOf(order.code), style: text.titleLarge),
           const SizedBox(height: 4),
           Text(
             [order.description, if (order.patient != null) order.patient!.fullName].join(' · '),
@@ -49,14 +52,14 @@ class _CompleteOrderSheetState extends State<CompleteOrderSheet> {
             maxLength: 10000,
             textCapitalization: TextCapitalization.sentences,
             onChanged: (_) => setState(() {}),
-            decoration: const InputDecoration(labelText: 'Report', alignLabelWithHint: true),
+            decoration: const InputDecoration(labelText: CommonText.report, alignLabelWithHint: true),
           ),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             value: _abnormal,
             onChanged: (v) => setState(() => _abnormal = v),
-            title: const Text('Abnormal finding'),
-            subtitle: const Text('The ordering doctor is alerted.'),
+            title: const Text(OrderText.abnormalFinding),
+            subtitle: const Text(OrderText.abnormalHint),
           ),
           const SizedBox(height: 8),
           FilledButton.icon(
@@ -64,7 +67,7 @@ class _CompleteOrderSheetState extends State<CompleteOrderSheet> {
                 ? null
                 : () => Navigator.pop<OrderResult>(context, (report: _report.text.trim(), abnormal: _abnormal)),
             icon: const Icon(Icons.task_alt_rounded),
-            label: const Text('Save result'),
+            label: const Text(OrderText.saveResult),
           ),
         ],
       ),

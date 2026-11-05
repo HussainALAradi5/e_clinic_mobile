@@ -2,6 +2,8 @@ import 'package:e_clinic_core/core.dart';
 import 'package:e_clinic_data/data.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/staff/patient_text.dart';
+
 /// A patient file on a list: initials, name, file number · age · mobile, and a warning mark for allergies.
 class PatientTile extends StatelessWidget {
   const PatientTile({super.key, required this.patient, required this.onTap, this.trailing});
@@ -32,7 +34,7 @@ class PatientTile extends StatelessWidget {
             if (allergic) ...[
               const SizedBox(width: 6),
               Tooltip(
-                message: 'Allergies',
+                message: PatientText.allergies,
                 child: Icon(Icons.warning_amber_rounded, size: 18, color: scheme.error),
               ),
             ],

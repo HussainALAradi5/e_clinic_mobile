@@ -99,7 +99,7 @@ class _ComposerState extends State<_Composer> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   IconButton(
-                    tooltip: 'Add a photo',
+                    tooltip: ChatText.addPhoto,
                     onPressed: () async {
                       final picked = await pickPhoto(context);
                       if (picked != null && mounted) setState(() => _photo = picked);
@@ -115,7 +115,7 @@ class _ComposerState extends State<_Composer> {
                       maxLength: 4000,
                       textCapitalization: TextCapitalization.sentences,
                       decoration: const InputDecoration(
-                        hintText: 'Message',
+                        hintText: ChatText.message,
                         counterText: '',
                         isDense: true,
                         border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(24))),
@@ -124,7 +124,7 @@ class _ComposerState extends State<_Composer> {
                   ),
                   const SizedBox(width: 6),
                   IconButton.filled(
-                    tooltip: 'Send',
+                    tooltip: ChatText.send,
                     onPressed: canSend ? _send : null,
                     icon: widget.sending
                         ? const SizedBox.square(dimension: 20, child: CircularProgressIndicator(strokeWidth: 2))

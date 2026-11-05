@@ -25,7 +25,7 @@ class _SolvedBanner extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Solved${ticket.resolver == null ? '' : ' by ${ticket.resolver!.fullName}'}',
+                  TicketText.solvedBanner(ticket.resolver?.fullName),
                   style: TextStyle(color: fg, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 4),
@@ -33,7 +33,7 @@ class _SolvedBanner extends StatelessWidget {
                 if (ticket.resolutionSteps.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   Text(
-                    'Steps taken',
+                    TicketText.stepsTaken,
                     style: TextStyle(color: fg, fontWeight: FontWeight.w600),
                   ),
                 ],

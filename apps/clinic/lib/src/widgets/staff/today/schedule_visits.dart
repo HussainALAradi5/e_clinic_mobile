@@ -1,6 +1,7 @@
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/staff/appointment_text.dart';
 import '../../../controllers/staff/staff_providers.dart';
 import '../appointments/appointment_card.dart';
 
@@ -30,10 +31,10 @@ class ScheduleVisits extends StatelessWidget {
         if (shown.isEmpty)
           EmptyState(
             icon: Icons.event_available_outlined,
-            title: visits.isEmpty ? 'Nothing booked today' : 'No bookings here',
+            title: visits.isEmpty ? AppointmentText.nothingBookedToday : AppointmentText.noBookingsHere,
             message: visits.isEmpty
-                ? (mine ? 'No patients are booked with you today.' : 'The clinic has no bookings today.')
-                : 'Pick another stage to see the rest of the day.',
+                ? (mine ? AppointmentText.noneBookedWithYou : AppointmentText.noneBookedInClinic)
+                : AppointmentText.pickAnotherStage,
           ),
         for (final visit in shown)
           Padding(

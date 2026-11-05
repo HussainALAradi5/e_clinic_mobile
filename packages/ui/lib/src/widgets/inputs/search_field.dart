@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../constants/ui_text.dart';
+
 /// Rounded search box that reports what is typed after a short pause (one request per pause, not per key),
 /// with a clear button.
 class SearchField extends StatefulWidget {
@@ -54,7 +56,7 @@ class _SearchFieldState extends State<SearchField> {
         prefixIcon: const Icon(Icons.search_rounded),
         suffixIcon: _text.text.isEmpty
             ? null
-            : IconButton(tooltip: 'Clear', icon: const Icon(Icons.close_rounded), onPressed: _clear),
+            : IconButton(tooltip: UiText.clear, icon: const Icon(Icons.close_rounded), onPressed: _clear),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(28)),
         isDense: true,
       ),

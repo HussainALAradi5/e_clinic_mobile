@@ -16,7 +16,7 @@ class _ChatToolbar extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-          child: SearchField(hint: 'Search chats or people', onChanged: onSearch),
+          child: SearchField(hint: ChatText.searchChats, onChanged: onSearch),
         ),
         _ChatFilters(selected: filter, onSelected: onFilter),
         if (total case final n?)

@@ -12,17 +12,17 @@ class _TodayFacts extends StatelessWidget {
     return Card(
       child: FactList(
         facts: [
-          (label: 'Checked in', value: row.checkInAt == null ? null : clockTime(row.checkInAt)),
-          (label: 'Checked out', value: row.checkOutAt == null ? null : clockTime(row.checkOutAt)),
-          (label: 'Late', value: row.lateMinutes > 0 ? formatMinutes(row.lateMinutes) : null),
+          (label: CommonText.checkedIn, value: row.checkInAt == null ? null : clockTime(row.checkInAt)),
+          (label: CommonText.checkedOut, value: row.checkOutAt == null ? null : clockTime(row.checkOutAt)),
+          (label: ClockText.lateLabel, value: row.lateMinutes > 0 ? formatMinutes(row.lateMinutes) : null),
           (
-            label: 'Overtime',
+            label: ClockText.overtime,
             value: row.overtimeMinutes > 0
                 ? '${formatMinutes(row.overtimeMinutes)}'
                       '${row.overtimeApproved ?? false ? ' (approved)' : ' (waiting for approval)'}'
                 : null,
           ),
-          (label: 'Shift', value: shift.label),
+          (label: ClockText.shift, value: shift.label),
         ],
       ),
     );

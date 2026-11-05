@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:e_clinic_core/core.dart';
 import 'package:flutter/material.dart';
 
+import '../../constants/ui_text.dart';
 import '../feedback/error_state.dart';
 import '../feedback/skeleton_list.dart';
 

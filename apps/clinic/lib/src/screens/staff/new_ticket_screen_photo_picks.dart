@@ -30,7 +30,7 @@ class _PhotoPicks extends StatelessWidget {
               if (photo != null) onAdd(photo);
             },
             icon: const Icon(Icons.add_a_photo_outlined),
-            label: Text(photos.isEmpty ? 'Add a photo or screenshot' : 'Add another'),
+            label: Text(photos.isEmpty ? TicketText.addPhotoOrScreenshot : TicketText.addAnother),
           ),
       ],
     );

@@ -3,6 +3,9 @@ import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/staff/patient_text.dart';
+
 /// Medical, insurance and contact details of a patient file (medical lines only when the server sent them).
 class PatientFacts extends StatelessWidget {
   const PatientFacts({super.key, required this.patient});
@@ -14,29 +17,29 @@ class PatientFacts extends StatelessWidget {
     final p = patient;
     final emergency = p.emergencyContacts.map((c) => c.line).join('\n');
     final insurance = p.insurer == null
-        ? 'Self-paying'
+        ? PatientText.selfPaying
         : [
             p.insurer!.name,
             if (p.insuranceCoveragePercent != null) '${p.insuranceCoveragePercent}% covered',
           ].join(' · ');
     return FactList(
       facts: [
-        (label: 'Blood group', value: p.bloodGroup == 'unknown' ? null : p.bloodGroup),
-        (label: 'Chronic conditions', value: p.chronicConditions),
-        (label: 'Family history', value: p.familyHistory),
-        (label: 'Surgical history', value: p.surgicalHistory),
-        (label: 'Date of birth', value: ClinicClock.date(p.dateOfBirth)),
-        (label: 'ID number', value: p.person.nationalId),
-        (label: 'Email', value: p.email),
-        (label: 'Address', value: p.person.address?.formatted),
-        (label: 'Insurance', value: insurance),
-        (label: 'Policy', value: p.insurancePolicyNumber),
+        (label: PatientText.bloodGroup, value: p.bloodGroup == 'unknown' ? null : p.bloodGroup),
+        (label: PatientText.chronicConditions, value: p.chronicConditions),
+        (label: PatientText.familyHistory, value: p.familyHistory),
+        (label: PatientText.surgicalHistory, value: p.surgicalHistory),
+        (label: CommonText.dateOfBirth, value: ClinicClock.date(p.dateOfBirth)),
+        (label: CommonText.idNumber, value: p.person.nationalId),
+        (label: CommonText.email, value: p.email),
+        (label: CommonText.address, value: p.person.address?.formatted),
+        (label: PatientText.insurance, value: insurance),
+        (label: PatientText.policy, value: p.insurancePolicyNumber),
         (
-          label: 'Insurance expires',
+          label: PatientText.insuranceExpires,
           value: p.insuranceExpiryDate == null ? null : ClinicClock.date(p.insuranceExpiryDate!),
         ),
-        (label: 'Emergency contacts', value: emergency.isEmpty ? null : emergency),
-        (label: 'Front-desk notes', value: p.notes),
+        (label: CommonText.emergencyContacts, value: emergency.isEmpty ? null : emergency),
+        (label: PatientText.frontDeskNotes, value: p.notes),
       ],
     );
   }

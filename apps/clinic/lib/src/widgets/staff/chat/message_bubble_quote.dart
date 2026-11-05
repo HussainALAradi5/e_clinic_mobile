@@ -18,7 +18,7 @@ class _Quote extends StatelessWidget {
     };
     return Semantics(
       button: true,
-      label: 'Show the message from ${quote.senderName}',
+      label: ChatText.showQuoted(quote.senderName),
       child: GestureDetector(
         onTap: onTap,
         child: Container(
@@ -33,7 +33,7 @@ class _Quote extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                quote.senderId == meId ? 'You' : quote.senderName,
+                quote.senderId == meId ? CommonText.you : quote.senderName,
                 style: text.labelMedium?.copyWith(color: white, fontWeight: FontWeight.w700),
               ),
               Text(

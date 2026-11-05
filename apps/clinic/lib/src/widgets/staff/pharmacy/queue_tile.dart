@@ -3,6 +3,8 @@ import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/staff/pharmacy_text.dart';
+
 /// A prescription waiting at the pharmacy: patient, medicines, doctor and age; a lock mark for controlled drugs.
 class QueueTile extends StatelessWidget {
   const QueueTile({super.key, required this.prescription, required this.onTap});
@@ -51,7 +53,7 @@ class QueueTile extends StatelessWidget {
                           const Chip(
                             visualDensity: VisualDensity.compact,
                             avatar: Icon(Icons.lock_outline_rounded, size: 16),
-                            label: Text('Controlled'),
+                            label: Text(PharmacyText.controlled),
                           ),
                         Text(
                           [

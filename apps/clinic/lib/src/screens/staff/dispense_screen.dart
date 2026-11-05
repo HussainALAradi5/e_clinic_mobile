@@ -8,6 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../constants/common/common_text.dart';
+import '../../constants/staff/pharmacy_text.dart';
 import '../../controllers/staff/pharmacy_providers.dart';
 import '../../utilities/staff/dispense_plan.dart';
 import '../../widgets/common/reason_field.dart';
@@ -32,7 +34,7 @@ class DispenseScreen extends ConsumerWidget {
     // The form keeps its quantities, so it is built once the prescription is in (with its own bar and button).
     if (value.value case final prescription?) return _DispenseForm(prescription: prescription);
     return Scaffold(
-      appBar: AppBar(title: const Text('Dispense')),
+      appBar: AppBar(title: const Text(PharmacyText.dispense)),
       body: AsyncBody(
         value: value,
         onRetry: () => ref.invalidate(prescriptionProvider(id)),

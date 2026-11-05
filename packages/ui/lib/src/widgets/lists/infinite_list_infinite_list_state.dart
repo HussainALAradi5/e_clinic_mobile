@@ -114,7 +114,7 @@ class _InfiniteListState<T> extends State<InfiniteList<T>> {
         child: TextButton.icon(
           onPressed: _next,
           icon: const Icon(Icons.refresh_rounded),
-          label: const Text('Could not load more — try again'),
+          label: const Text(UiText.loadMoreFailed),
         ),
       );
     }

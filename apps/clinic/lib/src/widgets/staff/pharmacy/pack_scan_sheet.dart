@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
+import '../../../constants/common/common_text.dart';
+import '../../../constants/staff/pharmacy_text.dart';
 import '../scan/camera_unavailable.dart';
 import '../scan/type_code_dialog.dart';
 
@@ -44,7 +46,7 @@ class _PackScannerState extends State<_PackScanner> {
   Future<void> _typeCode() async => _finish(
     await showDialog<String>(
       context: context,
-      builder: (_) => const TypeCodeDialog(label: 'Barcode number', hint: 'e.g. 6291100000000'),
+      builder: (_) => const TypeCodeDialog(label: PharmacyText.barcodeNumber, hint: PharmacyText.barcodeHint),
     ),
   );
 
@@ -77,11 +79,11 @@ class _PackScannerState extends State<_PackScanner> {
         child: Row(
           children: [
             const Expanded(
-              child: Text('Point at the barcode on the pack', style: TextStyle(color: Colors.white)),
+              child: Text(PharmacyText.pointAtBarcode, style: TextStyle(color: Colors.white)),
             ),
-            TextButton(onPressed: _typeCode, child: const Text('Type it')),
+            TextButton(onPressed: _typeCode, child: const Text(PharmacyText.typeIt)),
             IconButton(
-              tooltip: 'Close',
+              tooltip: CommonText.close,
               color: Colors.white,
               icon: const Icon(Icons.close_rounded),
               onPressed: () => Navigator.pop(context),

@@ -9,15 +9,25 @@ class _StepBar extends StatelessWidget {
 
   /// The steps open to an admin from the ticket's current status.
   static List<_Step> stepsFor(SupportTicket t) => [
-    (to: GenericStatus.inProgress, label: 'Take it', icon: Icons.assignment_ind_rounded, variant: ButtonVariant.tonal),
-    (to: GenericStatus.completed, label: 'Mark solved', icon: Icons.task_alt_rounded, variant: ButtonVariant.filled),
+    (
+      to: GenericStatus.inProgress,
+      label: TicketText.takeIt,
+      icon: Icons.assignment_ind_rounded,
+      variant: ButtonVariant.tonal,
+    ),
+    (
+      to: GenericStatus.completed,
+      label: TicketText.markSolved,
+      icon: Icons.task_alt_rounded,
+      variant: ButtonVariant.filled,
+    ),
     (
       to: GenericStatus.pending,
-      label: t.status == GenericStatus.completed ? 'Reopen' : 'Back to queue',
+      label: t.status == GenericStatus.completed ? TicketText.reopen : TicketText.backToQueue,
       icon: Icons.undo_rounded,
       variant: ButtonVariant.outlined,
     ),
-    (to: GenericStatus.cancelled, label: 'Cancel', icon: Icons.block_rounded, variant: ButtonVariant.outlined),
+    (to: GenericStatus.cancelled, label: CommonText.cancel, icon: Icons.block_rounded, variant: ButtonVariant.outlined),
   ].where((s) => t.allowedTransitions.contains(s.to)).toList();
 
   final List<_Step> steps;

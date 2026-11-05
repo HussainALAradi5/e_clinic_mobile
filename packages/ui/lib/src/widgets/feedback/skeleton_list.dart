@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../constants/ui_text.dart';
+
 /// Placeholder blocks shaped like a list of cards, gently pulsing (no spinner).
 class SkeletonList extends StatefulWidget {
   const SkeletonList({super.key, this.count = 4, this.height = 96});
@@ -26,7 +28,7 @@ class _SkeletonListState extends State<SkeletonList> with SingleTickerProviderSt
     final color = Theme.of(context).colorScheme.surfaceContainerHigh;
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
     return Semantics(
-      label: 'Loading',
+      label: UiText.loading,
       child: FadeTransition(
         opacity: reduceMotion ? const AlwaysStoppedAnimation<double>(1) : Tween(begin: 0.45, end: 1.0).animate(_pulse),
         child: Column(

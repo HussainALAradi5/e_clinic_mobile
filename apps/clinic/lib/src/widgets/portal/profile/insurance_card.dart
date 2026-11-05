@@ -3,6 +3,8 @@ import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 
+import '../../../constants/portal/profile_text.dart';
+
 /// The patient's insurance: insurer, policy number, how much it covers and until when.
 class InsuranceCard extends StatelessWidget {
   const InsuranceCard({super.key, required this.patient});
@@ -15,16 +17,16 @@ class InsuranceCard extends StatelessWidget {
     return Card(
       child: FactList(
         facts: [
-          (label: 'Insurer', value: p.insurer?.name),
-          (label: 'Policy number', value: p.insurancePolicyNumber),
+          (label: ProfileText.insurer, value: p.insurer?.name),
+          (label: ProfileText.policyNumber, value: p.insurancePolicyNumber),
           (
-            label: 'Covers',
+            label: ProfileText.covers,
             value: p.insuranceCoveragePercent == null
                 ? null
                 : '${double.tryParse(p.insuranceCoveragePercent!)?.round() ?? p.insuranceCoveragePercent} %',
           ),
           (
-            label: 'Valid until',
+            label: ProfileText.validUntil,
             value: p.insuranceExpiryDate == null ? null : ClinicClock.date(p.insuranceExpiryDate!),
           ),
         ],

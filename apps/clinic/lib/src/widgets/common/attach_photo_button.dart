@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../constants/common/common_text.dart';
+
 /// Attaches a photo (camera or gallery) to a record: picks first, then locks for the upload only. The server checks
 /// the type, size and virus scan, and keeps the file private.
 class AttachPhotoButton extends ConsumerStatefulWidget {
@@ -14,7 +16,7 @@ class AttachPhotoButton extends ConsumerStatefulWidget {
     required this.ownerId,
     required this.category,
     required this.onUploaded,
-    this.label = 'Add photo',
+    this.label = CommonText.addPhotoShort,
     this.variant = ButtonVariant.outlined,
     this.expand = false,
   });
@@ -52,14 +54,10 @@ class _AttachPhotoButtonState extends ConsumerState<AttachPhotoButton> {
           files: [(path: photo.path, name: photo.name)],
         );
     if (saved.isEmpty) {
-      throw const ApiException(
-        status: 422,
-        code: ErrorCodes.unexpected,
-        message: 'The clinic did not accept the photo.',
-      );
+      throw const ApiException(status: 422, code: ErrorCodes.unexpected, message: CommonText.photoRefused);
     }
     widget.onUploaded(saved);
-    if (mounted) AppSnack.success(context, 'Photo attached.');
+    if (mounted) AppSnack.success(context, CommonText.photoAttached);
   }
 
   @override
@@ -83,12 +81,12 @@ Future<XFile?> pickPhoto(BuildContext context) async {
         children: [
           ListTile(
             leading: const Icon(Icons.photo_camera_outlined),
-            title: const Text('Take a photo'),
+            title: const Text(CommonText.takePhoto),
             onTap: () => Navigator.pop(context, ImageSource.camera),
           ),
           ListTile(
             leading: const Icon(Icons.photo_library_outlined),
-            title: const Text('Choose from the gallery'),
+            title: const Text(CommonText.chooseFromGallery),
             onTap: () => Navigator.pop(context, ImageSource.gallery),
           ),
         ],

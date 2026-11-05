@@ -1,5 +1,7 @@
 import 'package:e_clinic_data/data.dart';
 
+import '../common/common_text.dart';
+
 /// Wording and sizes of the staff chat screens.
 abstract final class ChatText {
   static const title = 'Chat';
@@ -55,4 +57,31 @@ abstract final class ChatText {
 
   /// Wait after typing before searching.
   static const debounce = Duration(milliseconds: 300);
+
+  static const groups = 'Groups';
+  static const oneToOne = 'One-to-one';
+  static const youLeadThisGroup = 'You lead this group';
+  static const searchChats = 'Search chats or people';
+  static const message = 'Message';
+  static const noMessagesYet = 'No messages yet';
+  static const sayHello = 'Say hello.';
+  static const cancelReply = 'Cancel reply';
+  static const checkingFile = 'Checking file…';
+  static const reply = 'Reply';
+  static const copyText = 'Copy text';
+  static const addPhoto = CommonText.addPhoto;
+  static const send = CommonText.send;
+
+  static String replyingTo(String? name) => 'Replying to ${name ?? 'yourself'}';
+  static String showQuoted(String? name) => 'Show the message from $name';
+
+  static const groupCreated = 'Group created';
+  static const sayHelloRow = 'Say hello';
+  static const youPrefix = 'You: ';
+  static const file = 'File';
+  static const copied = 'Copied.';
+  static const quoteNotLoaded = 'That message is further back — scroll up to load it.';
+  static const voiceNote = 'Voice note';
+  static const fewerEmojis = 'Fewer emojis';
+  static const moreEmojis = 'More emojis';
 }

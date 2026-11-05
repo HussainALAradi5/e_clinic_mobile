@@ -3,6 +3,7 @@ import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../constants/portal/treatment_text.dart';
 import '../../../controllers/portal/portal_providers.dart';
 
 class TreatmentSessionList extends ConsumerWidget {
@@ -21,7 +22,7 @@ class TreatmentSessionList extends ConsumerWidget {
         child: Center(child: CircularProgressIndicator()),
       ),
       data: (sessions) => sessions.isEmpty
-          ? const Padding(padding: EdgeInsets.all(16), child: Text('No sessions booked yet.'))
+          ? const Padding(padding: EdgeInsets.all(16), child: Text(TreatmentText.noSessions))
           : Column(
               children: [
                 for (final s in sessions)
