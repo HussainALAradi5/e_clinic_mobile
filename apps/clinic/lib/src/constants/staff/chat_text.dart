@@ -2,7 +2,10 @@ import 'package:e_clinic_data/data.dart';
 
 /// Wording and sizes of the staff chat screens.
 abstract final class ChatText {
+  static const title = 'Chat';
   static const newChat = 'New chat';
+  static const noChats = 'No chats here';
+  static const noChatsHint = 'Try another filter, or start a new chat.';
   static const search = 'Name, phone, email or staff no.';
   static const nobody = 'No one in the clinic matches.';
   static const more = 'Show more';

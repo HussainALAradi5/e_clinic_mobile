@@ -17,6 +17,7 @@ import '../../widgets/staff/chat/chat_avatar.dart';
 import '../../widgets/staff/chat/presence_switch.dart';
 
 part 'chats_screen_chat_filters.dart';
+part 'chats_screen_chat_list.dart';
 part 'chats_screen_chat_menu.dart';
 part 'chats_screen_chat_menu_choice.dart';
 part 'chats_screen_chat_row.dart';
@@ -25,8 +26,9 @@ part 'chats_screen_contact_picker.dart';
 part 'chats_screen_contact_picker_state.dart';
 
 /// `/chat` — my chats, newest activity first: search (every word of a name), chips All · Unread · Groups ·
-/// One-to-one (on the server), paging as you scroll, unread badges. Long-press a chat for Open / Mark as read /
-/// Delete chat (a soft delete). "New chat" starts a one-to-one chat with a colleague. Refreshes every 20 s.
+/// One-to-one (on the server), paging as you scroll, unread badges, my Online / Offline switch. Long-press a chat
+/// for Open / Mark as read / Mute / Exit group / Delete chat (from my list only; a group once exited).
+/// "New chat" starts a one-to-one chat with a colleague. Refreshes every 20 s.
 class ChatsScreen extends ConsumerStatefulWidget {
   const ChatsScreen({super.key});
 
@@ -112,14 +114,14 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
     final canStart = ref.watch(accessProvider).can('chat.create');
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        title: const Text(ChatText.title),
         actions: const [PresenceSwitch(), SizedBox(width: 8)],
       ),
       floatingActionButton: canStart
           ? FloatingActionButton.extended(
               onPressed: _newChat,
               icon: const Icon(Icons.edit_square),
-              label: const Text('New chat'),
+              label: const Text(ChatText.newChat),
             )
           : null,
       body: Column(
@@ -132,23 +134,13 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
             onFilter: (v) => setState(() => _filter = v),
           ),
           Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async => setState(() => _version++),
-              child: InfiniteList<Conversation>(
-                reloadKey: (_filter, _search, _version),
-                load: _load,
-                empty: const EmptyState(
-                  icon: Icons.forum_outlined,
-                  title: 'No chats here',
-                  message: 'Try another filter, or start a new chat.',
-                ),
-                itemBuilder: (context, chat, _) => _ChatRow(
-                  chat: chat,
-                  meId: ref.watch(currentUserProvider)?.id ?? '',
-                  onTap: () => _open(chat),
-                  onLongPress: () => _menu(chat),
-                ),
-              ),
+            child: _ChatList(
+              reloadKey: (_filter, _search, _version),
+              load: _load,
+              meId: ref.watch(currentUserProvider)?.id ?? '',
+              onRefresh: () => setState(() => _version++),
+              onOpen: _open,
+              onMenu: _menu,
             ),
           ),
         ],

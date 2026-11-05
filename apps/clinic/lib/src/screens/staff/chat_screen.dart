@@ -19,6 +19,7 @@ import '../../widgets/staff/chat/message_bubble.dart';
 import '../../widgets/staff/chat/reaction_sheet.dart';
 
 part 'chat_screen_app_bar.dart';
+part 'chat_screen_body.dart';
 part 'chat_screen_composer.dart';
 part 'chat_screen_day_separator.dart';
 part 'chat_screen_footer.dart';
@@ -112,8 +113,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Future<void> _mute(MuteDuration? duration) =>
       _guard(() => _thread.mute(duration), done: duration == null ? ChatText.unmutedDone : ChatText.mutedDone);
 
-  void _info(Conversation chat) => ChatInfoSheet.show(context, chat);
-
   @override
   Widget build(BuildContext context) {
     final reactions = ref.watch(chatReactionsProvider).value;
@@ -125,37 +124,24 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         return Scaffold(
           appBar: _ChatAppBar(
             chat: chat,
-            onInfo: () => _info(chat),
+            onInfo: () => ChatInfoSheet.show(context, chat),
             onMute: _mute,
             onLeave: () => _leave(chat),
             onDelete: () => _delete(chat),
           ),
-          body: Column(
-            children: [
-              Expanded(
-                child: _MessageList(
-                  chat: chat,
-                  messages: _thread.messages,
-                  hasMore: _thread.hasMore,
-                  scroll: _scroll,
-                  meId: _me,
-                  reactions: reactions,
-                  onReply: _reply,
-                  pickedId: _replyTo?.id,
-                  pick: _pick,
-                  onReact: _react,
-                ),
-              ),
-              _ChatFooter(
-                chat: chat,
-                sending: _thread.sending,
-                replyTo: _replyTo,
-                meId: _me,
-                onCancelReply: () => setState(() => _replyTo = null),
-                onSend: _send,
-                onDelete: () => _delete(chat),
-              ),
-            ],
+          body: _ChatBody(
+            chat: chat,
+            thread: _thread,
+            scroll: _scroll,
+            meId: _me,
+            reactions: reactions,
+            replyTo: _replyTo,
+            pick: _pick,
+            onReply: _reply,
+            onReact: _react,
+            onCancelReply: () => setState(() => _replyTo = null),
+            onSend: _send,
+            onDelete: () => _delete(chat),
           ),
         );
       },

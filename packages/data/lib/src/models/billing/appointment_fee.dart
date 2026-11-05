@@ -3,6 +3,7 @@ import '../shared/money.dart';
 
 part 'appointment_fee.freezed.dart';
 part 'appointment_fee.g.dart';
+part 'appointment_fee_fee_visit.dart';
 
 /// Mirror of AppointmentFeeResource: a fee for a missed or late-cancelled visit, charged on the patient's invoice
 /// or waived (with who and why).
@@ -28,13 +29,4 @@ abstract class AppointmentFee with _$AppointmentFee {
   factory AppointmentFee.fromJson(Map<String, dynamic> json) => _$AppointmentFeeFromJson(json);
 
   bool get waived => status == 'waived';
-}
-
-/// The missed visit of a fee.
-@freezed
-abstract class FeeVisit with _$FeeVisit {
-  const factory FeeVisit({required String id, required String code, required String scheduledDate, String? startTime}) =
-      _FeeVisit;
-
-  factory FeeVisit.fromJson(Map<String, dynamic> json) => _$FeeVisitFromJson(json);
 }
