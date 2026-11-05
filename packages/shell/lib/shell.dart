@@ -9,6 +9,7 @@ export 'src/controllers/settings/inbox_watcher.dart' show inboxWatcherProvider;
 export 'src/controllers/settings/phone_notifications_controller.dart';
 export 'src/controllers/settings/theme_mode_controller.dart';
 export 'src/run_clinic_app.dart';
+export 'src/services/auth/access_notice.dart';
 export 'src/widgets/auth/auth_scaffold.dart' show BrandMark;
 export 'src/widgets/settings/phone_notifications_tile.dart';
 export 'src/widgets/settings/theme_mode_tile.dart';

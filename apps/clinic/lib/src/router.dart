@@ -72,7 +72,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       final user = ref.read(currentUserProvider);
       final auth = authRedirect(ref, state, home: homeFor(user));
       if (auth != null || user == null) return auth;
-      return areaRedirect(user, state.matchedLocation, ref.read(accessProvider).can);
+      final can = ref.read(accessProvider).can;
+      final path = state.matchedLocation;
+      if (!user.isPatient && StaffPaths.owns(path) && !can(StaffPaths.accessFor(path))) AccessNotice.noAccess();
+      return areaRedirect(user, path, can);
     },
     routes: [
       ...authRoutes(),

@@ -11,6 +11,7 @@ import '../../screens/auth/lock_screen.dart';
 import '../../screens/auth/login_screen.dart';
 import '../../screens/auth/splash_screen.dart';
 import '../../screens/auth/two_factor_screen.dart';
+import '../../services/auth/access_notice.dart';
 import 'auth_paths.dart';
 
 part 'auth_routing_app_lock_scope.dart';
@@ -46,7 +47,12 @@ String? authRedirect(Ref ref, GoRouterState state, {required String home}) {
     return path == AuthPaths.splash ? null : _holding(AuthPaths.splash, state);
   }
   final Session? signedIn = session.value;
-  if (signedIn == null) return public ? null : AuthPaths.login;
+  if (signedIn == null) {
+    if (public) return null;
+    // Opening a screen (a link, a notification) while signed out; the app's own start is not a refusal.
+    if (path != '/' && path != AuthPaths.splash && path != AuthPaths.lock) AccessNotice.signInNeeded();
+    return AuthPaths.login;
+  }
   if (ref.read(appLockProvider).locked) return path == AuthPaths.lock ? null : _holding(AuthPaths.lock, state);
   if (path == AuthPaths.splash || path == AuthPaths.lock) return _returnTo(state) ?? home;
   if (public) return home;

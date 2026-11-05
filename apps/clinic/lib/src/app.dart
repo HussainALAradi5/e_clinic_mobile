@@ -51,6 +51,7 @@ class EClinicApp extends ConsumerWidget {
         darkTheme: AppTheme.dark,
         themeMode: ref.watch(themeModeProvider),
         routerConfig: ref.watch(routerProvider),
+        scaffoldMessengerKey: AppSnack.messengerKey,
       ),
     );
   }
