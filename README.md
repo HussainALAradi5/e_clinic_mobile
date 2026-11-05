@@ -15,13 +15,13 @@ It talks to the same REST API as the web client, so a feature looks and behaves 
 | | Address |
 |---|---|
 | Web app (staff and patient portal) | https://e-clinic-web.onrender.com |
-| API | https://e-clinic-api.onrender.com/api/v1 |
+| API | https://e-clinic-api.onrender.com |
 
 Free Render instances sleep when idle: the first visit can take about a minute to wake the API. Demo accounts
 (one per role: patient, receptionist, doctor, nurse, pharmacist, cashier, accountant, HR, admin) are available on
 request.
 
-The phone app is not in a store yet; build it with `--dart-define=API_URL=https://e-clinic-api.onrender.com/api/v1`
+The phone app is not in a store yet; build it with `--dart-define=API_URL=https://e-clinic-api.onrender.com`
 to use the live API.
 
 | | |
@@ -162,7 +162,7 @@ flowchart TD
     data --> core["packages/core<br/>ApiClient (Dio) · interceptors · auth · config"]:::pkg
     ui --> core
     shell --> core
-    core --> api[("Laravel API /api/v1")]
+    core --> api[("Laravel API")]
     classDef app fill:#0f3d3e,color:#fff,stroke:#0f3d3e
     classDef pkg fill:#e6f4f1,stroke:#2f7d6d,color:#0f3d3e
 ```
@@ -267,13 +267,13 @@ the scanner, plain HTTP to a local server in debug builds — see `tools/patch_p
 ```bash
 # In e_clinic_server:  composer dev   (API on http://127.0.0.1:8000 plus the queue worker)
 cd apps/clinic
-flutter run                                                         # Android emulator → http://10.0.2.2:8000/api/v1
+flutter run                                                         # Android emulator → http://10.0.2.2:8000
 
 # Real Android phone over USB: forward the phone's port 8000 to this computer, then use localhost.
 adb reverse tcp:8000 tcp:8000
-flutter run --dart-define=API_URL=http://127.0.0.1:8000/api/v1
+flutter run --dart-define=API_URL=http://127.0.0.1:8000
 
-flutter run --dart-define=API_URL=http://127.0.0.1:8000/api/v1      # iOS simulator
+flutter run --dart-define=API_URL=http://127.0.0.1:8000      # iOS simulator
 ```
 
 ### Demo accounts (local seed data only)
@@ -315,8 +315,8 @@ keyPassword=<the key password>
 
 ```bash
 cd apps/clinic
-flutter build appbundle --release --dart-define=API_URL=https://e-clinic-api.onrender.com/api/v1   # Play Store
-flutter build apk --release --dart-define=API_URL=https://e-clinic-api.onrender.com/api/v1         # direct install
+flutter build appbundle --release --dart-define=API_URL=https://e-clinic-api.onrender.com   # Play Store
+flutter build apk --release --dart-define=API_URL=https://e-clinic-api.onrender.com         # direct install
 ```
 
 Without `key.properties` the release build falls back to the debug key, which is fine for `flutter run --release`

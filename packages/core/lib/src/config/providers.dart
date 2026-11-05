@@ -27,8 +27,8 @@ final dioProvider = Provider<Dio>((ref) {
   final config = ref.watch(appConfigProvider);
   final dio = Dio(
     BaseOptions(
-      // Dio joins the base and a relative path as text: without the slash `.../api/v1` + `auth/login`
-      // would become `.../api/v1auth/login`.
+      // Dio joins the base and a relative path as text: without the slash `...:8000` + `auth/login`
+      // would become `...:8000auth/login`.
       baseUrl: config.apiBaseUrl.endsWith('/') ? config.apiBaseUrl : '${config.apiBaseUrl}/',
       connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(seconds: 30),

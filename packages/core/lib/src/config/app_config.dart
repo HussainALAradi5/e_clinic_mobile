@@ -11,7 +11,7 @@ class AppConfig {
   /// Shown in the user's list of signed-in devices.
   static const deviceName = 'flutter-e-clinic';
 
-  /// Server origin plus `/api/v1`, e.g. `https://api.clinic.bh/api/v1` (passed with `--dart-define=API_URL=...`).
+  /// Server origin, e.g. `https://api.clinic.bh` (passed with `--dart-define=API_URL=...`).
   final String apiBaseUrl;
 
   /// Time in the background after which the app asks to unlock again. Staff phones hold many patients' data, so

@@ -13,12 +13,12 @@ void main() {
   });
 
   test('requests go to <api>/<path> whether or not the configured URL ends in a slash', () {
-    for (final url in ['http://10.0.2.2:8000/api/v1', 'http://10.0.2.2:8000/api/v1/']) {
+    for (final url in ['http://10.0.2.2:8000', 'http://10.0.2.2:8000/']) {
       final container = ProviderContainer(overrides: [appConfigProvider.overrideWithValue(AppConfig(apiBaseUrl: url))]);
       addTearDown(container.dispose);
       final dio = container.read(dioProvider);
-      expect(Uri.parse(dio.options.baseUrl).resolve('auth/login').toString(), 'http://10.0.2.2:8000/api/v1/auth/login');
-      expect(container.read(apiClientProvider).baseUrl, 'http://10.0.2.2:8000/api/v1');
+      expect(Uri.parse(dio.options.baseUrl).resolve('auth/login').toString(), 'http://10.0.2.2:8000/auth/login');
+      expect(container.read(apiClientProvider).baseUrl, 'http://10.0.2.2:8000');
     }
   });
 
