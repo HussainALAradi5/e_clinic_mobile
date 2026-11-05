@@ -8,6 +8,9 @@ abstract class ChatMember with _$ChatMember {
     required String fullName,
     String? avatarUrl,
     required String role,
+
+    /// `online` / `offline` in chat.
+    String? presence,
     @Default(false) bool isMe,
     DateTime? lastReadAt,
 

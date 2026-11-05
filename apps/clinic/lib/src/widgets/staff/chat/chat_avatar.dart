@@ -3,7 +3,15 @@ import 'package:flutter/material.dart';
 /// A person's photo, else their initials on a steady colour (the same person always gets the same colour);
 /// a group shows the group icon.
 class ChatAvatar extends StatelessWidget {
-  const ChatAvatar({super.key, required this.name, required this.seed, this.url, this.group = false, this.size = 44});
+  const ChatAvatar({
+    super.key,
+    required this.name,
+    required this.seed,
+    this.url,
+    this.group = false,
+    this.size = 44,
+    this.online = false,
+  });
 
   final String name;
 
@@ -12,6 +20,9 @@ class ChatAvatar extends StatelessWidget {
   final String? url;
   final bool group;
   final double size;
+
+  /// A green dot on the corner (the other person is online).
+  final bool online;
 
   static const _colors = [
     Color(0xFF0F766E),
@@ -33,7 +44,7 @@ class ChatAvatar extends StatelessWidget {
         .take(2)
         .map((w) => w[0].toUpperCase())
         .join();
-    return CircleAvatar(
+    final avatar = CircleAvatar(
       radius: size / 2,
       backgroundColor: color,
       foregroundImage: url == null ? null : NetworkImage(url!),
@@ -43,6 +54,27 @@ class ChatAvatar extends StatelessWidget {
               initials,
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: size * 0.36),
             ),
+    );
+    if (!online) return avatar;
+    final dot = size * 0.28;
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        avatar,
+        Positioned(
+          right: 0,
+          bottom: 0,
+          child: Container(
+            width: dot,
+            height: dot,
+            decoration: BoxDecoration(
+              color: Colors.green.shade500,
+              shape: BoxShape.circle,
+              border: Border.all(color: Theme.of(context).colorScheme.surface, width: 2),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

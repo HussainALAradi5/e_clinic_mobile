@@ -35,6 +35,9 @@ class AuthRepository {
 
   Future<void> logout() => _api.post('auth/logout', ApiClient.ignore);
 
+  /// My `online` / `offline` status in chat, switched by hand.
+  Future<void> setPresence(String status) => _api.put('auth/presence', ApiClient.ignore, body: {'status': status});
+
   Future<void> logoutAll() => _api.post('auth/logout-all', ApiClient.ignore);
 
   Future<void> changePassword({

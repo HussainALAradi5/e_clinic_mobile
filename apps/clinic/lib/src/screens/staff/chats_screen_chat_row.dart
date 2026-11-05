@@ -9,6 +9,7 @@ class _ChatRow extends StatelessWidget {
   final VoidCallback onLongPress;
 
   String get _preview {
+    if (chat.left) return ChatText.leftRow;
     final m = chat.lastMessage;
     if (m == null) return chat.isGroup ? 'Group created' : 'Say hello';
     final who = m.sender.id == meId ? 'You: ' : (chat.isGroup ? '${m.sender.fullName.split(' ').first}: ' : '');
@@ -29,7 +30,13 @@ class _ChatRow extends StatelessWidget {
       onTap: onTap,
       onLongPress: onLongPress,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-      leading: ChatAvatar(name: chat.title, seed: chat.partnerId ?? chat.id, url: chat.avatarUrl, group: chat.isGroup),
+      leading: ChatAvatar(
+        name: chat.title,
+        seed: chat.partnerId ?? chat.id,
+        url: chat.avatarUrl,
+        group: chat.isGroup,
+        online: chat.partnerOnline,
+      ),
       title: Row(
         children: [
           Flexible(

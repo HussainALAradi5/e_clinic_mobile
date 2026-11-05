@@ -39,12 +39,13 @@ class _ChatTitle extends StatelessWidget {
                   ],
                 ],
               ),
-              if (chat.isGroup)
-                Text(
-                  '${chat.members.length} members · ${others.join(', ')}',
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+              Text(
+                chat.isGroup
+                    ? '${ChatText.memberCount(chat.members.length)} · ${others.join(', ')}'
+                    : (chat.partnerOnline ? ChatText.online : ChatText.offline),
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ],
           ),
         ),

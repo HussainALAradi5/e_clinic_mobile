@@ -12,7 +12,8 @@ part 'chat_chat_reply_quote.dart';
 part 'chat_chat_sender.dart';
 
 /// Mirror of ConversationResource — one chat in my list: a one-to-one chat (titled with the other person) or a
-/// group. `myRole` is `admin` (leader) or `member`; deleted chats carry `deletedAt` (admins only see them).
+/// group. `myRole` is `admin` (leader) or `member`; deleted chats carry `deletedAt` (admins only see them); `left`
+/// marks a group I exited (read-only on my list until I delete it).
 @freezed
 abstract class Conversation with _$Conversation {
   const factory Conversation({
@@ -20,6 +21,9 @@ abstract class Conversation with _$Conversation {
     required String type,
     required String title,
     String? partnerId,
+
+    /// The other person's `online` / `offline` status (one-to-one chats).
+    String? partnerPresence,
     String? avatarUrl,
     String? myRole,
     @Default(<ChatMember>[]) List<ChatMember> members,
@@ -36,6 +40,9 @@ abstract class Conversation with _$Conversation {
 
     /// When my mute ends by itself; null = until I unmute.
     DateTime? mutedUntil,
+
+    /// I exited this group: readable up to then, not writable.
+    @Default(false) bool left,
   }) = _Conversation;
 
   factory Conversation.fromJson(Map<String, dynamic> json) => _$ConversationFromJson(json);
@@ -46,8 +53,15 @@ abstract class Conversation with _$Conversation {
 
   bool get iLead => myRole == 'admin';
 
-  /// Either person deletes a one-to-one chat; a group only its leader.
-  bool get canDelete => deletedAt == null && (!isGroup || iLead);
+  /// Deleted from my list only: a one-to-one chat any time, a group once I exited it.
+  bool get canDelete => deletedAt == null && (!isGroup || left);
+
+  /// Still in this group (Exit is offered).
+  bool get canLeave => isGroup && !left && deletedAt == null;
+
+  bool get canMute => !left && deletedAt == null;
+
+  bool get partnerOnline => partnerPresence == 'online';
 
   DateTime? get activity => lastMessageAt ?? createdAt;
 }

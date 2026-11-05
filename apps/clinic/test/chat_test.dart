@@ -15,7 +15,25 @@ void main() {
     expect(chat.members.where((m) => m.isMe), hasLength(1));
     expect(chat.lastMessage, isNotNull);
     expect(chat.deletedAt, isNull);
-    expect(chat.canDelete, chat.isGroup ? chat.iLead : isTrue);
+    // A group comes off my list only once I exited it; a one-to-one chat any time.
+    expect(chat.canDelete, !chat.isGroup || chat.left);
+  });
+
+  test('a group I exited is deletable, read-only, and offers no exit or mute; presence reads', () {
+    final json = Map<String, dynamic>.from(fixture['conversation'] as Map<String, dynamic>);
+    final group = Conversation.fromJson({...json, 'type': 'group', 'left': false});
+    expect(group.canLeave, isTrue);
+    expect(group.canDelete, isFalse);
+    expect(group.canMute, isTrue);
+
+    final left = Conversation.fromJson({...json, 'type': 'group', 'left': true});
+    expect(left.canLeave, isFalse);
+    expect(left.canDelete, isTrue);
+    expect(left.canMute, isFalse);
+
+    final direct = Conversation.fromJson({...json, 'type': 'direct', 'partner_presence': 'online'});
+    expect(direct.canDelete, isTrue);
+    expect(direct.partnerOnline, isTrue);
   });
 
   test('messages read with their quote, files and reactions', () {

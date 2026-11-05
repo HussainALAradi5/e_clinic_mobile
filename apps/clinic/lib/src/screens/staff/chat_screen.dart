@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../constants/staff/chat_text.dart';
+import '../../controllers/staff/chat_actions.dart';
 import '../../controllers/staff/chat_providers.dart';
 import '../../controllers/staff/chat_thread_controller.dart';
 import '../../widgets/common/attach_photo_button.dart';
@@ -100,6 +101,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     _pick++;
   });
 
+  Future<void> _leave(Conversation chat) async {
+    if (await ChatActions.leave(context, ref, chat)) await _thread.load();
+  }
+
+  Future<void> _delete(Conversation chat) async {
+    if (await ChatActions.delete(context, ref, chat) && mounted) Navigator.of(context).pop();
+  }
+
   Future<void> _mute(MuteDuration? duration) =>
       _guard(() => _thread.mute(duration), done: duration == null ? ChatText.unmutedDone : ChatText.mutedDone);
 
@@ -114,7 +123,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         final chat = _thread.chat;
         if (chat == null) return _ChatLoading(error: _thread.error, onRetry: _thread.load);
         return Scaffold(
-          appBar: _ChatAppBar(chat: chat, onInfo: () => _info(chat), onMute: _mute),
+          appBar: _ChatAppBar(
+            chat: chat,
+            onInfo: () => _info(chat),
+            onMute: _mute,
+            onLeave: () => _leave(chat),
+            onDelete: () => _delete(chat),
+          ),
           body: Column(
             children: [
               Expanded(
@@ -138,6 +153,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 meId: _me,
                 onCancelReply: () => setState(() => _replyTo = null),
                 onSend: _send,
+                onDelete: () => _delete(chat),
               ),
             ],
           ),

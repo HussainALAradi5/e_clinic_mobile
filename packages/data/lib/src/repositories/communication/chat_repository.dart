@@ -81,8 +81,11 @@ class ChatRepository {
   Future<Conversation> startDirect(String userId) =>
       _api.post('$_path/conversations', objectOf(Conversation.fromJson), body: {'type': 'direct', 'user_id': userId});
 
-  /// Soft delete: it leaves the members' lists; an admin can restore it.
+  /// Deletes the chat from my list only (soft); a group must be exited first.
   Future<void> delete(String id) => _api.delete('$_path/conversations/$id');
+
+  /// Exits a group (it stays on my list, read-only).
+  Future<void> leave(String id, String myId) => _api.delete('$_path/conversations/$id/members/$myId');
 
   /// The quick reaction row and everything behind "+".
   Future<({List<String> quick, List<String> all})> reactions() => _api.get('$_path/settings', (data) {

@@ -14,6 +14,7 @@ import '../../constants/staff/chat_text.dart';
 import '../../controllers/staff/chat_actions.dart';
 import '../../controllers/staff/chat_providers.dart';
 import '../../widgets/staff/chat/chat_avatar.dart';
+import '../../widgets/staff/chat/presence_switch.dart';
 
 part 'chats_screen_chat_filters.dart';
 part 'chats_screen_chat_menu.dart';
@@ -81,6 +82,15 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
         await repo.markRead(chat.id);
         ref.invalidate(chatUnreadProvider);
         setState(() => _version++);
+      case _ChatMenuChoice.mute:
+        final duration = await ChatActions.pickMute(context);
+        if (duration != null && mounted && await ChatActions.mute(context, ref, chat, duration) && mounted) {
+          setState(() => _version++);
+        }
+      case _ChatMenuChoice.unmute:
+        if (await ChatActions.mute(context, ref, chat, null) && mounted) setState(() => _version++);
+      case _ChatMenuChoice.leave:
+        if (await ChatActions.leave(context, ref, chat) && mounted) setState(() => _version++);
       case _ChatMenuChoice.delete:
         if (await ChatActions.delete(context, ref, chat) && mounted) setState(() => _version++);
     }
@@ -101,7 +111,10 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
   Widget build(BuildContext context) {
     final canStart = ref.watch(accessProvider).can('chat.create');
     return Scaffold(
-      appBar: AppBar(title: const Text('Chat')),
+      appBar: AppBar(
+        title: const Text('Chat'),
+        actions: const [PresenceSwitch(), SizedBox(width: 8)],
+      ),
       floatingActionButton: canStart
           ? FloatingActionButton.extended(
               onPressed: _newChat,

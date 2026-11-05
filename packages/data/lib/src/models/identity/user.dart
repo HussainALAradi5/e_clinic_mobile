@@ -20,6 +20,9 @@ abstract class User with _$User {
     String? phone,
     required String userType,
     @Default(TwoFactorState()) TwoFactorState twoFactor,
+
+    /// `online` / `offline` in chat: Online on sign-in, switchable.
+    @Default('offline') String presence,
   }) = _User;
 
   const User._();
@@ -27,4 +30,6 @@ abstract class User with _$User {
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   bool get isPatient => userType == 'patient';
+
+  bool get online => presence == 'online';
 }
