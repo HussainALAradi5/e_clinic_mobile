@@ -76,4 +76,5 @@ export 'src/repositories/identity/signature_repository.dart';
 export 'src/repositories/pharmacy/dispensation_repository.dart';
 export 'src/repositories/pharmacy/prescription_repository.dart';
 export 'src/repositories/providers.dart';
+export 'src/repositories/reference/clinic_repository.dart';
 export 'src/utilities/identity/notification_kind_of.dart';

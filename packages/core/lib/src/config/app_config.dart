@@ -1,9 +1,12 @@
+import 'reverb_config.dart';
+
 part 'app_config_mobile_app.dart';
 
 /// App settings, provided by `main.dart` through [appConfigProvider].
 class AppConfig {
   const AppConfig({
     required this.apiBaseUrl,
+    this.reverb,
     this.patientLockAfter = const Duration(minutes: 5),
     this.staffLockAfter = const Duration(minutes: 2),
   });
@@ -13,6 +16,9 @@ class AppConfig {
 
   /// Server origin, e.g. `https://api.clinic.bh` (passed with `--dart-define=API_URL=...`).
   final String apiBaseUrl;
+
+  /// The live connection (Reverb); null keeps the screens polling.
+  final ReverbConfig? reverb;
 
   /// Time in the background after which the app asks to unlock again. Staff phones hold many patients' data, so
   /// they lock sooner.

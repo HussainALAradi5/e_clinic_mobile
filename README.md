@@ -278,6 +278,24 @@ flutter run --dart-define=API_URL=http://127.0.0.1:8000
 flutter run --dart-define=API_URL=http://127.0.0.1:8000      # iOS simulator
 ```
 
+Live chat updates (Online / Offline at once) need Reverb (`php artisan reverb:start --port=8085` in e_clinic_server)
+and its address; without these the app polls:
+
+```bash
+adb reverse tcp:8085 tcp:8085
+flutter run --dart-define=API_URL=http://127.0.0.1:8000 --dart-define=REVERB_KEY=<REVERB_APP_KEY>   --dart-define=REVERB_HOST=127.0.0.1 --dart-define=REVERB_PORT=8085 --dart-define=REVERB_SCHEME=http
+```
+
+### Icons and notification sounds
+
+```bash
+python tools/make_icons.py apps/clinic/android/app/src/main/res ../e_clinic_client/public    # needs Pillow
+python tools/make_notification_sounds.py apps/clinic/android/app/src/main/res/raw ../e_clinic_client/public/sounds
+```
+
+The first draws the app icon (launcher, adaptive icon, web favicon) from the e-Clinic mark and one picture per kind
+of notification (its colour and icon); the second makes one sound per kind.
+
 ### Demo accounts (local seed data only)
 
 The server's demo seeder creates these accounts on non-production installs; the password and the fixed two-step code

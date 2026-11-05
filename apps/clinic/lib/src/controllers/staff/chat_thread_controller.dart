@@ -110,6 +110,14 @@ class ChatThreadController extends ChangeNotifier {
     _changed();
   }
 
+  /// Someone went Online / Offline (live): the subtitle of a one-to-one chat with them follows at once.
+  void onPresence(String userId, String presence) {
+    final open = chat;
+    if (open == null || open.partnerId != userId || open.partnerPresence == presence) return;
+    chat = open.copyWith(partnerPresence: presence);
+    _changed();
+  }
+
   void _changed() {
     if (!_disposed) notifyListeners();
   }

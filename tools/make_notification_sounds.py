@@ -27,6 +27,7 @@ PATTERNS = {
     'chat': [('B5', 0.0, 0.45, 0.55)],                                              # one short pop
     'support': [('C6', 0.0, 0.9, 0.45), ('G5', 0.2, 1.0, 0.5)],                     # falling fifth
     'urgent': [('A5', 0.0, 0.3, 0.8), ('A5', 0.22, 0.3, 0.8), ('E6', 0.44, 0.6, 0.7)],  # three quick, insistent
+    'files': [('G5', 0.0, 0.5, 0.5), ('C6', 0.14, 0.5, 0.45), ('E6', 0.28, 0.9, 0.4)],  # quick rising "done"
     'system': [('C5', 0.0, 1.0, 0.45)],                                             # one low, quiet bell
 }
 

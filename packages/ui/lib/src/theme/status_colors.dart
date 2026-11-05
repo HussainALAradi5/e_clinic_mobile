@@ -98,6 +98,7 @@ abstract final class StatusColors {
       'chat': StatusTone.cyan,
       'support': StatusTone.orange,
       'urgent': StatusTone.red,
+      'files': StatusTone.pink,
       'system': StatusTone.grey,
     },
     // How an invoice stands with its payments; how it was paid; one colour per kind of result. Same as the web.

@@ -83,6 +83,8 @@ class SystemNotifications {
           // The ringtone volume (usually set louder than notifications), so a message is heard.
           audioAttributesUsage: AudioAttributesUsage.notificationRingtone,
           color: StatusEdge.of(tone, Brightness.light),
+          // The kind's own picture (its colour and icon, as in the inbox; res/drawable-nodpi, tools/make_icons.py).
+          largeIcon: DrawableResourceAndroidBitmap(kind.sound),
           category: kind == NotificationKind.chat ? AndroidNotificationCategory.message : null,
         ),
         iOS: const DarwinNotificationDetails(presentSound: true),

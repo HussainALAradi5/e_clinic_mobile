@@ -12,10 +12,11 @@ NotificationKind notificationKindOf(String template) {
     'treatment' => NotificationKind.treatment,
     'order' => NotificationKind.result,
     'prescription' || 'pharmacy' => NotificationKind.pharmacy,
-    'refund' || 'expense' || 'invoice' || 'payment' => NotificationKind.billing,
+    'refund' || 'expense' || 'invoice' || 'payment' || 'report' => NotificationKind.billing,
     'leave' || 'attendance' || 'staff_request' || 'payroll' => NotificationKind.hr,
     'chat' => NotificationKind.chat,
     'ticket' => NotificationKind.support,
+    'task' => NotificationKind.files,
     _ => NotificationKind.system,
   };
 }

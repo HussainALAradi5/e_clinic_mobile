@@ -85,7 +85,9 @@ class InvoiceDetail extends ConsumerWidget {
                   trailing: StatusChip(enumName: 'PaymentStatus', value: payment.status),
                 ),
             ],
-            if (invoice.owing && ref.watch(accessProvider).can('online_payments.create')) ...[
+            if (invoice.owing &&
+                ref.watch(accessProvider).can('online_payments.create') &&
+                (ref.watch(onlinePaymentsEnabledProvider).value ?? false)) ...[
               const SizedBox(height: 16),
               PayOnlineButton(invoiceId: invoice.id),
             ],

@@ -26,10 +26,9 @@ part 'chats_screen_chat_toolbar.dart';
 part 'chats_screen_contact_picker.dart';
 part 'chats_screen_contact_picker_state.dart';
 
-/// `/chat` — my chats, newest activity first: search (every word of a name), chips All · Unread · Groups ·
-/// One-to-one (on the server), paging as you scroll, unread badges, my Online / Offline switch. Long-press a chat
-/// for Open / Mark as read / Mute / Exit group / Delete chat (from my list only; a group once exited).
-/// "New chat" starts a one-to-one chat with a colleague. Refreshes every 20 s.
+/// `/chat` — my chats, newest first: search, chips All · Unread · Groups · One-to-one, paging, unread badges, my
+/// Online / Offline switch; long-press for Open / Mark as read / Mute / Exit group / Delete chat (mine only).
+/// "New chat" starts a one-to-one chat. Refreshes every 20 s, and at once when a colleague goes Online / Offline.
 class ChatsScreen extends ConsumerStatefulWidget {
   const ChatsScreen({super.key});
 
@@ -112,6 +111,7 @@ class _ChatsScreenState extends ConsumerState<ChatsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(presenceChangesProvider, (_, _) => setState(() => _version++));
     final canStart = ref.watch(accessProvider).can('chat.create');
     return Scaffold(
       appBar: AppBar(title: const Text(ChatText.title), actions: const [PresenceSwitch(), SizedBox(width: 8)]),

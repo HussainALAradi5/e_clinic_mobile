@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:e_clinic_data/data.dart';
+import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -12,11 +15,19 @@ void main() {
     expect(notificationKindOf('leave.approved'), NotificationKind.hr);
     expect(notificationKindOf('chat.mention'), NotificationKind.chat);
     expect(notificationKindOf('ticket.resolved'), NotificationKind.support);
-    expect(notificationKindOf('task.completed'), NotificationKind.system);
+    expect(notificationKindOf('task.completed'), NotificationKind.files);
+    expect(notificationKindOf('report.month_summary'), NotificationKind.billing);
+    expect(notificationKindOf('welcome.sent'), NotificationKind.system);
   });
 
-  test('every kind has its own sound', () {
+  test('every kind has its own sound, colour and image', () {
     final sounds = NotificationKind.values.map((k) => k.sound).toSet();
     expect(sounds, hasLength(NotificationKind.values.length));
+    final tones = NotificationKind.values.map((k) => StatusColors.tone('NotificationKind', k.name)).toSet();
+    expect(tones, hasLength(NotificationKind.values.length));
+    for (final kind in NotificationKind.values) {
+      expect(File('android/app/src/main/res/drawable-nodpi/${kind.sound}.png').existsSync(), isTrue, reason: kind.name);
+      expect(File('android/app/src/main/res/raw/${kind.sound}.wav').existsSync(), isTrue, reason: kind.name);
+    }
   });
 }

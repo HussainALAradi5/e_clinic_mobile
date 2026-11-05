@@ -28,9 +28,8 @@ part 'chat_screen_message_list.dart';
 part 'chat_screen_reply_preview.dart';
 part 'chat_screen_title.dart';
 
-/// `/chat/:id` — one chat: messages newest at the bottom (older ones load as you scroll up), day separators,
-/// long-press for reactions / Reply / Copy, swipe right to reply, a quote above the box while replying, photos.
-/// New messages arrive every few seconds while the chat is open; opening it marks it read.
+/// `/chat/:id` — one chat: newest at the bottom (older load on scroll up), day separators, reactions / Reply / Copy,
+/// swipe to reply, photos. Polls for new messages, Online / Offline is live; opening it marks it read.
 class ChatScreen extends ConsumerStatefulWidget {
   const ChatScreen({super.key, required this.id});
 
@@ -116,6 +115,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final reactions = ref.watch(chatReactionsProvider).value;
+    ref.listen(presenceChangesProvider, (_, next) => next.whenData((p) => _thread.onPresence(p.userId, p.presence)));
     return ListenableBuilder(
       listenable: _thread,
       builder: (context, _) {

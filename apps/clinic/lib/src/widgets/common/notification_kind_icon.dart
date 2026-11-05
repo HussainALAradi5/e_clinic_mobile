@@ -19,6 +19,7 @@ class NotificationKindIcon extends StatelessWidget {
     NotificationKind.chat => Icons.forum_rounded,
     NotificationKind.support => Icons.support_agent_rounded,
     NotificationKind.urgent => Icons.priority_high_rounded,
+    NotificationKind.files => Icons.download_done_rounded,
     NotificationKind.system => Icons.notifications_rounded,
   };
 

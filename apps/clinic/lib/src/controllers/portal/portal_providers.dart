@@ -63,6 +63,11 @@ final unreadCountProvider = FutureProvider.autoDispose<int>(
   (ref) => ref.watch(notificationRepositoryProvider).unreadCount(),
 );
 
+/// The clinic has switched online payments on (admin settings); off when it cannot be read.
+final onlinePaymentsEnabledProvider = FutureProvider.autoDispose<bool>(
+  (ref) => ref.watch(clinicRepositoryProvider).onlinePaymentsEnabled().catchError((Object _) => false),
+);
+
 final profileProvider = AsyncNotifierProvider.autoDispose<Profile, Patient>(Profile.new);
 
 final treatmentsProvider = FutureProvider.autoDispose<List<Treatment>>(

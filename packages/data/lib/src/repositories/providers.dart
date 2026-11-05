@@ -31,6 +31,7 @@ import 'identity/notification_repository.dart';
 import 'identity/signature_repository.dart';
 import 'pharmacy/dispensation_repository.dart';
 import 'pharmacy/prescription_repository.dart';
+import 'reference/clinic_repository.dart';
 
 final authRepositoryProvider = Provider((ref) => AuthRepository(ref.watch(apiClientProvider)));
 final portalRepositoryProvider = Provider((ref) => PortalRepository(ref.watch(apiClientProvider)));
@@ -61,6 +62,8 @@ final staffRequestRepositoryProvider = Provider((ref) => StaffRequestRepository(
 final sickLeaveRepositoryProvider = Provider((ref) => SickLeaveRepository(ref.watch(apiClientProvider)));
 final chatRepositoryProvider = Provider((ref) => ChatRepository(ref.watch(apiClientProvider)));
 final ticketRepositoryProvider = Provider((ref) => TicketRepository(ref.watch(apiClientProvider)));
+
+final clinicRepositoryProvider = Provider((ref) => ClinicRepository(ref.watch(apiClientProvider)));
 
 /// Enum labels; falls back to humanised values while loading or offline.
 final enumCatalogProvider = FutureProvider<EnumCatalog>(
