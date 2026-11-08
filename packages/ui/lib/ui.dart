@@ -42,4 +42,5 @@ export 'src/widgets/lists/infinite_list.dart';
 export 'src/widgets/navigation/link_group.dart';
 export 'src/widgets/navigation/link_tile.dart';
 export 'src/widgets/status/flag_badge.dart';
+export 'src/widgets/status/status_badge.dart';
 export 'src/widgets/status/status_chip.dart';

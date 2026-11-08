@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../constants/common/common_text.dart';
 import '../../../constants/staff/appointment_text.dart';
+import '../../../constants/staff/appointment_tones.dart';
 import '../../../controllers/staff/staff_providers.dart';
 
 class AppointmentDetails extends ConsumerWidget {
@@ -27,19 +28,27 @@ class AppointmentDetails extends ConsumerWidget {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
         children: [
-          Text(visit.patientName, style: theme.textTheme.headlineSmall),
           Text(
             '${ClinicClock.relativeDay(visit.scheduledDate)} · ${ClinicClock.timeRange(visit.startTime, visit.endTime)}',
-            style: theme.textTheme.titleMedium?.copyWith(color: scheme.onSurfaceVariant),
+            style: theme.textTheme.titleLarge,
           ),
           const SizedBox(height: 12),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: StatusChip(enumName: 'AppointmentStatus', value: visit.status),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              StatusBadge(label: visit.patientName, tone: AppointmentTones.patient),
+              StatusChip(enumName: 'AppointmentStatus', value: visit.status),
+            ],
           ),
           const SectionHeader(AppointmentText.booking),
           Card(
             child: FactList(
+              tones: {
+                AppointmentText.type: StatusColors.tone('AppointmentType', wireValue(visit.type)),
+                AppointmentText.provider: AppointmentTones.doctor,
+                AppointmentText.bookedVia: StatusColors.tone('AppointmentSource', visit.source ?? ''),
+              },
               facts: [
                 (
                   label: AppointmentText.type,
@@ -48,6 +57,10 @@ class AppointmentDetails extends ConsumerWidget {
                       : '${catalog.label('AppointmentType', visit.type)} · session ${visit.sessionNumber}',
                 ),
                 (label: AppointmentText.provider, value: visit.provider?.fullName),
+                (
+                  label: AppointmentText.bookedVia,
+                  value: visit.source == null ? null : catalog.label('AppointmentSource', visit.source!),
+                ),
                 (label: CommonText.room, value: visit.room?.name),
                 (label: AppointmentText.service, value: visit.billableService?.name),
                 (label: CommonText.reason, value: visit.reason),
@@ -67,6 +80,7 @@ class AppointmentDetails extends ConsumerWidget {
             const SectionHeader(CommonText.patient),
             Card(
               child: FactList(
+                tones: const {CommonText.fileNumber: AppointmentTones.file},
                 facts: [
                   (label: CommonText.fileNumber, value: patient.code),
                   (label: CommonText.mobile, value: patient.phone),
