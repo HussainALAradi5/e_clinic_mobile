@@ -83,15 +83,24 @@ class VisitCard extends ConsumerWidget {
               if (upcoming) ...[
                 const SizedBox(height: 12),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     FilledButton.tonalIcon(
                       onPressed: () => PortalActions.showVisitCode(context, visit),
                       icon: const Icon(Icons.qr_code_2_rounded),
                       label: const Text(VisitText.checkInCode),
                     ),
-                    const Spacer(),
                     if (visit.status.cancellable && !visit.patientCanChange)
-                      Text(VisitText.callReception, style: Theme.of(context).textTheme.bodySmall)
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsetsDirectional.only(start: 12),
+                          child: Text(
+                            VisitText.callReception,
+                            textAlign: TextAlign.end,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+                      )
                     else if (visit.status.cancellable)
                       TextButton(
                         style: TextButton.styleFrom(foregroundColor: scheme.error),
