@@ -8,6 +8,7 @@ abstract final class AppointmentText {
   static const type = 'Type';
   static const provider = 'With';
   static const service = 'Service';
+  static const bookedVia = 'Booked via';
   static const noSchedule = 'Your work is on the other tabs';
   static const noScheduleHint = 'Your role has no patient bookings. Use the tabs below for the rest of your work.';
   static const completeVisit = 'Complete this visit?';

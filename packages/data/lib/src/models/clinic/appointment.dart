@@ -23,6 +23,9 @@ abstract class Appointment with _$Appointment {
     required String providerId,
     PersonRef? provider,
     @JsonKey(unknownEnumValue: AppointmentType.unknown) required AppointmentType type,
+
+    /// How it was booked, as the wire value of `AppointmentSource`.
+    String? source,
     String? treatmentId,
     int? sessionNumber,
     required String scheduledDate,
