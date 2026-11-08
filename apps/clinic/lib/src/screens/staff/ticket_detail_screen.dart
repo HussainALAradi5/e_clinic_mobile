@@ -10,6 +10,7 @@ import '../../constants/staff/ticket_text.dart';
 import '../../controllers/staff/support_providers.dart';
 import '../../widgets/common/attach_photo_button.dart';
 import '../../widgets/common/attachment_list.dart';
+import '../../widgets/staff/activity/activity_log_section.dart';
 import '../../widgets/staff/support/solve_steps_sheet.dart';
 
 part 'ticket_detail_screen_ask_card.dart';
@@ -129,6 +130,7 @@ class _TicketDetailScreenState extends ConsumerState<TicketDetailScreen> {
                 const InfoNote(icon: Icons.lock_outline_rounded, text: TicketText.cancelledNote)
               else
                 _ReplyBox(onSend: _send),
+              ActivityLogSection(entity: ActivityEntity.supportTicket, id: t.id),
             ],
           ),
         ),

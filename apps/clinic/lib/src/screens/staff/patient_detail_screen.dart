@@ -121,7 +121,7 @@ class PatientDetailScreen extends ConsumerWidget {
                       canOpenOrders: access.can('orders.read_all | orders.read_own'),
                     ),
                   ),
-              if (access.can('activity.read_all')) ActivityLogSection(entity: ActivityEntity.patientProfile, id: id),
+              ActivityLogSection(entity: ActivityEntity.patientProfile, id: id),
             ],
           ),
         ),

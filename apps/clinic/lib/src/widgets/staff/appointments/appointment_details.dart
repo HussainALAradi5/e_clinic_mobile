@@ -7,7 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../constants/common/common_text.dart';
 import '../../../constants/staff/appointment_text.dart';
 import '../../../constants/staff/appointment_tones.dart';
+import '../../../controllers/staff/activity_log_controller.dart';
 import '../../../controllers/staff/staff_providers.dart';
+import '../activity/activity_log_section.dart';
 
 class AppointmentDetails extends ConsumerWidget {
   const AppointmentDetails({super.key, required this.visit});
@@ -23,6 +25,7 @@ class AppointmentDetails extends ConsumerWidget {
     return RefreshIndicator(
       onRefresh: () async {
         ref.invalidate(appointmentProvider(visit.id));
+        ref.invalidate(activityLogProvider((entity: ActivityEntity.appointment, id: visit.id)));
         await ref.read(appointmentProvider(visit.id).future);
       },
       child: ListView(
@@ -88,6 +91,7 @@ class AppointmentDetails extends ConsumerWidget {
               ),
             ),
           ],
+          ActivityLogSection(entity: ActivityEntity.appointment, id: visit.id),
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 16, 4, 0),
             child: Text(
