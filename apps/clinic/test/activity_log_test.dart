@@ -138,7 +138,7 @@ void main() {
     );
 
     expect(_sentence('Amal Haddad'), findsOneWidget);
-    expect(_sentence('8 Nov 2026, 6:27 PM'), findsNWidgets(2));
+    expect(_sentence('8 Nov 2026, 6:27:00 PM'), findsNWidgets(2));
     expect(_sentence('Email from a@x.com to b@x.com'), findsOneWidget);
     expect(find.text('Opened the page'), findsOneWidget);
     expect(find.text('Edited'), findsOneWidget);

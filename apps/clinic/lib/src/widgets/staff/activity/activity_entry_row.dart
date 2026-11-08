@@ -34,7 +34,7 @@ class ActivityEntryRow extends StatelessWidget {
             ),
             if (changes.isNotEmpty) TextSpan(text: ' $changes'),
             TextSpan(
-              text: ' · ${ClinicClock.dateTime(entry.createdAt)}',
+              text: ' · ${ClinicClock.dateTimeExact(entry.createdAt)}',
               style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
             ),
           ],

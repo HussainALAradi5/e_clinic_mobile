@@ -51,6 +51,14 @@ abstract final class ClinicClock {
     return '${date(isoDate(l))}, ${clock(l.hour, l.minute)}';
   }
 
+  /// `25 Oct 2026, 2:05:09 PM`: an instant to the second, for event logs.
+  static String dateTimeExact(DateTime instant) {
+    final l = local(instant);
+    final seconds = l.second.toString().padLeft(2, '0');
+    final time = clock(l.hour, l.minute).replaceFirst(' ', ':$seconds ');
+    return '${date(isoDate(l))}, $time';
+  }
+
   /// `9:05 AM` / `2:30 PM` — times are always shown on the 12-hour clock.
   static String clock(int hour, int minute) {
     final h = hour % 12 == 0 ? 12 : hour % 12;
