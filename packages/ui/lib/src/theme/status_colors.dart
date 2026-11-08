@@ -39,6 +39,7 @@ abstract final class StatusColors {
       'referral': StatusTone.purple,
     },
     'AuditAction': {
+      'viewed': StatusTone.cyan,
       'created': StatusTone.green,
       'updated': StatusTone.blue,
       'deleted': StatusTone.red,
