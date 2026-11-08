@@ -24,7 +24,7 @@ class _BubbleContent extends StatelessWidget {
     final theme = Theme.of(context);
     const white = Colors.white;
     final time = ClinicClock.local(m.createdAt);
-    final stamp = '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+    final stamp = ClinicClock.clock(time.hour, time.minute);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,

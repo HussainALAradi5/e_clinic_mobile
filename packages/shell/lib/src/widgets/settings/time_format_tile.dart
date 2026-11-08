@@ -1,3 +1,4 @@
+import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,6 +11,14 @@ class TimeFormatTile extends ConsumerWidget {
 
   static const _twelveHour = '12h';
   static const _twentyFourHour = '24h';
+
+  Future<void> _save(BuildContext context, WidgetRef ref, String format) async {
+    try {
+      await ref.read(sessionProvider.notifier).setTimeFormat(format);
+    } catch (error) {
+      if (context.mounted) AppSnack.error(context, error);
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,7 +40,7 @@ class TimeFormatTile extends ConsumerWidget {
                   ButtonSegment(value: _twentyFourHour, label: Text(SettingsText.twentyFourHour)),
                 ],
                 selected: {format},
-                onSelectionChanged: (s) => ref.read(sessionProvider.notifier).setTimeFormat(s.first),
+                onSelectionChanged: (s) => _save(context, ref, s.first),
               ),
             ),
           ],

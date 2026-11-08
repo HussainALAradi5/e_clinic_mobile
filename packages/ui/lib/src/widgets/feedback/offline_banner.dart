@@ -14,14 +14,14 @@ class OfflineBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final time = ClinicClock.local(savedAt);
-    final hhmm = '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+    final savedTime = ClinicClock.clock(time.hour, time.minute);
     return Material(
       color: scheme.tertiaryContainer,
       borderRadius: BorderRadius.circular(16),
       child: ListTile(
         leading: Icon(Icons.cloud_off_rounded, color: scheme.onTertiaryContainer),
         title: Text(UiText.offline, style: TextStyle(color: scheme.onTertiaryContainer)),
-        subtitle: Text(UiText.offlineCopy(hhmm), style: TextStyle(color: scheme.onTertiaryContainer)),
+        subtitle: Text(UiText.offlineCopy(savedTime), style: TextStyle(color: scheme.onTertiaryContainer)),
         trailing: onRetry == null
             ? null
             : IconButton(
