@@ -27,10 +27,7 @@ class PhoneNotificationsTile extends ConsumerWidget {
                   final allowed = await ref.read(phoneNotificationsProvider.notifier).set(next);
                   if (!context.mounted) return;
                   if (!allowed) {
-                    AppSnack.info(
-                      context,
-                      SettingsText.notificationsBlocked,
-                    );
+                    AppSnack.info(context, SettingsText.notificationsBlocked);
                   } else {
                     AppSnack.success(context, next ? SettingsText.notificationsOn : SettingsText.notificationsOff);
                   }

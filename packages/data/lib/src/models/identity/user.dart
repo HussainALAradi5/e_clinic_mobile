@@ -23,6 +23,9 @@ abstract class User with _$User {
 
     /// `online` / `offline` in chat: Online on sign-in, switchable.
     @Default('offline') String presence,
+
+    /// `12h` (the default) or `24h`, chosen in the person's profile.
+    @Default('12h') String timeFormat,
   }) = _User;
 
   const User._();
@@ -32,4 +35,6 @@ abstract class User with _$User {
   bool get isPatient => userType == 'patient';
 
   bool get online => presence == 'online';
+
+  bool get uses24Hour => timeFormat == '24h';
 }

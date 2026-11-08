@@ -13,3 +13,4 @@ export 'src/services/auth/access_notice.dart';
 export 'src/widgets/auth/auth_scaffold.dart' show BrandMark;
 export 'src/widgets/settings/phone_notifications_tile.dart';
 export 'src/widgets/settings/theme_mode_tile.dart';
+export 'src/widgets/settings/time_format_tile.dart';

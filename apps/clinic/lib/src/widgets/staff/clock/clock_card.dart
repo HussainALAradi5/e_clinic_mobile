@@ -1,3 +1,4 @@
+import 'package:e_clinic_core/core.dart';
 import 'package:e_clinic_data/data.dart';
 import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';

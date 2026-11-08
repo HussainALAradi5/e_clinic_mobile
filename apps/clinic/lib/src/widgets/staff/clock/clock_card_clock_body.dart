@@ -23,13 +23,13 @@ class _ClockBody extends StatelessWidget {
       detail = shift.start == null
           ? ClockText.checkInOnArrival
           : shift.flexible
-          ? '${shift.name}: arrive by ${shift.start}.'
-          : '${shift.name ?? 'Your shift'} starts at ${shift.start}.';
+          ? '${shift.name}: arrive by ${ClinicClock.wallTime(shift.start!)}.'
+          : '${shift.name ?? 'Your shift'} starts at ${ClinicClock.wallTime(shift.start!)}.';
     } else if (working) {
       title = ClockText.checkedInAt(clockTime(row.checkInAt));
       detail = [
         if (row.lateMinutes > 0) ClockText.minutesLate(formatMinutes(row.lateMinutes)),
-        if (shift.end != null) ClockText.shiftEndsAt(shift.end!),
+        if (shift.end != null) ClockText.shiftEndsAt(ClinicClock.wallTime(shift.end!)),
       ].join(' · ');
     } else {
       final worked = row.workedMinutes;

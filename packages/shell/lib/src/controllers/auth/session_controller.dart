@@ -14,6 +14,7 @@ class SessionController extends AsyncNotifier<Session?> {
 
   @override
   Future<Session?> build() async {
+    listenSelf((_, next) => ClinicClock.use24Hour = next.value?.user.uses24Hour ?? false);
     if (await _tokens.read() == null) return null;
     try {
       return await _auth.me();
@@ -70,6 +71,12 @@ class SessionController extends AsyncNotifier<Session?> {
   Future<void> refresh() async {
     final session = await _auth.me();
     state = AsyncData(session.copyWith(token: null));
+  }
+
+  /// Saves how this person reads times and applies it.
+  Future<void> setTimeFormat(String format) async {
+    await _auth.setTimeFormat(format);
+    await refresh();
   }
 
   /// The server rejected the token (revoked elsewhere or expired).
