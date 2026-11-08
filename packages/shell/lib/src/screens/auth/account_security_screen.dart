@@ -43,7 +43,7 @@ class AccountSecurityScreen extends ConsumerWidget {
                 const Divider(indent: 16, endIndent: 16),
                 FutureBuilder<bool>(
                   future: ref.read(appLockProvider.notifier).available,
-                  builder: (context, snapshot) => SwitchListTile(
+                  builder: (context, snapshot) => AppSwitchTile(
                     secondary: const Icon(Icons.fingerprint_rounded),
                     title: const Text(AuthText.lockTitle),
                     subtitle: Text(
