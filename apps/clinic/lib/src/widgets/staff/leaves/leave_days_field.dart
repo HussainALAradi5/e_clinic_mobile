@@ -1,4 +1,5 @@
 import 'package:e_clinic_core/core.dart';
+import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/staff/leave_text.dart';
@@ -55,7 +56,7 @@ class LeaveDaysField extends StatelessWidget {
           ),
         ),
         if (oneDay)
-          SwitchListTile(
+          AppSwitchTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 16),
             value: halfDay,
             onChanged: onHalfDay,

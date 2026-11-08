@@ -1,4 +1,5 @@
 import 'package:e_clinic_data/data.dart';
+import 'package:e_clinic_ui/ui.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/common/common_text.dart';
@@ -54,7 +55,7 @@ class _CompleteOrderSheetState extends State<CompleteOrderSheet> {
             onChanged: (_) => setState(() {}),
             decoration: const InputDecoration(labelText: CommonText.report, alignLabelWithHint: true),
           ),
-          SwitchListTile(
+          AppSwitchTile(
             contentPadding: EdgeInsets.zero,
             value: _abnormal,
             onChanged: (v) => setState(() => _abnormal = v),

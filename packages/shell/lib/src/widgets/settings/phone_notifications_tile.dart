@@ -15,7 +15,7 @@ class PhoneNotificationsTile extends ConsumerWidget {
     final value = ref.watch(phoneNotificationsProvider);
     final on = value.value ?? false;
     return Card(
-      child: SwitchListTile(
+      child: AppSwitchTile(
         secondary: const Icon(Icons.notifications_active_outlined),
         title: const Text(SettingsText.notifications),
         subtitle: const Text(SettingsText.notificationsHint),
