@@ -70,6 +70,7 @@ Future<void> _pump(WidgetTester tester, _FakeActivity repo, {double width = 800,
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
+        accessProvider.overrideWithValue(const Access({'activity.read_all'}, signedIn: true)),
         activityRepositoryProvider.overrideWithValue(repo),
         enumCatalogProvider.overrideWith((ref) async => EnumCatalog.empty),
       ],
@@ -137,7 +138,7 @@ void main() {
     );
 
     expect(_sentence('Amal Haddad'), findsOneWidget);
-    expect(_sentence('8 Nov 2026, 6:27 PM'), findsNWidgets(2));
+    expect(_sentence('8 Nov 2026, 6:27:00 PM'), findsNWidgets(2));
     expect(_sentence('Email from a@x.com to b@x.com'), findsOneWidget);
     expect(find.text('Opened the page'), findsOneWidget);
     expect(find.text('Edited'), findsOneWidget);
@@ -207,6 +208,38 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   }
+
+  testWidgets('each page has its own audience', (tester) async {
+    Future<void> pump(Set<String> rights) => tester.pumpWidget(
+      ProviderScope(
+        key: UniqueKey(),
+        overrides: [
+          accessProvider.overrideWithValue(Access(rights, signedIn: true)),
+          activityRepositoryProvider.overrideWithValue(
+            _FakeActivity({
+              null: _page([_entry(0)]),
+            }),
+          ),
+          enumCatalogProvider.overrideWith((ref) async => EnumCatalog.empty),
+        ],
+        child: const MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: ActivityLogSection(entity: ActivityEntity.appointment, id: 'a1'),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await pump({'appointments.read_all'});
+    await tester.pumpAndSettle();
+    expect(find.text('Event log'), findsOneWidget);
+
+    await pump({'activity.read_all', 'appointments.read_own'});
+    await tester.pumpAndSettle();
+    expect(find.text('Event log'), findsNothing);
+  });
 
   group('on the patient file', () {
     Future<_FakeActivity> open(WidgetTester tester, Set<String> rights) async {
