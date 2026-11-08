@@ -23,7 +23,9 @@ Free Render instances sleep when idle: the first visit can take about a minute t
 (one per role: patient, receptionist, doctor, nurse, pharmacist, cashier, accountant, HR, admin) are available on
 request.
 
-The phone app is not in a store yet; build it with `--dart-define=API_URL=https://e-clinic-api.onrender.com`
+**Android:** [download e-Clinic 1.0.0](https://github.com/HussainALAradi5/e_clinic_mobile/raw/main/releases/android/e-clinic-1.0.0-arm64.apk) (31 MB, for 64-bit phones). It uses the live demo. Android asks you to allow installs from your browser the first time.
+
+The phone app is not in a store yet. To build it yourself, use `--dart-define=API_URL=https://e-clinic-api.onrender.com`
 to use the live API.
 
 | | |
