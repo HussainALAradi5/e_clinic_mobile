@@ -77,6 +77,7 @@ class ProfileScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               const ThemeModeTile(),
+              const TimeFormatTile(),
               const PhoneNotificationsTile(),
               const SectionHeader(CommonText.more),
               const ProfileLinks(),

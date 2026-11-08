@@ -38,6 +38,10 @@ class AuthRepository {
   /// My `online` / `offline` status in chat, switched by hand.
   Future<void> setPresence(String status) => _api.put('auth/presence', ApiClient.ignore, body: {'status': status});
 
+  /// How I read times: `12h` or `24h`.
+  Future<void> setTimeFormat(String format) =>
+      _api.put('auth/time-format', ApiClient.ignore, body: {'time_format': format});
+
   Future<void> logoutAll() => _api.post('auth/logout-all', ApiClient.ignore);
 
   Future<void> changePassword({

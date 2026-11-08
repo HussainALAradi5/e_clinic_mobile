@@ -9,4 +9,7 @@ abstract final class SettingsText {
   static const themeLight = 'Light';
   static const themeDark = 'Dark';
   static const appearance = 'Appearance';
+  static const timeFormat = 'Time format';
+  static const twelveHour = '12-hour';
+  static const twentyFourHour = '24-hour';
 }

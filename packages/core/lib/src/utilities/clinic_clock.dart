@@ -4,6 +4,9 @@ import '../constants/time_text.dart';
 abstract final class ClinicClock {
   static const offset = Duration(hours: 3);
 
+  /// The signed-in person's choice: 12-hour unless they picked 24-hour in their profile.
+  static bool use24Hour = false;
+
   static const _weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   static const _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -54,13 +57,14 @@ abstract final class ClinicClock {
   /// `25 Oct 2026, 2:05:09 PM`: an instant to the second, for event logs.
   static String dateTimeExact(DateTime instant) {
     final l = local(instant);
-    final seconds = l.second.toString().padLeft(2, '0');
-    final time = clock(l.hour, l.minute).replaceFirst(' ', ':$seconds ');
+    final minutes = clock(l.hour, l.minute);
+    final time = use24Hour ? '$minutes:${_two(l.second)}' : minutes.replaceFirst(' ', ':${_two(l.second)} ');
     return '${date(isoDate(l))}, $time';
   }
 
-  /// `9:05 AM` / `2:30 PM` — times are always shown on the 12-hour clock.
+  /// `9:05 AM` / `2:30 PM`, or `09:05` / `14:30` for someone who chose the 24-hour clock.
   static String clock(int hour, int minute) {
+    if (use24Hour) return '${_two(hour)}:${_two(minute)}';
     final h = hour % 12 == 0 ? 12 : hour % 12;
     return '$h:${_two(minute)} ${hour < 12 ? 'AM' : 'PM'}';
   }
