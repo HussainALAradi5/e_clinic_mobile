@@ -25,6 +25,8 @@ export 'src/widgets/feedback/info_note.dart';
 export 'src/widgets/feedback/offline_banner.dart';
 export 'src/widgets/feedback/sheets.dart';
 export 'src/widgets/feedback/skeleton_list.dart';
+export 'src/widgets/inputs/app_switch.dart';
+export 'src/widgets/inputs/app_switch_tile.dart';
 export 'src/widgets/inputs/chip_bar.dart';
 export 'src/widgets/inputs/password_fields.dart';
 export 'src/widgets/inputs/search_field.dart';
