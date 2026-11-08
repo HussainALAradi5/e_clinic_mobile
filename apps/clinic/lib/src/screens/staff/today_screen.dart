@@ -93,14 +93,14 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
       SectionHeader(
         mine ? AppointmentText.mySchedule : AppointmentText.clinicSchedule,
         trailing: canSwitch
-            ? SegmentedButton<bool>(
-                showSelectedIcon: false,
-                segments: const [
-                  ButtonSegment(value: true, label: Text(AppointmentText.mine)),
-                  ButtonSegment(value: false, label: Text(CommonText.all)),
+            ? ChipBar<bool>(
+                padding: EdgeInsets.zero,
+                options: const [
+                  (value: true, label: AppointmentText.mine, count: null),
+                  (value: false, label: CommonText.all, count: null),
                 ],
-                selected: {mine},
-                onSelectionChanged: (value) => ref.read(onlyMineProvider.notifier).set(value.first),
+                selected: mine,
+                onSelected: (value) => ref.read(onlyMineProvider.notifier).set(value),
               )
             : null,
       ),

@@ -8,8 +8,10 @@ import 'package:go_router/go_router.dart';
 import '../../config/routes/staff_paths.dart';
 import '../../constants/billing/wallet_text.dart';
 import '../../constants/staff/patient_detail_text.dart';
+import '../../controllers/staff/activity_log_controller.dart';
 import '../../controllers/staff/patient_providers.dart';
 import '../../widgets/billing/wallet_card.dart';
+import '../../widgets/staff/activity/activity_log_section.dart';
 import '../../widgets/staff/appointments/appointment_card.dart';
 import '../../widgets/staff/patients/medical_alert_card.dart';
 import '../../widgets/staff/patients/medical_history_sheet.dart';
@@ -61,7 +63,8 @@ class PatientDetailScreen extends ConsumerWidget {
             ref
               ..invalidate(patientProvider(id))
               ..invalidate(patientTimelineProvider(id))
-              ..invalidate(patientUpcomingProvider(id));
+              ..invalidate(patientUpcomingProvider(id))
+              ..invalidate(activityLogProvider((entity: ActivityEntity.patientProfile, id: id)));
             await ref.read(patientProvider(id).future);
           },
           child: ListView(
@@ -118,6 +121,7 @@ class PatientDetailScreen extends ConsumerWidget {
                       canOpenOrders: access.can('orders.read_all | orders.read_own'),
                     ),
                   ),
+              ActivityLogSection(entity: ActivityEntity.patientProfile, id: id),
             ],
           ),
         ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/shared/enum_catalog.dart';
 import 'accounting/month_summary_repository.dart';
+import 'audit/activity_repository.dart';
 import 'billing/appointment_fee_repository.dart';
 import 'billing/invoice_repository.dart';
 import 'billing/package_repository.dart';
@@ -51,6 +52,7 @@ final monthSummaryRepositoryProvider = Provider((ref) => MonthSummaryRepository(
 final walletRepositoryProvider = Provider((ref) => WalletRepository(ref.watch(apiClientProvider)));
 final notificationRepositoryProvider = Provider((ref) => NotificationRepository(ref.watch(apiClientProvider)));
 final metaRepositoryProvider = Provider((ref) => MetaRepository(ref.watch(apiClientProvider)));
+final activityRepositoryProvider = Provider((ref) => ActivityRepository(ref.watch(apiClientProvider)));
 final codeRepositoryProvider = Provider((ref) => CodeRepository(ref.watch(apiClientProvider)));
 final attendanceRepositoryProvider = Provider((ref) => AttendanceRepository(ref.watch(apiClientProvider)));
 final refundRepositoryProvider = Provider((ref) => RefundRepository(ref.watch(apiClientProvider)));

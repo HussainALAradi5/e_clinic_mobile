@@ -2,6 +2,7 @@
 /// endpoint), grouped by feature.
 library;
 
+export 'src/enums/audit/activity_entity.dart';
 export 'src/enums/billing/invoice_payment_state.dart';
 export 'src/enums/billing/invoice_status.dart';
 export 'src/enums/billing/payment_method.dart';
@@ -15,6 +16,7 @@ export 'src/enums/communication/mute_duration.dart';
 export 'src/enums/documents/document_type.dart';
 export 'src/enums/identity/notification_kind.dart';
 export 'src/enums/shared/generic_status.dart';
+export 'src/models/audit/activity_entry.dart';
 export 'src/models/billing/appointment_fee.dart';
 export 'src/models/billing/coverage.dart';
 export 'src/models/billing/invoice.dart';
@@ -47,6 +49,7 @@ export 'src/models/shared/enum_catalog.dart';
 export 'src/models/shared/money.dart';
 export 'src/models/shared/refs.dart';
 export 'src/repositories/accounting/month_summary_repository.dart';
+export 'src/repositories/audit/activity_repository.dart';
 export 'src/repositories/billing/appointment_fee_repository.dart';
 export 'src/repositories/billing/invoice_repository.dart';
 export 'src/repositories/billing/package_repository.dart';

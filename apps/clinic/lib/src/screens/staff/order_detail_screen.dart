@@ -11,6 +11,7 @@ import '../../controllers/staff/order_actions.dart';
 import '../../controllers/staff/order_providers.dart';
 import '../../widgets/common/attach_photo_button.dart';
 import '../../widgets/common/attachment_list.dart';
+import '../../widgets/staff/activity/activity_log_section.dart';
 import '../../widgets/staff/orders/order_action_button.dart';
 
 /// `/clinic/clinical-orders/:id` — one order: what was asked and why, the result once written, its files, and
@@ -117,6 +118,7 @@ class OrderDetailScreen extends ConsumerWidget {
                   onUploaded: (_) => ref.read(ordersVersionProvider.notifier).bump(),
                 ),
               ),
+            ActivityLogSection(entity: ActivityEntity.clinicalOrder, id: order.id),
           ],
         ),
       ),
